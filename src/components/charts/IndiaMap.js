@@ -94,26 +94,28 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
   return (
     <div className="relative w-full h-full flex flex-col overflow-hidden">
 
-      {/* Toggle */}
-      <div className="flex items-center gap-1.5 mb-1 flex-shrink-0">
-        {OPTIONS.map(opt => (
-          <button
-            key={opt.id}
-            onClick={() => setViewMode(opt.id)}
-            className={`px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all ${
-              viewMode === opt.id
-                ? 'bg-blue-600 text-white shadow shadow-blue-900/50'
-                : 'bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] hover:border-blue-500 hover:text-[var(--t-text)]'
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-        <div className="ml-auto flex flex-wrap gap-x-2 gap-y-0.5">
+      {/* Toggle & Legend */}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1.5 flex-shrink-0">
+        <div className="flex items-center gap-1.5">
+          {OPTIONS.map(opt => (
+            <button
+              key={opt.id}
+              onClick={() => setViewMode(opt.id)}
+              className={`px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all ${
+                viewMode === opt.id
+                  ? 'bg-blue-600 text-white shadow shadow-blue-900/50'
+                  : 'bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] hover:border-blue-500 hover:text-[var(--t-text)]'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-x-2 gap-y-1 sm:ml-auto">
           {legendEntries.map(([p, c]) => (
             <div key={p} className="flex items-center gap-1">
               <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: c }} />
-              <span className="text-[9px] text-[var(--t-textSec)]">{p}</span>
+              <span className="text-[9px] text-[var(--t-textSec)] whitespace-nowrap">{p}</span>
             </div>
           ))}
         </div>

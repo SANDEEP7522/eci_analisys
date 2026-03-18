@@ -38,8 +38,8 @@ export default function CoalitionRose() {
     <div className="flex items-center gap-1 h-full w-full">
 
       {/* ── Nested Rose Chart ───────────────────── */}
-      <div className="relative flex-shrink-0" style={{ width: 140, height: 130 }}>
-        <ResponsiveContainer width={140} height={130}>
+      <div className="relative flex-shrink-0 w-[130px] h-[130px] sm:w-[140px] sm:h-[130px]">
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             {/* Outer ring: party breakdown */}
             <Pie

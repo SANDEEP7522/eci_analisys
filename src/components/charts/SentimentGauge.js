@@ -56,8 +56,8 @@ export default function SentimentGauge() {
   return (
     <div className="flex flex-col w-full h-full">
       {/* ── Gauge SVG ───────────────────────── */}
-      <div className="relative flex justify-center">
-        <svg width={220} height={108} viewBox="0 0 220 108">
+      <div className="relative flex justify-center w-full max-w-[240px] mx-auto">
+        <svg viewBox="0 0 220 108" className="w-full h-auto">
           {/* Track background */}
           <path
             d={arcPath(CX, CY, R_INNER, R_OUTER, 0, 180)}

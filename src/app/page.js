@@ -45,7 +45,7 @@ const slideLeft = { hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0,
 const slideRight= { hidden: { opacity: 0, x:  24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4 } } };
 
 // ── Card wrapper ──────────────────────────────────────────────────────────────
-function DCard({ title, children, className = "", action, headerRight }) {
+function DCard({ title, children, className = "", action, onAction, headerRight }) {
   return (
     <motion.div
       variants={fadeUp}
@@ -60,9 +60,12 @@ function DCard({ title, children, className = "", action, headerRight }) {
             {title}
           </span>
           {headerRight || (action && (
-            <span className="text-[10px] text-blue-400 cursor-pointer hover:text-blue-300 flex-shrink-0">
+            <button
+              onClick={onAction}
+              className="text-[10px] text-blue-400 hover:text-blue-300 flex-shrink-0 font-medium"
+            >
               {action}
-            </span>
+            </button>
           ))}
         </div>
       )}
@@ -159,7 +162,7 @@ export default function Home() {
   const stateHighlights = yearData.stateHighlights;
 
   return (
-    <div className="flex flex-col min-h-screen lg:h-screen bg-[var(--t-bg)] lg:overflow-hidden text-[var(--t-text)]">
+    <div className="flex flex-col min-h-screen bg-[var(--t-bg)] text-[var(--t-text)] overflow-x-hidden">
 
       {/* ══ NAVBAR ══════════════════════════════════════════════════════════ */}
       <nav className="sticky top-0 z-50 bg-[var(--t-sidebar)] border-b border-[var(--t-border)]">
@@ -307,17 +310,17 @@ export default function Home() {
       </div>
 
       {/* ══ MAIN BODY ════════════════════════════════════════════════════════ */}
-      <div className="flex flex-col xl:flex-row gap-2 p-2 xl:flex-1 xl:min-h-0 overflow-y-auto xl:overflow-hidden">
+      <div className="flex flex-col lg:flex-row gap-2 p-2 lg:flex-1 lg:min-h-0">
 
         {/* ── LEFT COLUMN ───────────────────────────────────────────────── */}
         <motion.div
           variants={slideLeft}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-2 w-full xl:w-[320px] xl:flex-shrink-0"
+          className="flex flex-col gap-2 w-full lg:w-[300px] xl:w-[320px] lg:flex-shrink-0"
         >
           {/* Sentiment + Coalition side-by-side on mobile/tablet, stacked on xl */}
-          <div className="grid grid-cols-2 xl:grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
             <DCard title="Sentiment Analysis" action="+17/95" className="min-h-[155px]">
               <SentimentGauge />
             </DCard>
@@ -327,7 +330,12 @@ export default function Home() {
           </div>
 
           {/* Candidate Profile */}
-          <DCard title="Candidate Profile" action="View All" className="flex-1 min-h-[200px] xl:min-h-0">
+          <DCard
+            title="Candidate Profile"
+            action="View All"
+            onAction={() => alert("Redirecting to full Candidate Profiles list...")}
+            className="flex-1 min-h-[200px] xl:min-h-0"
+          >
             <CandidateProfile />
           </DCard>
 
@@ -351,13 +359,13 @@ export default function Home() {
           variants={fadeIn}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-2 w-full xl:flex-1 xl:min-w-0"
+          className="flex flex-col gap-2 w-full lg:flex-1 lg:min-w-0"
         >
           {/* Map + Key States */}
           <div className="flex flex-col lg:flex-row gap-2 flex-1 min-h-0">
 
             {/* India Map */}
-            <div className="flex-1 min-w-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden h-[320px] sm:h-[380px] lg:h-auto">
+            <div className="flex-1 min-w-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden h-[360px] sm:h-[420px] lg:h-auto">
               <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
                 <span className="text-[11px] font-semibold text-[var(--t-textSec)] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot inline-block" />
@@ -398,8 +406,8 @@ export default function Home() {
                 </span>
               </div>
 
-              {/* State rows — 2-col grid on mobile, 1-col on lg */}
-              <div className="flex-1 overflow-y-auto px-2 py-1 grid grid-cols-2 lg:grid-cols-1 gap-1.5 min-h-0">
+              {/* State rows — 1-col on mobile/sm, 2-col on md, 1-col on lg */}
+              <div className="flex-1 overflow-y-auto px-2 py-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 min-h-0">
                 {KEY_STATES.map((s, i) => (
                   <motion.div
                     key={i}
@@ -493,10 +501,10 @@ export default function Home() {
           variants={slideRight}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-2 w-full xl:w-[360px] xl:flex-shrink-0"
+          className="flex flex-col gap-2 w-full lg:w-[320px] xl:w-[360px] lg:flex-shrink-0"
         >
           {/* Vote share + Constituency side-by-side on mobile */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
             <DCard title="National Vote Share" action="2024" className="min-h-[273px]">
               <VoteSharePie
                 data={partiesData.map((p) => ({ party: p.party, share: p.share }))}
