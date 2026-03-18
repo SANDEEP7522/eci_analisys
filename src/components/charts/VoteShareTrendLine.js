@@ -1,6 +1,6 @@
 'use client';
 
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DATA = [
   { year: '99', BJP: 23.7, INC: 28.3, SP: 4.1, TMC: 3.2, Others: 40.7 },
@@ -29,8 +29,8 @@ export default function VoteShareTrendLine() {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={DATA} margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
-        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="year" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {Object.entries(COLORS).map(([k, v]) => (
           <Line key={k} type="monotone" dataKey={k} stroke={v} strokeWidth={1.5} dot={{ r: 2, fill: v }} activeDot={{ r: 3 }} />

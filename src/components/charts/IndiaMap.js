@@ -154,8 +154,8 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
 
         {/* Hover tooltip */}
         {hoveredPayload && (
-          <div className="absolute top-2 left-2 bg-[var(--t-bgCardSolid)]/95 border border-[var(--t-border)] text-white px-3 py-2 rounded-lg text-[11px] shadow-xl pointer-events-none z-10 backdrop-blur-sm">
-            <div className="font-bold text-white mb-0.5">{hoveredPayload.name}</div>
+          <div className="absolute top-2 left-2 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] text-[var(--t-text)] px-3 py-2 rounded-lg text-[11px] shadow-xl pointer-events-none z-10">
+            <div className="font-bold text-[var(--t-text)] mb-0.5">{hoveredPayload.name}</div>
             <div className="flex items-center gap-2">
               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: hoveredPayload.color + '33', color: hoveredPayload.color }}>
                 {viewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}

@@ -14,7 +14,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased overflow-hidden h-screen flex flex-col">
+      <body className="antialiased overflow-y-auto lg:overflow-hidden lg:h-screen flex flex-col">
         <ThemeContextProvider defaultTheme="dark">
           {children}
         </ThemeContextProvider>

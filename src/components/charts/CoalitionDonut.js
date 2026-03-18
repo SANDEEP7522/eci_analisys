@@ -24,7 +24,7 @@ const CustomTooltip = ({ active, payload }) => {
 
   return (
     <div className="bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded px-2 py-1 text-[10px]">
-      <div className="font-bold text-white">
+      <div className="font-bold text-[var(--t-text)]">
         {d.name}: {d.value}
       </div>
     </div>
@@ -39,7 +39,7 @@ export default function CoalitionRadar() {
       <div className="flex-1 relative" style={{ minHeight: 120 }}>
         <ResponsiveContainer width="100%" height={120}>
           <RadarChart data={DATA}>
-            <PolarGrid stroke="#334155" />
+            <PolarGrid stroke="var(--t-border)" />
             <PolarAngleAxis
               dataKey="name"
               tick={{ fontSize: 10, fill: '#94a3b8' }}
@@ -66,7 +66,7 @@ export default function CoalitionRadar() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="text-center">
             <div className="text-[10px] text-[var(--t-textSec)]">Maj.</div>
-            <div className="text-xs font-bold text-white">{MAJORITY}</div>
+            <div className="text-xs font-bold text-[var(--t-text)]">{MAJORITY}</div>
           </div>
         </div>
       </div>

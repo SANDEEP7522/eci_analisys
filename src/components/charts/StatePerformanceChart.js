@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DATA = [
   { state: 'UP', BJP: 33, INC: 6, SP: 37, Others: 4 },
@@ -12,7 +12,7 @@ const DATA = [
   { state: 'GJ', BJP: 26, INC: 0, Others: 0 },
 ];
 
-const COLORS = ['#f97316','#3b82f6','#22c55e','#a78bfa','#06b6d4','#f59e0b','#84cc16'];
+const COLORS = ['#f97316','#6366f1','#ef4444','#22c55e','#a855f7','#14b8a6','#94a3b8'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -30,8 +30,8 @@ export default function StatePerformanceChart() {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={DATA} margin={{ top: 4, right: 4, bottom: 4, left: -25 }} barSize={6} barGap={1}>
-        <XAxis dataKey="state" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="state" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {['BJP','INC','SP','TMC','DMK','JDU','Others'].map((k, i) => (
           <Bar key={k} dataKey={k} fill={COLORS[i]} stackId="a" radius={i === 6 ? [3,3,0,0] : [0,0,0,0]} />

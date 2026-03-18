@@ -4,32 +4,32 @@
 
 /* ── Default CSS variable values (dark theme bootstrap) ────────────────────── */
 :root {
-  --t-bg:           #060a10;
-  --t-bgCard:       rgba(255,255,255,0.028);
-  --t-bgCardSolid:  #0c1118;
-  --t-border:       rgba(255,255,255,0.06);
-  --t-borderHi:     rgba(245,158,11,0.4);
+  --t-bg:           #0F172A;
+  --t-bgCard:       rgba(255,255,255,0.04);
+  --t-bgCardSolid:  #1E293B;
+  --t-border:       rgba(255,255,255,0.08);
+  --t-borderHi:     rgba(245,158,11,0.45);
   --t-text:         #eef1f6;
   --t-textSec:      rgba(255,255,255,0.55);
-  --t-textMut:      rgba(255,255,255,0.25);
+  --t-textMut:      rgba(255,255,255,0.28);
   --t-textGhost:    rgba(255,255,255,0.1);
-  --t-sidebar:      #080d15;
-  --t-header:       rgba(6,10,16,0.88);
+  --t-sidebar:      #0B1221;
+  --t-header:       rgba(11,18,33,0.92);
   --t-accent:       #f59e0b;
   --t-accentBg:     rgba(245,158,11,0.1);
-  --t-grid:         rgba(255,255,255,0.04);
-  --t-tip:          rgba(10,14,22,0.96);
-  --t-inp:          rgba(255,255,255,0.04);
-  --t-inpBd:        rgba(255,255,255,0.08);
+  --t-grid:         rgba(255,255,255,0.05);
+  --t-tip:          rgba(11,18,33,0.96);
+  --t-inp:          rgba(255,255,255,0.05);
+  --t-inpBd:        rgba(255,255,255,0.1);
   --t-ok:           #10b981;
   --t-no:           #ef4444;
   --t-info:         #6366f1;
-  --t-mapBase:      #131c2a;
-  --t-mapStroke:    #1e2d40;
+  --t-mapBase:      #162033;
+  --t-mapStroke:    #2a3f5f;
   --t-mapHi:        #f59e0b;
-  --t-tblStripe:    rgba(255,255,255,0.012);
-  --t-tblHov:       rgba(255,255,255,0.03);
-  --t-shadow:       rgba(0,0,0,0.4);
+  --t-tblStripe:    rgba(255,255,255,0.015);
+  --t-tblHov:       rgba(255,255,255,0.04);
+  --t-shadow:       rgba(0,0,0,0.5);
 
   /* legacy aliases used by older components */
   --background: var(--t-bg);
@@ -41,38 +41,43 @@
 
 /* Light theme overrides (set by ThemeContextProvider via data-theme) */
 [data-theme="light"] {
-  --t-bg:          #f0f2f5;
-  --t-bgCard:      #ffffff;
+  --t-bg:          #f2f5fc;
+  --t-bgCard:      rgba(255,255,255,0.85);
   --t-bgCardSolid: #ffffff;
-  --t-border:      #e0e5ec;
-  --t-borderHi:    #d97706;
-  --t-text:        #0f172a;
-  --t-textSec:     #475569;
-  --t-textMut:     #94a3b8;
-  --t-textGhost:   #cbd5e1;
-  --t-sidebar:     #ffffff;
-  --t-header:      rgba(255,255,255,0.9);
-  --t-accent:      #d97706;
-  --t-accentBg:    rgba(217,119,6,0.08);
-  --t-grid:        rgba(0,0,0,0.06);
-  --t-tip:         rgba(255,255,255,0.97);
-  --t-inp:         #f1f5f9;
-  --t-inpBd:       #d1d5db;
-  --t-ok:          #059669;
-  --t-no:          #dc2626;
-  --t-info:        #4f46e5;
-  --t-mapBase:     #dfe5ed;
-  --t-mapStroke:   #a0aec0;
-  --t-mapHi:       #d97706;
-  --t-tblStripe:   #f8fafc;
-  --t-tblHov:      #f1f5f9;
-  --t-shadow:      rgba(0,0,0,0.08);
+  --t-border:      #e4eaf5;
+  --t-borderHi:    #14b8a6;
+  --t-text:        #1a2035;
+  --t-textSec:     #5a6480;
+  --t-textMut:     #9aa5be;
+  --t-textGhost:   #d0d8ed;
+  --t-sidebar:     #f8faff;
+  --t-header:      rgba(248,250,255,0.97);
+  --t-accent:      #14b8a6;
+  --t-accentBg:    rgba(20,184,166,0.08);
+  --t-grid:        rgba(0,0,0,0.04);
+  --t-tip:         #ffffff;
+  --t-inp:         #f1f5fb;
+  --t-inpBd:       #c8d3e8;
+  --t-ok:          #22c55e;
+  --t-no:          #ef4444;
+  --t-info:        #6366f1;
+  --t-mapBase:     #dce8f8;
+  --t-mapStroke:   #a8b8d0;
+  --t-mapHi:       #14b8a6;
+  --t-tblStripe:   #f8fafd;
+  --t-tblHov:      #f0f5ff;
+  --t-shadow:      rgba(20,184,166,0.10);
 
   --background: var(--t-bg);
   --foreground: var(--t-text);
   --surface:    var(--t-bgCardSolid);
   --border:     var(--t-border);
   --muted:      var(--t-textMut);
+}
+
+/* Light theme card elevation */
+[data-theme="light"] .rounded-lg {
+  box-shadow: 0 4px 20px rgba(20,184,166,0.08), 0 1px 6px rgba(0,0,0,0.04);
 }
 
 @layer base {
@@ -99,9 +104,14 @@
   .bg-accent-soft { background-color: var(--t-accentBg); }
 }
 
+/* Card elevation in light mode */
+[data-theme="light"] .rounded-lg {
+  box-shadow: 0 2px 16px rgba(99,102,241,0.07), 0 1px 4px rgba(0,0,0,0.04);
+}
+
 /* Smooth transitions */
 *, *::before, *::after {
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease, box-shadow 0.25s ease;
 }
 svg *, canvas * { transition: none !important; }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DATA = [
   { phase: 'P1', BJP: 38, INC: 22, SP: 8, TMC: 6, Others: 26 },
@@ -41,8 +41,8 @@ export default function SeatShareArea() {
             </linearGradient>
           ))}
         </defs>
-        <XAxis dataKey="phase" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="phase" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {Object.entries(COLORS).map(([k, v]) => (
           <Area key={k} type="monotone" dataKey={k} stroke={v} strokeWidth={1.5}

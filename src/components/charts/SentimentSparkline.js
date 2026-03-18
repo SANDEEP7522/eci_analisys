@@ -15,8 +15,8 @@ export default function SentimentSparkline() {
         <Line type="monotone" dataKey="pos" stroke="#22c55e" strokeWidth={1.5} dot={false} />
         <Line type="monotone" dataKey="neg" stroke="#ef4444" strokeWidth={1.5} dot={false} />
         <Tooltip
-          contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', fontSize: 10, borderRadius: 4 }}
-          itemStyle={{ color: '#e2e8f0' }}
+          contentStyle={{ backgroundColor: 'var(--t-bgCardSolid)', border: '1px solid var(--t-border)', fontSize: 10, borderRadius: 4 }}
+          itemStyle={{ color: 'var(--t-textSec)' }}
           labelFormatter={() => ''}
         />
       </LineChart>

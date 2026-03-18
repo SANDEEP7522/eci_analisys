@@ -60,7 +60,7 @@ export default function CandidateProfile() {
           {c.initials}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-white text-xs truncate">{c.name}</div>
+          <div className="font-bold text-[var(--t-text)] text-xs truncate">{c.name}</div>
           <div className="text-[10px] text-[var(--t-textSec)]">{c.constituency}</div>
         </div>
         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ backgroundColor: c.color + '22', color: c.color }}>{c.party}</span>
@@ -88,7 +88,7 @@ export default function CandidateProfile() {
         </button>
         <div className="flex gap-1">
           {CANDIDATES.map((_, i) => (
-            <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === idx ? 'bg-blue-400' : 'bg-slate-600'}`} />
+            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors`} style={{ backgroundColor: i === idx ? '#6366f1' : 'var(--t-border)' }} />
           ))}
         </div>
         <button onClick={() => setIdx((idx + 1) % CANDIDATES.length)} className="p-1 rounded hover:bg-[var(--t-bgCard)] text-[var(--t-textSec)]">
