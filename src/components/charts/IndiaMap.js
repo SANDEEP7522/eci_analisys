@@ -7,209 +7,168 @@ import { ELECTION_BY_CODE, ELECTION_STATES } from '@/data/electionData';
 import { getStateByCode, ALL_STATES } from '@/data/statesData';
 import { PARTY_COLORS } from '@/data/dummy';
 
-const DEFAULT_FILL = '#94a3b8';
+const DEFAULT_FILL = '#1e3a5f';
 
 const OPTIONS = [
-  { id: 'parties', label: 'State Legislatures by Parties' },
-  { id: 'alliance', label: 'State Legislatures by Alliance' },
+  { id: 'parties',  label: 'By Parties'  },
+  { id: 'alliance', label: 'By Alliance' },
 ];
 
-/** Resolve state code from stateData item (id, code, or state name lookup) */
 function getCodeFromStateItem(s, nameToCode) {
-  if (s.id) return s.id;
-  if (s.code) return s.code;
+  if (s.id)    return s.id;
+  if (s.code)  return s.code;
   if (s.state && nameToCode) return nameToCode[s.state];
   return null;
 }
 
-export default function IndiaMap({
-  onStateClick,
-  highlightState,
-  stateData = [],
-  selectedYear,
-}) {
-  const [hovered, setHovered] = useState(null);
+export default function IndiaMap({ onStateClick, highlightState, stateData = [] }) {
+  const [hovered,  setHovered]  = useState(null);
   const [viewMode, setViewMode] = useState('parties');
 
   const nameToCode = useMemo(
-    () => Object.fromEntries((ALL_STATES || []).map((s) => [s.name, s.code])),
+    () => Object.fromEntries((ALL_STATES || []).map(s => [s.name, s.code])),
     []
   );
 
   const stateByCode = useMemo(() => {
-    const fromElection = Object.fromEntries(
-      ELECTION_STATES.map((s) => [s.code, s])
-    );
+    const fromElection = Object.fromEntries(ELECTION_STATES.map(s => [s.code, s]));
     const fromProps = {};
-    (stateData || []).forEach((s) => {
+    (stateData || []).forEach(s => {
       const code = getCodeFromStateItem(s, nameToCode);
       if (code) fromProps[code] = { ...s, code };
     });
     return { ...fromElection, ...fromProps };
   }, [stateData, nameToCode]);
 
-  const getStateCode = (geo) => {
+  const getStateCode = geo => {
     const id = geo.id ?? geo.properties?.id ?? geo.properties?.state_code;
     if (id && id !== '-99') return id;
-    const name = geo.properties?.name || geo.properties?.ST_NM || geo.properties?.State;
-    const fromStates = getStateByCode ? getStateByCode(id) : null;
-    return fromStates?.code || id;
+    const info = getStateByCode ? getStateByCode(id) : null;
+    return info?.code || id;
   };
 
-  const getFill = (geo) => {
+  const getFill = geo => {
     const code = getStateCode(geo);
-    if (hovered === code) return '#fbbf24';
-    if (highlightState === code) return '#1e3a8a';
-    const fromYear = stateByCode[code];
-    const fromStatic = ELECTION_BY_CODE[code];
-    const election = fromYear || fromStatic;
-    if (viewMode === 'alliance') {
-      if (fromStatic?.colorAlliance) return fromStatic.colorAlliance;
-      return DEFAULT_FILL;
-    }
-    if (viewMode === 'parties') {
-      if (fromYear?.winner && PARTY_COLORS[fromYear.winner]) return PARTY_COLORS[fromYear.winner];
-      if (fromStatic?.colorParty) return fromStatic.colorParty;
-      if (election?.colorParty) return election.colorParty;
-      if (election?.winner && PARTY_COLORS[election.winner]) return PARTY_COLORS[election.winner];
-    }
-    return DEFAULT_FILL;
+    if (hovered === code)      return '#fbbf24';
+    if (highlightState === code) return '#2563eb';
+    const s = stateByCode[code] || ELECTION_BY_CODE[code];
+    if (!s) return DEFAULT_FILL;
+    if (viewMode === 'alliance') return s.colorAlliance || DEFAULT_FILL;
+    return s.colorParty || PARTY_COLORS[s.party] || PARTY_COLORS[s.winner] || DEFAULT_FILL;
   };
 
-  const getClickPayload = (geo) => {
-    const code = getStateCode(geo);
-    const fromYear = stateByCode[code];
-    const fromStatic = ELECTION_BY_CODE[code];
-    const election = fromYear || fromStatic;
-    const info = getStateByCode ? getStateByCode(code) : null;
-    const name = election?.name || election?.state || info?.name || geo.properties?.name || code;
-    const winner = election?.party ?? election?.winner ?? 'N/A';
-    return {
-      id: code,
-      name,
-      seats: election?.rulingSeats ?? election?.seats ?? election?.totalSeats ?? 0,
-      winner,
-      colorParty: election?.colorParty ?? PARTY_COLORS[winner],
-      ...election,
-    };
+  const getClickPayload = geo => {
+    const code  = getStateCode(geo);
+    const s     = stateByCode[code] || ELECTION_BY_CODE[code] || {};
+    const info  = getStateByCode ? getStateByCode(code) : null;
+    const name  = s.name || s.state || info?.name || geo.properties?.name || code;
+    const winner = s.party ?? s.winner ?? 'N/A';
+    return { id: code, name, seats: s.rulingSeats ?? s.seats ?? 0, winner, colorParty: s.colorParty ?? PARTY_COLORS[winner], ...s };
   };
 
-  const hoveredPayload = hovered ? (() => {
-    const fromYear = stateByCode[hovered];
-    const fromStatic = ELECTION_BY_CODE[hovered];
-    const election = fromYear || fromStatic;
+  const hoveredPayload = useMemo(() => {
+    if (!hovered) return null;
+    const s    = stateByCode[hovered] || ELECTION_BY_CODE[hovered] || {};
     const info = getStateByCode ? getStateByCode(hovered) : null;
-    const name = election?.name || election?.state || info?.name || hovered;
     return {
-      name,
-      party: election?.party ?? election?.winner ?? 'N/A',
-      alliance: election?.alliance ?? 'N/A',
-      rulingSeats: election?.rulingSeats ?? election?.seats ?? 0,
+      name:       s.name || s.state || info?.name || hovered,
+      party:      s.party ?? s.winner ?? 'N/A',
+      alliance:   s.alliance ?? 'N/A',
+      rulingSeats: s.rulingSeats ?? s.seats ?? 0,
+      totalSeats: s.totalSeats ?? 0,
+      color:      s.colorParty || PARTY_COLORS[s.party] || '#fff',
     };
-  })() : null;
+  }, [hovered, stateByCode]);
 
   const legendEntries = useMemo(() => {
     if (viewMode === 'alliance') {
-      const byAlliance = {};
-      ELECTION_STATES.forEach((s) => {
-        if (s.alliance && !byAlliance[s.alliance]) byAlliance[s.alliance] = s.colorAlliance;
-      });
-      return Object.entries(byAlliance).slice(0, 10);
+      const map = {};
+      ELECTION_STATES.forEach(s => { if (s.alliance && !map[s.alliance]) map[s.alliance] = s.colorAlliance; });
+      return Object.entries(map).slice(0, 8);
     }
-    const byParty = {};
-    ELECTION_STATES.forEach((s) => {
-      if (s.party && !byParty[s.party]) byParty[s.party] = s.colorParty;
-    });
-    return Object.entries(byParty).slice(0, 10);
+    const map = {};
+    ELECTION_STATES.forEach(s => { if (s.party && !map[s.party]) map[s.party] = s.colorParty; });
+    return Object.entries(map).slice(0, 8);
   }, [viewMode]);
 
   return (
-    <div className="relative w-full">
-      {/* View mode toggle */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-3">
-        {OPTIONS.map((opt) => (
+    <div className="relative w-full h-full flex flex-col overflow-hidden">
+
+      {/* Toggle */}
+      <div className="flex items-center gap-1.5 mb-1 flex-shrink-0">
+        {OPTIONS.map(opt => (
           <button
             key={opt.id}
-            type="button"
             onClick={() => setViewMode(opt.id)}
-            className={`w-full sm:w-auto px-3 py-2.5 sm:py-1.5 rounded-lg text-xs font-medium transition-colors text-left sm:text-center ${
+            className={`px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all ${
               viewMode === opt.id
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                ? 'bg-blue-600 text-white shadow shadow-blue-900/50'
+                : 'bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] hover:border-blue-500 hover:text-[var(--t-text)]'
             }`}
           >
             {opt.label}
           </button>
         ))}
-      </div>
-
-      <ComposableMap
-        projection="geoMercator"
-        projectionConfig={{
-          center: [82, 23],
-          scale: 900,
-        }}
-        className="w-full h-auto"
-        style={{ minHeight: 320 }}
-      >
-        <Geographies geography={INDIA_TOPOLOGY_URL}>
-          {({ geographies }) =>
-            geographies.map((geo) => {
-              const code = getStateCode(geo);
-              const fill = getFill(geo);
-
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={fill || DEFAULT_FILL}
-                  stroke="#fff"
-                  strokeWidth={0.5}
-                  style={{
-                    default: { outline: 'none' },
-                    hover: { outline: 'none', fill: '#fbbf24' },
-                    pressed: { outline: 'none' },
-                  }}
-                  onMouseEnter={() => code && setHovered(code)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() =>
-                    code &&
-                    onStateClick &&
-                    onStateClick(getClickPayload(geo))
-                  }
-                />
-              );
-            })
-          }
-        </Geographies>
-      </ComposableMap>
-
-      {/* Legend from election data */}
-      <div className="flex flex-wrap gap-2 mt-2">
-        {legendEntries.map(([party, color]) => (
-          <div key={party} className="flex items-center gap-1">
-            <div
-              className="w-3 h-3 rounded-sm flex-shrink-0"
-              style={{ backgroundColor: color }}
-            />
-            <span className="text-xs text-gray-600 dark:text-gray-400">
-              {party}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Tooltip */}
-      {hoveredPayload && (
-        <div className="absolute top-2 left-2 bg-gray-900 dark:bg-slate-800 text-white px-3 py-2 rounded-lg text-xs shadow-lg pointer-events-none z-10 border border-gray-700">
-          <div className="font-bold">{hoveredPayload.name}</div>
-          <div className="text-gray-300 mt-0.5">
-            {viewMode === 'alliance'
-              ? `${hoveredPayload.alliance} · ${hoveredPayload.rulingSeats} seats`
-              : `${hoveredPayload.party} · ${hoveredPayload.rulingSeats} seats`}
-          </div>
+        <div className="ml-auto flex flex-wrap gap-x-2 gap-y-0.5">
+          {legendEntries.map(([p, c]) => (
+            <div key={p} className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: c }} />
+              <span className="text-[9px] text-[var(--t-textSec)]">{p}</span>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
+
+      {/* Map fills remaining height */}
+      <div className="flex-1 min-h-0 overflow-hidden relative">
+        <ComposableMap
+          projection="geoMercator"
+          projectionConfig={{ center: [82, 23], scale: 1000 }}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <Geographies geography={INDIA_TOPOLOGY_URL}>
+            {({ geographies }) =>
+              geographies.map(geo => {
+                const code = getStateCode(geo);
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill={getFill(geo)}
+                    stroke="#0b1120"
+                    strokeWidth={0.6}
+                    style={{
+                      default: { outline: 'none' },
+                      hover:   { outline: 'none', fill: '#fbbf24', cursor: 'pointer' },
+                      pressed: { outline: 'none' },
+                    }}
+                    onMouseEnter={() => code && setHovered(code)}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={() => code && onStateClick && onStateClick(getClickPayload(geo))}
+                  />
+                );
+              })
+            }
+          </Geographies>
+        </ComposableMap>
+
+        {/* Hover tooltip */}
+        {hoveredPayload && (
+          <div className="absolute top-2 left-2 bg-[var(--t-bgCardSolid)]/95 border border-[var(--t-border)] text-white px-3 py-2 rounded-lg text-[11px] shadow-xl pointer-events-none z-10 backdrop-blur-sm">
+            <div className="font-bold text-white mb-0.5">{hoveredPayload.name}</div>
+            <div className="flex items-center gap-2">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: hoveredPayload.color + '33', color: hoveredPayload.color }}>
+                {viewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
+              </span>
+              {hoveredPayload.rulingSeats > 0 && (
+                <span className="text-[var(--t-textSec)]">{hoveredPayload.rulingSeats}
+                  {hoveredPayload.totalSeats > 0 && <span className="text-[var(--t-textMut)]">/{hoveredPayload.totalSeats}</span>} seats
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

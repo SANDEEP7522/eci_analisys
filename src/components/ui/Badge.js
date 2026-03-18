@@ -12,13 +12,13 @@ export default function Badge({ children, party = 'default', className = '' }) {
     if (name === 'aimim')  return 'bg-teal-600 text-white';
     if (name === 'nda')    return 'bg-orange-600 text-white';
     if (name === 'india')  return 'bg-blue-700 text-white';
-    if (name === 'others') return 'bg-gray-500 text-white';
+    if (name === 'others') return 'bg-[var(--t-bgCard)] text-[var(--t-textSec)]';
     switch (p) {
       case 'primary': return 'bg-blue-800 text-white';
       case 'accent':  return 'bg-orange-500 text-white';
       case 'success': return 'bg-green-600 text-white';
       case 'error':   return 'bg-red-500 text-white';
-      default:        return 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200';
+      default:        return 'bg-[var(--t-bgCard)] text-[var(--t-text)] border border-[var(--t-border)]';
     }
   };
 

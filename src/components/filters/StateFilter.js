@@ -13,7 +13,7 @@ export default function StateFilter({ value, onChange, className = '' }) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="px-3 py-2 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-gray-900 dark:text-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer min-w-[150px]"
+        className="px-3 py-2 bg-white dark:bg-[var(--t-bgCard)] border border-gray-200 dark:border-[var(--t-border)] text-gray-900 dark:text-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer min-w-[150px]"
       >
         <option value="">All States / UTs</option>
         {STATES.map(s => <option key={s} value={s}>{s}</option>)}

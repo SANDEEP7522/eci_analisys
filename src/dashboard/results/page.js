@@ -54,7 +54,7 @@ export default function Results() {
   return (
     <div className="space-y-4 pb-6">
       {/* Header */}
-      <div className="border-b border-gray-200 dark:border-slate-700 pb-3">
+      <div className="border-b border-gray-200 dark:border-[var(--t-border)] pb-3">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Constituency Results</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Sortable breakdown by state, party, and candidate</p>
       </div>

@@ -5,112 +5,110 @@ import { ArrowLeft, Filter, Search } from 'lucide-react';
 import Link from 'next/link';
 
 const DEMO_DATA = [
-  { constituency: 'Varanasi', state: 'Uttar Pradesh', candidate: 'Narendra Modi', party: 'BJP', margin: 152513 },
-  { constituency: 'Raebareli', state: 'Uttar Pradesh', candidate: 'Rahul Gandhi', party: 'INC', margin: 390030 },
-  { constituency: 'Gandhinagar', state: 'Gujarat', candidate: 'Amit Shah', party: 'BJP', margin: 744716 },
-  { constituency: 'Wayanad', state: 'Kerala', candidate: 'Rahul Gandhi', party: 'INC', margin: 364422 },
-  { constituency: 'New Delhi', state: 'Delhi', candidate: 'Bansuri Swaraj', party: 'BJP', margin: 78370 },
+  { constituency: 'Varanasi',    state: 'Uttar Pradesh', candidate: 'Narendra Modi',  party: 'BJP', margin: 152513 },
+  { constituency: 'Raebareli',   state: 'Uttar Pradesh', candidate: 'Rahul Gandhi',   party: 'INC', margin: 390030 },
+  { constituency: 'Gandhinagar', state: 'Gujarat',       candidate: 'Amit Shah',      party: 'BJP', margin: 744716 },
+  { constituency: 'Wayanad',     state: 'Kerala',        candidate: 'Rahul Gandhi',   party: 'INC', margin: 364422 },
+  { constituency: 'New Delhi',   state: 'Delhi',         candidate: 'Bansuri Swaraj', party: 'BJP', margin: 78370  },
 ];
+
+const PARTY_BADGE_COLOR = { BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e' };
 
 export default function ResultsPage() {
   const [search, setSearch] = useState('');
-  const [party, setParty] = useState('');
+  const [party,  setParty]  = useState('');
 
-  const filtered = useMemo(() => {
-    return DEMO_DATA.filter((row) => {
-      const matchesSearch =
-        !search ||
-        row.constituency.toLowerCase().includes(search.toLowerCase()) ||
-        row.candidate.toLowerCase().includes(search.toLowerCase());
-      const matchesParty = !party || row.party === party;
-      return matchesSearch && matchesParty;
-    });
-  }, [search, party]);
+  const filtered = useMemo(() =>
+    DEMO_DATA.filter(row => {
+      const q = search.toLowerCase();
+      return (!search || row.constituency.toLowerCase().includes(q) || row.candidate.toLowerCase().includes(q))
+          && (!party  || row.party === party);
+    }),
+  [search, party]);
 
-  const parties = Array.from(new Set(DEMO_DATA.map((d) => d.party)));
+  const parties = Array.from(new Set(DEMO_DATA.map(d => d.party)));
 
   return (
-    <div className="space-y-4 pb-6">
-      <div className="flex items-center justify-between gap-2">
+    <div className="h-screen flex flex-col bg-[var(--t-bg)] text-[var(--t-text)] p-4 gap-4">
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Constituency Results
-          </h1>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-            Simple demo table – no external API calls.
-          </p>
+          <h1 className="text-xl font-bold text-[var(--t-text)]">Constituency Results</h1>
+          <p className="text-xs text-[var(--t-textMut)]">Demo table — 2024 General Elections</p>
         </div>
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:underline"
-        >
-          <ArrowLeft size={14} />
-          Back
+        <Link href="/" className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+          <ArrowLeft size={14} /> Back to Dashboard
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center text-xs">
-        <div className="flex items-center gap-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-1 flex-1">
-          <Search size={14} className="text-gray-400" />
+      {/* Filters row */}
+      <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-1.5 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg px-2.5 py-1.5 flex-1 hover:border-[var(--t-borderHi)] transition-colors">
+          <Search size={13} className="text-[var(--t-textMut)]" />
           <input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             placeholder="Search constituency or candidate…"
-            className="bg-transparent outline-none flex-1 text-xs text-gray-700 dark:text-gray-100"
+            className="bg-transparent outline-none flex-1 text-xs text-[var(--t-text)] placeholder:text-[var(--t-textMut)]"
           />
         </div>
-        <div className="flex items-center gap-1">
-          <Filter size={14} className="text-gray-400 hidden sm:inline" />
+        <div className="flex items-center gap-1.5 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg px-2.5 py-1.5 hover:border-[var(--t-borderHi)] transition-colors">
+          <Filter size={13} className="text-[var(--t-textMut)]" />
           <select
             value={party}
-            onChange={(e) => setParty(e.target.value)}
-            className="border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 rounded-lg px-2 py-1 text-xs"
+            onChange={e => setParty(e.target.value)}
+            className="bg-transparent text-[var(--t-text)] text-xs outline-none cursor-pointer"
           >
-            <option value="">All parties</option>
-            {parties.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
+            <option value="" style={{ background: 'var(--t-bgCardSolid)' }}>All Parties</option>
+            {parties.map(p => (
+              <option key={p} value={p} style={{ background: 'var(--t-bgCardSolid)' }}>{p}</option>
             ))}
           </select>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+      {/* Table */}
+      <div className="flex-1 overflow-auto rounded-xl border border-[var(--t-border)]">
         <table className="min-w-full text-xs">
-          <thead className="bg-gray-50 dark:bg-slate-800 text-gray-600 dark:text-gray-300">
+          <thead className="sticky top-0 bg-[var(--t-sidebar)]">
             <tr>
-              <th className="px-3 py-2 text-left font-semibold">Constituency</th>
-              <th className="px-3 py-2 text-left font-semibold">State</th>
-              <th className="px-3 py-2 text-left font-semibold">Candidate</th>
-              <th className="px-3 py-2 text-left font-semibold">Party</th>
-              <th className="px-3 py-2 text-right font-semibold">Margin</th>
+              {['Constituency', 'State', 'Candidate', 'Party', 'Margin'].map((h, i) => (
+                <th
+                  key={h}
+                  className={`px-3 py-2.5 text-[var(--t-textMut)] font-semibold uppercase tracking-wider border-b border-[var(--t-border)] ${i === 4 ? 'text-right' : 'text-left'}`}
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {filtered.map((row) => (
+            {filtered.map(row => (
               <tr
                 key={`${row.constituency}-${row.candidate}`}
-                className="border-t border-gray-100 dark:border-slate-800 hover:bg-gray-50/60 dark:hover:bg-slate-800/60"
+                className="border-t border-[var(--t-border)] hover:bg-[var(--t-bgCard)] transition-colors"
               >
-                <td className="px-3 py-2 whitespace-nowrap text-gray-900 dark:text-gray-100">
-                  {row.constituency}
+                <td className="px-3 py-2 font-medium text-[var(--t-text)] whitespace-nowrap">{row.constituency}</td>
+                <td className="px-3 py-2 text-[var(--t-textSec)] whitespace-nowrap">{row.state}</td>
+                <td className="px-3 py-2 text-[var(--t-textSec)] whitespace-nowrap">{row.candidate}</td>
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <span
+                    className="px-2 py-0.5 rounded text-[10px] font-bold"
+                    style={{ backgroundColor: (PARTY_BADGE_COLOR[row.party] || '#64748b') + '25', color: PARTY_BADGE_COLOR[row.party] || 'var(--t-textSec)' }}
+                  >
+                    {row.party}
+                  </span>
                 </td>
-                <td className="px-3 py-2 whitespace-nowrap">{row.state}</td>
-                <td className="px-3 py-2 whitespace-nowrap">{row.candidate}</td>
-                <td className="px-3 py-2 whitespace-nowrap">{row.party}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-right font-semibold">
+                <td className="px-3 py-2 text-right font-semibold text-[var(--t-text)] font-mono whitespace-nowrap">
                   {row.margin.toLocaleString('en-IN')}
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-3 py-6 text-center text-gray-400 dark:text-gray-500"
-                >
-                  No matching results.
+                <td colSpan={5} className="px-3 py-10 text-center text-[var(--t-textMut)]">
+                  No matching results found.
                 </td>
               </tr>
             )}
@@ -120,4 +118,3 @@ export default function ResultsPage() {
     </div>
   );
 }
-

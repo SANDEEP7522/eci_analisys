@@ -9,7 +9,7 @@ export default function ResultsTable({ data }) {
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-gray-200 dark:border-slate-600 text-gray-400 dark:text-gray-500">
+      <div className="flex flex-col items-center justify-center p-8 bg-white dark:bg-[var(--t-bgCardSolid)] rounded-2xl border border-dashed border-gray-200 dark:border-[var(--t-border)] text-gray-400 dark:text-gray-500">
         <div className="text-3xl mb-2">🔍</div>
         <div className="text-sm font-medium">No results match your filters</div>
       </div>
@@ -43,7 +43,7 @@ export default function ResultsTable({ data }) {
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+    <div className="bg-white dark:bg-[var(--t-bgCardSolid)] rounded-2xl shadow-sm border border-gray-100 dark:border-[var(--t-border)] overflow-hidden">
 
       {/* ── Mobile card view (shown on xs, hidden on md+) ── */}
       <div className="md:hidden divide-y divide-gray-100 dark:divide-slate-700">
@@ -67,14 +67,14 @@ export default function ResultsTable({ data }) {
       {/* ── Desktop table (hidden on mobile, shown on md+) ── */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
-          <thead className="bg-gray-50 dark:bg-slate-900/50">
+          <thead className="bg-gray-50 dark:bg-[var(--t-sidebar)]/50">
             <tr>
               {cols.map(col => (
                 <th
                   key={col.key}
                   scope="col"
                   onClick={() => requestSort(col.key)}
-                  className={`px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 select-none transition-colors ${col.right ? 'text-right' : 'text-left'}`}
+                  className={`px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-[var(--t-bgCardSolid)] select-none transition-colors ${col.right ? 'text-right' : 'text-left'}`}
                 >
                   <div className={`flex items-center gap-1.5 ${col.right ? 'justify-end' : ''}`}>
                     {col.label} <SortIcon col={col.key} />
@@ -85,7 +85,7 @@ export default function ResultsTable({ data }) {
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
             {sortedData.map((row, idx) => (
-              <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+              <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-[var(--t-bgCard)] transition-colors">
                 <td className="px-5 py-3 text-sm font-semibold text-gray-900 dark:text-gray-100 whitespace-nowrap">{row.constituency}</td>
                 <td className="px-5 py-3 text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">{row.state}</td>
                 <td className="px-5 py-3 text-sm text-gray-800 dark:text-gray-200 whitespace-nowrap">{row.candidate}</td>
@@ -102,7 +102,7 @@ export default function ResultsTable({ data }) {
       </div>
 
       {/* Footer summary */}
-      <div className="px-4 py-2.5 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/30 text-xs text-gray-400 dark:text-gray-500">
+      <div className="px-4 py-2.5 border-t border-gray-100 dark:border-[var(--t-border)] bg-gray-50 dark:bg-[var(--t-sidebar)]/30 text-xs text-gray-400 dark:text-gray-500">
         {sortedData.length} constituencies
       </div>
     </div>

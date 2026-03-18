@@ -2,7 +2,7 @@ import { Search, X } from 'lucide-react';
 
 export default function FilterBar({ children, onReset, onSearch, searchQuery, className = '' }) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-3 sm:p-4 space-y-3 ${className}`}>
+    <div className={`bg-white dark:bg-[var(--t-bgCardSolid)] rounded-2xl shadow-sm border border-gray-100 dark:border-[var(--t-border)] p-3 sm:p-4 space-y-3 ${className}`}>
       {/* Filters row - wraps on mobile */}
       <div className="flex flex-wrap gap-3 items-end">
         {children}
@@ -18,14 +18,14 @@ export default function FilterBar({ children, onReset, onSearch, searchQuery, cl
               value={searchQuery}
               onChange={(e) => onSearch(e.target.value)}
               placeholder="Search constituency or candidate..."
-              className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-[var(--t-border)] bg-white dark:bg-[var(--t-bgCard)] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         )}
         {onReset && (
           <button
             onClick={onReset}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 border border-gray-200 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 dark:bg-[var(--t-bgCard)] hover:bg-gray-100 dark:hover:bg-slate-600 border border-gray-200 dark:border-[var(--t-border)] text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium transition-colors"
           >
             <X size={15} />
             <span>Reset</span>

@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 export default function StateBarChart({ data, dataKey = 'turnout', nameKey = 'state', height = 320 }) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center bg-gray-50 dark:bg-slate-900/30 rounded-xl border border-dashed border-gray-200 dark:border-slate-600 text-gray-400 text-sm" style={{ height }}>
+      <div className="flex items-center justify-center bg-gray-50 dark:bg-[var(--t-sidebar)]/30 rounded-xl border border-dashed border-gray-200 dark:border-[var(--t-border)] text-gray-400 text-sm" style={{ height }}>
         No state data
       </div>
     );

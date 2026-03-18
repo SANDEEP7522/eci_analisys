@@ -27,7 +27,7 @@ const MOCK = {
 
 function ChartCard({ title, children, className = '' }) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-4 ${className}`}>
+    <div className={`bg-white dark:bg-[var(--t-bgCardSolid)] rounded-2xl shadow-sm border border-gray-100 dark:border-[var(--t-border)] p-4 ${className}`}>
       <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3">{title}</h3>
       {children}
     </div>
@@ -40,7 +40,7 @@ export default function Turnout() {
 
   return (
     <div className="space-y-4 pb-6">
-      <div className="border-b border-gray-200 dark:border-slate-700 pb-3">
+      <div className="border-b border-gray-200 dark:border-[var(--t-border)] pb-3">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Voter Turnout</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Historical trends and state-wise participation</p>
       </div>

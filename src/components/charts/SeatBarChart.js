@@ -10,7 +10,7 @@ const PARTY_COLORS = {
 export default function SeatBarChart({ data, height = 360 }) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center bg-gray-50 dark:bg-slate-900/30 rounded-xl border border-dashed border-gray-200 dark:border-slate-600 text-gray-400 dark:text-gray-500 text-sm" style={{ height }}>
+      <div className="flex items-center justify-center bg-gray-50 dark:bg-[var(--t-sidebar)]/30 rounded-xl border border-dashed border-gray-200 dark:border-[var(--t-border)] text-gray-400 dark:text-gray-500 text-sm" style={{ height }}>
         No seat data available
       </div>
     );

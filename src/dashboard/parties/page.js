@@ -21,7 +21,7 @@ const MOCK_PARTIES = [
 
 function ChartCard({ title, children, className = '' }) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-4 ${className}`}>
+    <div className={`bg-white dark:bg-[var(--t-bgCardSolid)] rounded-2xl shadow-sm border border-gray-100 dark:border-[var(--t-border)] p-4 ${className}`}>
       <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 mb-3">{title}</h3>
       {children}
     </div>
@@ -34,7 +34,7 @@ export default function Parties() {
 
   return (
     <div className="space-y-4 pb-6">
-      <div className="border-b border-gray-200 dark:border-slate-700 pb-3">
+      <div className="border-b border-gray-200 dark:border-[var(--t-border)] pb-3">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Party Performance</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Seat tallies and national vote share</p>
       </div>
@@ -60,7 +60,7 @@ export default function Parties() {
                       <span className="font-medium text-gray-700 dark:text-gray-300">{item.party}</span>
                       <span className="text-gray-500 dark:text-gray-400">{item.share.toFixed(2)}%</span>
                     </div>
-                    <div className="w-full bg-gray-100 dark:bg-slate-700 rounded-full h-2">
+                    <div className="w-full bg-gray-100 dark:bg-[var(--t-bgCard)] rounded-full h-2">
                       <div className="h-2 rounded-full bg-blue-500" style={{ width: `${Math.min(item.share * 2.5, 100)}%` }}></div>
                     </div>
                   </div>
