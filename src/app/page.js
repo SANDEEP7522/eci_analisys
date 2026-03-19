@@ -70,6 +70,13 @@ const STATE_NAME_TO_CODE = {
   "Nagaland": "NL", "Arunachal Pradesh": "AR", "Mizoram": "MZ", "Sikkim": "SK",
 };
 
+// Votes cast per election year (Crores) — totalVoters × turnout%
+const VOTES_CAST_CR = {
+  '1999': 36.5, '2004': 38.9, '2009': 41.7,
+  '2014': 54.1, '2019': 61.3, '2024': 63.8,
+};
+const YEAR_ORDER = ['1999', '2004', '2009', '2014', '2019', '2024'];
+
 const ALLIANCE_PARTIES = {
   "NDA":   ["BJP", "TDP", "JDU", "SHS", "NCP", "AINRC", "NPP", "NDPP"],
   "INDIA": ["INC", "SP", "TMC", "DMK", "AAP", "JMM", "CPI(M)", "VCK", "RJD"],
@@ -171,7 +178,7 @@ function GlassCard({ title, children, className = "", headerRight, action, onAct
     <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={custom} whileHover={{ y: -3, transition: { duration: 0.2 } }} className={`relative overflow-hidden rounded-2xl glass-card flex flex-col ${className}`}>
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
       {title && (
-        <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
+        <div className="flex items-center justify-between px-1 py-2 border-b border-[var(--t-border)] flex-shrink-0 h-2">
           <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">{title}</span>
           {headerRight || (action && <button onClick={onAction} className="text-[10px] font-semibold hover:opacity-80" style={{ color: "var(--t-accent)" }}>{action}</button>)}
         </div>
@@ -308,6 +315,14 @@ export default function Home() {
 
   // ── Derived filter logic ──────────────────────────────────────────────────
   const filteredKeyStates = useMemo(() => {
+    // If a state was clicked on the map, show only that state
+    if (selectedMapState) {
+      const found = yearStates.find(s => s.id === selectedMapState.id);
+      if (found) return [found];
+      // fallback to ALL_STATES_DATA
+      const fallback = ALL_STATES_DATA.find(s => s.id === selectedMapState.id);
+      return fallback ? [fallback] : [];
+    }
     let states = yearStates;
     if (activeFilters.region !== "All India") {
       const codes = REGION_CODES[activeFilters.region] || [];
@@ -324,7 +339,7 @@ export default function Home() {
       states = states.filter(s => s.alliance === activeFilters.alliance);
     }
     return states.slice(0, 8);
-  }, [activeFilters, yearStates]);
+  }, [activeFilters, yearStates, selectedMapState]);
 
   const filteredPartiesData = useMemo(() => {
     if (activeFilters.party !== "All Parties") {
@@ -504,7 +519,25 @@ export default function Home() {
             </div>
           </NeonStatCard>
 
-          <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={5} className="col-span-2 sm:col-span-1 glass-card rounded-xl p-2.5 flex-1 min-w-[160px] relative overflow-hidden">
+          {(() => {
+            const cur  = VOTES_CAST_CR[selectedYear];
+            const prev = VOTES_CAST_CR[YEAR_ORDER[YEAR_ORDER.indexOf(selectedYear) - 1]];
+            const pct  = prev ? (((cur - prev) / prev) * 100).toFixed(1) : null;
+            const color = pct !== null && parseFloat(pct) >= 0 ? '#22c55e' : '#ef4444';
+            return (
+              <NeonStatCard
+                title="New Votes %"
+                value={pct !== null
+                  ? <span style={{ color }}>{parseFloat(pct) >= 0 ? '+' : ''}{pct}%</span>
+                  : <span style={{ color: '#94a3b8' }}>—</span>}
+                sub1={`Cast: ${cur} Cr`}
+                sub2={prev ? `Prev: ${prev} Cr` : 'Base year'}
+                color={pct !== null ? color : '#94a3b8'} index={5}
+              />
+            );
+          })()}
+
+          <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={6} className="col-span-2 sm:col-span-1 glass-card rounded-xl p-2.5 flex-1 min-w-[160px] relative overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-0.5" style={{ background: "linear-gradient(90deg, transparent, var(--t-accent) 30%, #138808 70%, transparent)" }} />
             <div className="text-[10px] font-bold uppercase tracking-widest mb-1.5 text-[var(--t-textMut)]">Coalition Dynamics</div>
             <CoalitionDonut alliances={yearAlliances} majorityMark={summary.majorityMark} />
@@ -575,11 +608,24 @@ export default function Home() {
             {/* Key States panel */}
             <div className="w-full lg:w-[238px] xl:w-[252px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[400px] lg:max-h-none">
               <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">
-                  Key States
-                  {activePills.length > 0 && <span className="ml-1.5 text-[8px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "var(--t-accentBg)", color: "var(--t-accent)" }}>{filteredKeyStates.length}</span>}
-                </span>
-                <span className="text-[9px] text-green-500 flex items-center gap-1"><span className="w-1 h-1 rounded-full bg-green-500 pulse-dot" />live</span>
+                {selectedMapState ? (
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <button
+                      onClick={() => setSelectedMapState(null)}
+                      className="flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded transition-all hover:opacity-80"
+                      style={{ background: "var(--t-accentBg)", color: "var(--t-accent)", border: "1px solid var(--t-borderHi)" }}
+                    >
+                      ← Back
+                    </button>
+                    <span className="text-[10px] font-bold truncate text-[var(--t-text)]">{selectedMapState.name}</span>
+                  </div>
+                ) : (
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">
+                    Key States
+                    {activePills.length > 0 && <span className="ml-1.5 text-[8px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "var(--t-accentBg)", color: "var(--t-accent)" }}>{filteredKeyStates.length}</span>}
+                  </span>
+                )}
+                <span className="text-[9px] text-green-500 flex items-center gap-1 flex-shrink-0"><span className="w-1 h-1 rounded-full bg-green-500 pulse-dot" />live</span>
               </div>
 
               {filteredKeyStates.length === 0 ? (
@@ -702,7 +748,13 @@ export default function Home() {
                 </div>
               ) : null}
             </GlassCard>
-            <GlassCard title="Constituency Analysis" action="Scatter" className="min-h-[200px]"><ConstituencyScatter /></GlassCard>
+            <GlassCard
+              title={selectedMapState ? `${selectedMapState.name} — Constituencies` : "Constituency Analysis"}
+              action={selectedMapState ? `${selectedMapState.seats || '?'} seats` : "Scatter"}
+              className="min-h-[200px]"
+            >
+              <ConstituencyScatter selectedState={selectedMapState} selectedYear={selectedYear} />
+            </GlassCard>
           </div>
 
           <GlassCard title="Social Media Buzz" className="min-h-[160px]">
