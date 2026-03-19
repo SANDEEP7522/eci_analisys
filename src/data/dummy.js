@@ -461,3 +461,229 @@ export const ELECTION_DATA_BY_YEAR = {
   },
 };
 
+// ── Per-year party seat/share data ────────────────────────────────────────────
+export const PARTIES_BY_YEAR = {
+  '1999': [
+    { party: 'BJP',    seats: 182, share: 23.75, color: '#f97316' },
+    { party: 'INC',    seats: 114, share: 28.30, color: '#1e3a8a' },
+    { party: 'TDP',    seats: 29,  share: 3.84,  color: '#06b6d4' },
+    { party: 'SP',     seats: 26,  share: 3.23,  color: '#ef4444' },
+    { party: 'DMK',    seats: 12,  share: 2.07,  color: '#7c3aed' },
+    { party: 'Others', seats: 180, share: 38.81, color: '#94a3b8' },
+  ],
+  '2004': [
+    { party: 'INC',    seats: 145, share: 26.53, color: '#1e3a8a' },
+    { party: 'BJP',    seats: 138, share: 22.16, color: '#f97316' },
+    { party: 'CPI(M)', seats: 43,  share: 5.66,  color: '#b91c1c' },
+    { party: 'SP',     seats: 36,  share: 4.27,  color: '#ef4444' },
+    { party: 'BSP',    seats: 19,  share: 5.33,  color: '#94a3b8' },
+    { party: 'Others', seats: 162, share: 36.05, color: '#64748b' },
+  ],
+  '2009': [
+    { party: 'INC',    seats: 206, share: 28.55, color: '#1e3a8a' },
+    { party: 'BJP',    seats: 116, share: 18.80, color: '#f97316' },
+    { party: 'BSP',    seats: 21,  share: 6.17,  color: '#94a3b8' },
+    { party: 'SP',     seats: 23,  share: 3.23,  color: '#ef4444' },
+    { party: 'JDU',    seats: 20,  share: 2.59,  color: '#6366f1' },
+    { party: 'Others', seats: 157, share: 40.66, color: '#64748b' },
+  ],
+  '2014': [
+    { party: 'BJP',    seats: 282, share: 31.34, color: '#f97316' },
+    { party: 'INC',    seats: 44,  share: 19.52, color: '#1e3a8a' },
+    { party: 'AIADMK', seats: 37,  share: 3.31,  color: '#22c55e' },
+    { party: 'TMC',    seats: 34,  share: 3.84,  color: '#14b8a6' },
+    { party: 'TDP',    seats: 16,  share: 2.55,  color: '#06b6d4' },
+    { party: 'Others', seats: 130, share: 39.44, color: '#64748b' },
+  ],
+  '2019': [
+    { party: 'BJP',    seats: 303, share: 37.36, color: '#f97316' },
+    { party: 'INC',    seats: 52,  share: 19.49, color: '#1e3a8a' },
+    { party: 'DMK',    seats: 23,  share: 2.26,  color: '#7c3aed' },
+    { party: 'TMC',    seats: 22,  share: 4.07,  color: '#22c55e' },
+    { party: 'YSRCP',  seats: 22,  share: 2.53,  color: '#8b5cf6' },
+    { party: 'Others', seats: 121, share: 34.29, color: '#64748b' },
+  ],
+  '2024': [
+    { party: 'BJP',    seats: 240, share: 36.56, color: '#f97316' },
+    { party: 'INC',    seats: 99,  share: 21.19, color: '#1e3a8a' },
+    { party: 'SP',     seats: 37,  share: 4.58,  color: '#ef4444' },
+    { party: 'TMC',    seats: 29,  share: 4.37,  color: '#22c55e' },
+    { party: 'DMK',    seats: 22,  share: 3.58,  color: '#7c3aed' },
+    { party: 'TDP',    seats: 16,  share: 2.58,  color: '#06b6d4' },
+    { party: 'JDU',    seats: 12,  share: 1.76,  color: '#6366f1' },
+    { party: 'Others', seats: 88,  share: 25.38, color: '#94a3b8' },
+  ],
+};
+
+// ── Per-year alliance totals ───────────────────────────────────────────────────
+export const ALLIANCES_BY_YEAR = {
+  '1999': [
+    { name: 'NDA',    seats: 270, color: '#f97316' },
+    { name: 'INC+',   seats: 134, color: '#1e3a8a' },
+    { name: 'Others', seats: 139, color: '#64748b' },
+  ],
+  '2004': [
+    { name: 'UPA',    seats: 218, color: '#1e3a8a' },
+    { name: 'NDA',    seats: 181, color: '#f97316' },
+    { name: 'Others', seats: 144, color: '#64748b' },
+  ],
+  '2009': [
+    { name: 'UPA',    seats: 262, color: '#1e3a8a' },
+    { name: 'NDA',    seats: 159, color: '#f97316' },
+    { name: 'Others', seats: 122, color: '#64748b' },
+  ],
+  '2014': [
+    { name: 'NDA',    seats: 336, color: '#f97316' },
+    { name: 'UPA',    seats: 60,  color: '#1e3a8a' },
+    { name: 'Others', seats: 147, color: '#64748b' },
+  ],
+  '2019': [
+    { name: 'NDA',    seats: 353, color: '#f97316' },
+    { name: 'UPA',    seats: 91,  color: '#1e3a8a' },
+    { name: 'Others', seats: 99,  color: '#64748b' },
+  ],
+  '2024': [
+    { name: 'NDA',    seats: 293, color: '#f97316' },
+    { name: 'INDIA',  seats: 232, color: '#1e3a8a' },
+    { name: 'Others', seats: 18,  color: '#64748b' },
+  ],
+};
+
+// ── Per-year key state results ─────────────────────────────────────────────────
+export const STATE_DATA_BY_YEAR = {
+  '1999': [
+    { id: 'UP', state: 'Uttar Pradesh',  seats: 85, party: 'BJP',     won: 57, color: '#f97316', alliance: 'NDA',    region: 'North India'   },
+    { id: 'AP', state: 'Andhra Pradesh', seats: 42, party: 'TDP',     won: 29, color: '#06b6d4', alliance: 'NDA',    region: 'South India'   },
+    { id: 'MP', state: 'Madhya Pradesh', seats: 40, party: 'BJP',     won: 29, color: '#f97316', alliance: 'NDA',    region: 'Central India' },
+    { id: 'GJ', state: 'Gujarat',        seats: 26, party: 'BJP',     won: 20, color: '#f97316', alliance: 'NDA',    region: 'West India'    },
+    { id: 'RJ', state: 'Rajasthan',      seats: 25, party: 'BJP',     won: 16, color: '#f97316', alliance: 'NDA',    region: 'North India'   },
+    { id: 'MH', state: 'Maharashtra',    seats: 48, party: 'SS',      won: 15, color: '#fb923c', alliance: 'NDA',    region: 'West India'    },
+    { id: 'TN', state: 'Tamil Nadu',     seats: 39, party: 'AIADMK', won: 10, color: '#22c55e', alliance: 'NDA',    region: 'South India'   },
+    { id: 'WB', state: 'West Bengal',    seats: 42, party: 'CPI(M)', won: 21, color: '#ef4444', alliance: 'Others', region: 'East India'    },
+  ],
+  '2004': [
+    { id: 'WB', state: 'West Bengal',    seats: 42, party: 'CPI(M)', won: 26, color: '#ef4444', alliance: 'LF',  region: 'East India'    },
+    { id: 'AP', state: 'Andhra Pradesh', seats: 42, party: 'INC',    won: 29, color: '#1e3a8a', alliance: 'UPA', region: 'South India'   },
+    { id: 'UP', state: 'Uttar Pradesh',  seats: 80, party: 'SP',     won: 36, color: '#ef4444', alliance: 'UPA', region: 'North India'   },
+    { id: 'RJ', state: 'Rajasthan',      seats: 25, party: 'INC',    won: 21, color: '#1e3a8a', alliance: 'UPA', region: 'North India'   },
+    { id: 'TN', state: 'Tamil Nadu',     seats: 39, party: 'DMK',    won: 16, color: '#7c3aed', alliance: 'UPA', region: 'South India'   },
+    { id: 'MH', state: 'Maharashtra',    seats: 48, party: 'INC',    won: 13, color: '#1e3a8a', alliance: 'UPA', region: 'West India'    },
+    { id: 'GJ', state: 'Gujarat',        seats: 26, party: 'BJP',    won: 14, color: '#f97316', alliance: 'NDA', region: 'West India'    },
+    { id: 'KA', state: 'Karnataka',      seats: 28, party: 'INC',    won: 8,  color: '#1e3a8a', alliance: 'UPA', region: 'South India'   },
+  ],
+  '2009': [
+    { id: 'AP', state: 'Andhra Pradesh', seats: 42, party: 'INC',    won: 33, color: '#1e3a8a', alliance: 'UPA',    region: 'South India'   },
+    { id: 'MH', state: 'Maharashtra',    seats: 48, party: 'INC',    won: 17, color: '#1e3a8a', alliance: 'UPA',    region: 'West India'    },
+    { id: 'RJ', state: 'Rajasthan',      seats: 25, party: 'INC',    won: 20, color: '#1e3a8a', alliance: 'UPA',    region: 'North India'   },
+    { id: 'KA', state: 'Karnataka',      seats: 28, party: 'BJP',    won: 19, color: '#f97316', alliance: 'NDA',    region: 'South India'   },
+    { id: 'BR', state: 'Bihar',          seats: 40, party: 'JDU',    won: 20, color: '#6366f1', alliance: 'NDA',    region: 'East India'    },
+    { id: 'MP', state: 'Madhya Pradesh', seats: 29, party: 'BJP',    won: 16, color: '#f97316', alliance: 'NDA',    region: 'Central India' },
+    { id: 'UP', state: 'Uttar Pradesh',  seats: 80, party: 'SP',     won: 23, color: '#ef4444', alliance: 'Others', region: 'North India'   },
+    { id: 'WB', state: 'West Bengal',    seats: 42, party: 'CPI(M)', won: 15, color: '#ef4444', alliance: 'LF',     region: 'East India'    },
+  ],
+  '2014': [
+    { id: 'UP', state: 'Uttar Pradesh',  seats: 80, party: 'BJP',     won: 71, color: '#f97316', alliance: 'NDA',    region: 'North India'   },
+    { id: 'GJ', state: 'Gujarat',        seats: 26, party: 'BJP',     won: 26, color: '#f97316', alliance: 'NDA',    region: 'West India'    },
+    { id: 'RJ', state: 'Rajasthan',      seats: 25, party: 'BJP',     won: 25, color: '#f97316', alliance: 'NDA',    region: 'North India'   },
+    { id: 'MP', state: 'Madhya Pradesh', seats: 29, party: 'BJP',     won: 27, color: '#f97316', alliance: 'NDA',    region: 'Central India' },
+    { id: 'MH', state: 'Maharashtra',    seats: 48, party: 'BJP',     won: 23, color: '#f97316', alliance: 'NDA',    region: 'West India'    },
+    { id: 'KA', state: 'Karnataka',      seats: 28, party: 'BJP',     won: 17, color: '#f97316', alliance: 'NDA',    region: 'South India'   },
+    { id: 'TN', state: 'Tamil Nadu',     seats: 39, party: 'AIADMK', won: 37, color: '#22c55e', alliance: 'Others', region: 'South India'   },
+    { id: 'WB', state: 'West Bengal',    seats: 42, party: 'TMC',     won: 34, color: '#22c55e', alliance: 'Others', region: 'East India'    },
+  ],
+  '2019': [
+    { id: 'UP', state: 'Uttar Pradesh',  seats: 80, party: 'BJP', won: 62, color: '#f97316', alliance: 'NDA',    region: 'North India'   },
+    { id: 'GJ', state: 'Gujarat',        seats: 26, party: 'BJP', won: 26, color: '#f97316', alliance: 'NDA',    region: 'West India'    },
+    { id: 'RJ', state: 'Rajasthan',      seats: 25, party: 'BJP', won: 24, color: '#f97316', alliance: 'NDA',    region: 'North India'   },
+    { id: 'MP', state: 'Madhya Pradesh', seats: 29, party: 'BJP', won: 28, color: '#f97316', alliance: 'NDA',    region: 'Central India' },
+    { id: 'KA', state: 'Karnataka',      seats: 28, party: 'BJP', won: 25, color: '#f97316', alliance: 'NDA',    region: 'South India'   },
+    { id: 'MH', state: 'Maharashtra',    seats: 48, party: 'BJP', won: 23, color: '#f97316', alliance: 'NDA',    region: 'West India'    },
+    { id: 'BR', state: 'Bihar',          seats: 40, party: 'BJP', won: 17, color: '#f97316', alliance: 'NDA',    region: 'East India'    },
+    { id: 'WB', state: 'West Bengal',    seats: 42, party: 'TMC', won: 22, color: '#22c55e', alliance: 'Others', region: 'East India'    },
+  ],
+  '2024': [
+    { id: 'UP', state: 'Uttar Pradesh',  seats: 80, party: 'SP',  won: 37, color: '#ef4444', alliance: 'INDIA', region: 'North India'  },
+    { id: 'RJ', state: 'Rajasthan',      seats: 25, party: 'BJP', won: 14, color: '#f97316', alliance: 'NDA',   region: 'North India'  },
+    { id: 'WB', state: 'West Bengal',    seats: 42, party: 'TMC', won: 29, color: '#22c55e', alliance: 'INDIA', region: 'East India'   },
+    { id: 'MH', state: 'Maharashtra',    seats: 48, party: 'BJP', won: 23, color: '#f97316', alliance: 'NDA',   region: 'West India'   },
+    { id: 'GJ', state: 'Gujarat',        seats: 26, party: 'BJP', won: 26, color: '#f97316', alliance: 'NDA',   region: 'West India'   },
+    { id: 'BR', state: 'Bihar',          seats: 40, party: 'JDU', won: 12, color: '#8b5cf6', alliance: 'NDA',   region: 'East India'   },
+    { id: 'TN', state: 'Tamil Nadu',     seats: 39, party: 'DMK', won: 22, color: '#a855f7', alliance: 'INDIA', region: 'South India'  },
+    { id: 'KL', state: 'Kerala',         seats: 20, party: 'INC', won: 18, color: '#6366f1', alliance: 'INDIA', region: 'South India'  },
+  ],
+};
+
+// ── Per-year sentiment scores ─────────────────────────────────────────────────
+export const SENTIMENT_BY_YEAR = {
+  '1999': { positive: 62, neutral: 14, negative: 24 },
+  '2004': { positive: 58, neutral: 12, negative: 30 },
+  '2009': { positive: 65, neutral: 11, negative: 24 },
+  '2014': { positive: 72, neutral: 10, negative: 18 },
+  '2019': { positive: 68, neutral: 12, negative: 20 },
+  '2024': { positive: 54, neutral: 14, negative: 32 },
+};
+
+// ── Per-year bottom-bar ticker parties ────────────────────────────────────────
+export const TICKER_BY_YEAR = {
+  '1999': [
+    { name: 'BJP', color: '#f97316', seats: 182 },
+    { name: 'INC', color: '#1e3a8a', seats: 114 },
+    { name: 'TDP', color: '#06b6d4', seats: 29  },
+    { name: 'SP',  color: '#ef4444', seats: 26  },
+    { name: 'SS',  color: '#fb923c', seats: 15  },
+    { name: 'BSP', color: '#94a3b8', seats: 14  },
+    { name: 'DMK', color: '#7c3aed', seats: 12  },
+    { name: 'CPI', color: '#b91c1c', seats: 4   },
+  ],
+  '2004': [
+    { name: 'INC',    color: '#1e3a8a', seats: 145 },
+    { name: 'BJP',    color: '#f97316', seats: 138 },
+    { name: 'CPI(M)', color: '#b91c1c', seats: 43  },
+    { name: 'SP',     color: '#ef4444', seats: 36  },
+    { name: 'RJD',    color: '#22c55e', seats: 24  },
+    { name: 'BSP',    color: '#94a3b8', seats: 19  },
+    { name: 'DMK',    color: '#7c3aed', seats: 16  },
+    { name: 'NCP',    color: '#f59e0b', seats: 9   },
+  ],
+  '2009': [
+    { name: 'INC', color: '#1e3a8a', seats: 206 },
+    { name: 'BJP', color: '#f97316', seats: 116 },
+    { name: 'SP',  color: '#ef4444', seats: 23  },
+    { name: 'BSP', color: '#94a3b8', seats: 21  },
+    { name: 'JDU', color: '#6366f1', seats: 20  },
+    { name: 'DMK', color: '#7c3aed', seats: 18  },
+    { name: 'SS',  color: '#fb923c', seats: 11  },
+    { name: 'NCP', color: '#f59e0b', seats: 9   },
+  ],
+  '2014': [
+    { name: 'BJP',    color: '#f97316', seats: 282 },
+    { name: 'INC',    color: '#1e3a8a', seats: 44  },
+    { name: 'AIADMK', color: '#22c55e', seats: 37  },
+    { name: 'TMC',    color: '#14b8a6', seats: 34  },
+    { name: 'TDP',    color: '#06b6d4', seats: 16  },
+    { name: 'NCP',    color: '#f59e0b', seats: 6   },
+    { name: 'SP',     color: '#ef4444', seats: 5   },
+    { name: 'JDU',    color: '#6366f1', seats: 2   },
+  ],
+  '2019': [
+    { name: 'BJP',   color: '#f97316', seats: 303 },
+    { name: 'INC',   color: '#1e3a8a', seats: 52  },
+    { name: 'DMK',   color: '#7c3aed', seats: 23  },
+    { name: 'TMC',   color: '#22c55e', seats: 22  },
+    { name: 'YSRCP', color: '#8b5cf6', seats: 22  },
+    { name: 'SS',    color: '#fb923c', seats: 18  },
+    { name: 'JDU',   color: '#6366f1', seats: 16  },
+    { name: 'BSP',   color: '#94a3b8', seats: 10  },
+  ],
+  '2024': [
+    { name: 'BJP', color: '#f97316', seats: 240 },
+    { name: 'INC', color: '#1e3a8a', seats: 99  },
+    { name: 'SP',  color: '#ef4444', seats: 37  },
+    { name: 'TMC', color: '#22c55e', seats: 29  },
+    { name: 'DMK', color: '#7c3aed', seats: 22  },
+    { name: 'TDP', color: '#06b6d4', seats: 16  },
+    { name: 'JDU', color: '#6366f1', seats: 12  },
+    { name: 'BSP', color: '#94a3b8', seats: 0   },
+  ],
+};
+

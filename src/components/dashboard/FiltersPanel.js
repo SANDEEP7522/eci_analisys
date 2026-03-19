@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { X, SlidersHorizontal, RotateCcw, ChevronDown } from 'lucide-react';
+import { X, SlidersHorizontal, RotateCcw, ChevronDown, Search, Check } from 'lucide-react';
 
 const YEARS     = ['2024', '2019', '2014', '2009', '2004', '1999'];
 const REGIONS   = ['All India', 'North India', 'South India', 'East India', 'West India', 'Central India', 'Northeast India'];
@@ -47,6 +47,123 @@ function Sel({ value, options, onChange }) {
   );
 }
 
+// Searchable combobox — inline expand (avoids overflow-y-auto clipping)
+function SearchSel({ value, options, onChange }) {
+  const [open, setOpen]   = useState(false);
+  const [query, setQuery] = useState('');
+  const inputRef          = useRef(null);
+  const listRef           = useRef(null);
+
+  const filtered = useMemo(
+    () => options.filter(o => o.toLowerCase().includes(query.toLowerCase())),
+    [options, query],
+  );
+
+  useEffect(() => {
+    if (open) {
+      setQuery('');
+      setTimeout(() => {
+        inputRef.current?.focus();
+        // Scroll selected item into view
+        listRef.current?.querySelector('[data-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+      }, 50);
+    }
+  }, [open]);
+
+  const handleSelect = o => { onChange(o); setOpen(false); };
+
+  const isDefault = options[0] === value;
+
+  return (
+    <div className="flex flex-col">
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between gap-2 border text-[11px] rounded-md pl-2.5 pr-2 py-1.5 transition-all cursor-pointer"
+        style={{
+          background:      'var(--t-bgCard)',
+          borderColor:     open ? 'var(--t-accent)' : isDefault ? 'var(--t-border)' : 'var(--t-borderHi)',
+          color:           'var(--t-text)',
+          borderBottomLeftRadius:  open ? 0 : undefined,
+          borderBottomRightRadius: open ? 0 : undefined,
+          boxShadow:       open ? '0 0 0 2px rgba(255,107,0,0.12)' : 'none',
+        }}
+      >
+        <span className="truncate flex-1 text-left" style={{ color: isDefault ? 'var(--t-textSec)' : 'var(--t-text)', fontWeight: isDefault ? 400 : 600 }}>
+          {value}
+        </span>
+        <ChevronDown size={11} style={{ color: 'var(--t-textMut)', flexShrink: 0, transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+      </button>
+
+      {/* Inline panel */}
+      {open && (
+        <div
+          className="border border-t-0 rounded-b-md"
+          style={{ borderColor: 'var(--t-accent)', background: 'var(--t-bgCardSolid)', boxShadow: '0 4px 16px rgba(0,0,20,0.5)' }}
+        >
+          {/* Search bar */}
+          <div
+            className="flex items-center gap-1.5 px-2 py-1.5"
+            style={{ borderBottom: '1px solid var(--t-border)' }}
+          >
+            <Search size={11} style={{ color: 'var(--t-textMut)', flexShrink: 0 }} />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search..."
+              className="flex-1 bg-transparent text-[11px] focus:outline-none"
+              style={{ color: 'var(--t-text)' }}
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="rounded hover:bg-[var(--t-bgCard)] p-0.5 transition-colors"
+                style={{ color: 'var(--t-textMut)' }}
+              >
+                <X size={10} />
+              </button>
+            )}
+          </div>
+
+          {/* Options list */}
+          <div ref={listRef} className="overflow-y-auto" style={{ maxHeight: '160px' }}>
+            {filtered.length === 0 ? (
+              <div className="px-3 py-3 text-[11px] italic text-center" style={{ color: 'var(--t-textMut)' }}>
+                No results for &ldquo;{query}&rdquo;
+              </div>
+            ) : filtered.map(o => {
+              const isSelected = value === o;
+              return (
+                <button
+                  key={o}
+                  data-selected={isSelected}
+                  type="button"
+                  onClick={() => handleSelect(o)}
+                  className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[11px] transition-colors"
+                  style={{
+                    background: isSelected ? 'var(--t-accentBg)' : 'transparent',
+                    color:      isSelected ? 'var(--t-accent)'   : 'var(--t-text)',
+                    fontWeight: isSelected ? 700 : 400,
+                  }}
+                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'var(--t-bgCard)'; }}
+                  onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <span className="flex-1 text-left">{o}</span>
+                  {isSelected && <Check size={10} style={{ color: 'var(--t-accent)', flexShrink: 0 }} />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Pills({ value, options, onChange, cols = 3 }) {
   return (
     <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
@@ -74,7 +191,7 @@ function Section({ title, children, defaultOpen = true }) {
     <div className="border border-[var(--t-border)] rounded-lg overflow-hidden">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-[var(--t-sidebar)] hover:bg-[var(--t-accentBg)] transition-colors"
+        className="w-full flex items-center justify-between px-1 py-1 bg-[var(--t-sidebar)] hover:bg-[var(--t-accentBg)] transition-colors"
       >
         <span className="text-[11px] font-bold text-[var(--t-textSec)]">{title}</span>
         <ChevronDown size={12} className={`text-[var(--t-textMut)] transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -181,19 +298,17 @@ export default function FiltersPanel({ selectedYear, onApply }) {
             </Section>
 
             <Section title="Geography">
-              <div className="grid grid-cols-2 gap-2">
-                <Row label="Region">
-                  <Sel value={f.region} options={REGIONS} onChange={set('region')} />
-                </Row>
-                <Row label="State">
-                  <Sel value={f.state} options={STATES} onChange={set('state')} />
-                </Row>
-              </div>
+              <Row label="Region">
+                <SearchSel value={f.region} options={REGIONS} onChange={set('region')} />
+              </Row>
+              <Row label="State">
+                <SearchSel value={f.state} options={STATES} onChange={set('state')} />
+              </Row>
             </Section>
 
             <Section title="Party & Alliance">
               <Row label="Party">
-                <Sel value={f.party} options={PARTIES} onChange={set('party')} />
+                <SearchSel value={f.party} options={PARTIES} onChange={set('party')} />
               </Row>
               <Row label="Alliance">
                 <Pills value={f.alliance} options={ALLIANCES} onChange={set('alliance')} cols={3} />
@@ -202,7 +317,7 @@ export default function FiltersPanel({ selectedYear, onApply }) {
 
             <Section title="Phase & Date Range">
               <Row label="Phase">
-                <Sel value={f.phase} options={PHASES} onChange={set('phase')} />
+                <SearchSel value={f.phase} options={PHASES} onChange={set('phase')} />
               </Row>
               <Row label="Date Range">
                 <div className="grid grid-cols-2 gap-2">

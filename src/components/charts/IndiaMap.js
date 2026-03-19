@@ -21,9 +21,11 @@ function getCodeFromStateItem(s, nameToCode) {
   return null;
 }
 
-export default function IndiaMap({ onStateClick, highlightState, stateData = [] }) {
+export default function IndiaMap({ onStateClick, highlightState, stateData = [], externalViewMode, highlightParty }) {
   const [hovered,  setHovered]  = useState(null);
   const [viewMode, setViewMode] = useState('parties');
+
+  const activeViewMode = externalViewMode || viewMode;
 
   const nameToCode = useMemo(
     () => Object.fromEntries((ALL_STATES || []).map(s => [s.name, s.code])),
@@ -53,7 +55,12 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
     if (highlightState === code) return '#4f8eff';
     const s = stateByCode[code] || ELECTION_BY_CODE[code];
     if (!s) return DEFAULT_FILL;
-    if (viewMode === 'alliance') return s.colorAlliance || DEFAULT_FILL;
+    // Dim states that don't match the highlighted party
+    if (highlightParty) {
+      const stateParty = s.party ?? s.winner;
+      if (stateParty !== highlightParty) return 'rgba(30,40,70,0.4)';
+    }
+    if (activeViewMode === 'alliance') return s.colorAlliance || DEFAULT_FILL;
     return s.colorParty || PARTY_COLORS[s.party] || PARTY_COLORS[s.winner] || DEFAULT_FILL;
   };
 
@@ -81,7 +88,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
   }, [hovered, stateByCode]);
 
   const legendEntries = useMemo(() => {
-    if (viewMode === 'alliance') {
+    if (activeViewMode === 'alliance') {
       const map = {};
       ELECTION_STATES.forEach(s => { if (s.alliance && !map[s.alliance]) map[s.alliance] = s.colorAlliance; });
       return Object.entries(map).slice(0, 8);
@@ -89,7 +96,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
     const map = {};
     ELECTION_STATES.forEach(s => { if (s.party && !map[s.party]) map[s.party] = s.colorParty; });
     return Object.entries(map).slice(0, 8);
-  }, [viewMode]);
+  }, [activeViewMode]);
 
   return (
     <div className="relative w-full h-full flex flex-col overflow-hidden">
@@ -103,7 +110,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
               onClick={() => setViewMode(opt.id)}
               className="px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all"
               style={
-                viewMode === opt.id
+                activeViewMode === opt.id
                   ? {
                       background: 'rgba(255,107,0,0.15)',
                       color: '#ff6b00',
@@ -203,7 +210,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
                   textShadow: `0 0 8px ${hoveredPayload.color}80`,
                 }}
               >
-                {viewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
+                {activeViewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
               </span>
               {hoveredPayload.rulingSeats > 0 && (
                 <span className="text-[var(--t-textSec)] text-[10px]">
