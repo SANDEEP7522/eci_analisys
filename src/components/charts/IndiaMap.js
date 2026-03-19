@@ -111,9 +111,9 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
                       boxShadow: '0 0 10px rgba(255,107,0,0.2)',
                     }
                   : {
-                      background: 'rgba(255,255,255,0.04)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      color: 'rgba(220,228,255,0.45)',
+                      background: 'var(--t-bgCard)',
+                      border: '1px solid var(--t-border)',
+                      color: 'var(--t-textSec)',
                     }
               }
             >
@@ -125,7 +125,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
           {legendEntries.map(([p, c]) => (
             <div key={p} className="flex items-center gap-1">
               <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: c }} />
-              <span className="text-[9px] text-white/40 whitespace-nowrap">{p}</span>
+              <span className="text-[9px] text-[var(--t-textSec)] whitespace-nowrap">{p}</span>
             </div>
           ))}
         </div>
@@ -159,7 +159,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
                     key={geo.rsmKey}
                     geography={geo}
                     fill={getFill(geo)}
-                    stroke={isHov ? 'rgba(255,140,58,0.8)' : isSelect ? 'rgba(79,142,255,0.8)' : 'rgba(255,255,255,0.08)'}
+                    stroke={isHov ? 'rgba(255,140,58,0.9)' : isSelect ? 'rgba(79,142,255,0.9)' : 'var(--t-mapStroke)'}
                     strokeWidth={isHov || isSelect ? 1.2 : 0.4}
                     style={{
                       default: { outline: 'none', filter: isHov ? 'url(#state-glow)' : 'none', transition: 'fill 0.2s ease' },
@@ -181,16 +181,15 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
           <div
             className="absolute top-2 left-2 text-[11px] pointer-events-none z-10 rounded-xl overflow-hidden"
             style={{
-              background: 'rgba(3,4,13,0.88)',
+              background: 'var(--t-tip)',
               backdropFilter: 'blur(20px)',
-              border: `1px solid ${hoveredPayload.color}40`,
-              boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${hoveredPayload.color}25`,
+              border: `1px solid ${hoveredPayload.color}50`,
+              boxShadow: `0 8px 32px var(--t-shadow), 0 0 20px ${hoveredPayload.color}20`,
               padding: '8px 12px',
             }}
           >
             <div
-              className="font-black text-[12px] mb-1"
-              style={{ color: 'rgba(255,255,255,0.9)' }}
+              className="font-black text-[12px] mb-1 text-[var(--t-text)]"
             >
               {hoveredPayload.name}
             </div>
@@ -207,10 +206,10 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
                 {viewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
               </span>
               {hoveredPayload.rulingSeats > 0 && (
-                <span className="text-white/50 text-[10px]">
+                <span className="text-[var(--t-textSec)] text-[10px]">
                   <span style={{ color: hoveredPayload.color }}>{hoveredPayload.rulingSeats}</span>
                   {hoveredPayload.totalSeats > 0 && (
-                    <span className="text-white/28">/{hoveredPayload.totalSeats}</span>
+                    <span className="text-[var(--t-textMut)]">/{hoveredPayload.totalSeats}</span>
                   )}
                   {' seats'}
                 </span>

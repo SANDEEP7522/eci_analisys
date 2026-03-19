@@ -143,7 +143,16 @@ export default function FiltersPanel({ selectedYear, onApply }) {
 
       {/* ── Dropdown ─────────────────────────────────────────────── */}
       {open && (
-        <div className="absolute top-full right-0 mt-1.5 z-50 w-[340px] max-h-[80vh] bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-xl shadow-[0_8px_32px_rgba(0,0,20,0.7),0_2px_8px_rgba(0,0,20,0.5)] flex flex-col overflow-hidden">
+        <>
+          {/* Mobile backdrop */}
+          <div
+            className="sm:hidden fixed inset-0 z-[199] bg-black/40 backdrop-blur-sm"
+            onClick={() => setOpen(false)}
+          />
+        </>
+      )}
+      {open && (
+        <div className="fixed left-3 right-3 top-[52px] sm:absolute sm:top-full sm:left-auto sm:right-0 sm:w-[340px] sm:mt-1.5 z-[200] max-h-[80vh] bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-xl shadow-[0_8px_32px_rgba(0,0,20,0.7),0_2px_8px_rgba(0,0,20,0.5)] flex flex-col overflow-hidden">
 
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
