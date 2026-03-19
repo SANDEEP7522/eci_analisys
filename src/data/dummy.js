@@ -19,11 +19,111 @@ export const MOCK_TURNOUT = [
 ];
 
 export const STATE_HIGHLIGHTS = [
-  { id: 'UP', state: 'Uttar Pradesh', seats: 80, winner: 'SP',  won: 37 },
-  { id: 'MH', state: 'Maharashtra',   seats: 48, winner: 'BJP', won: 23 },
-  { id: 'WB', state: 'West Bengal',   seats: 42, winner: 'TMC', won: 29 },
-  { id: 'BR', state: 'Bihar',         seats: 40, winner: 'JDU', won: 12 },
-  { id: 'TN', state: 'Tamil Nadu',    seats: 39, winner: 'DMK', won: 22 },
+  {
+    id: 'UP',
+    state: 'Uttar Pradesh',
+    seats: 80,
+    winner: 'SP',
+    won: 37,
+    partyBreakdown: [
+      { name: 'SP',  seats: 37, color: '#ef4444', share: 33.59 },
+      { name: 'BJP', seats: 33, color: '#f97316', share: 41.37 },
+      { name: 'INC', seats: 6,  color: '#6366f1', share: 9.46  },
+      { name: 'RLD', seats: 2,  color: '#22c55e', share: 2.11  },
+      { name: 'ASP', seats: 1,  color: '#94a3b8', share: 1.05  },
+      { name: 'ADM', seats: 1,  color: '#f59e0b', share: 0.98  },
+    ],
+    turnout: 58.10,
+    constituencies: [
+      { name: 'Varanasi', candidate: 'Narendra Modi', party: 'BJP', margin: '1,52,513' },
+      { name: 'Lucknow', candidate: 'Rajnath Singh', party: 'BJP', margin: '1,35,159' },
+      { name: 'Amethi', candidate: 'Kishori Lal', party: 'INC', margin: '1,67,196' },
+      { name: 'Raebareli', candidate: 'Rahul Gandhi', party: 'INC', margin: '3,90,030' },
+      { name: 'Mainpuri', candidate: 'Dimple Yadav', party: 'SP', margin: '2,21,639' },
+      { name: 'Kannauj', candidate: 'Akhilesh Yadav', party: 'SP', margin: '1,70,922' },
+      { name: 'Faizabad', candidate: 'Awadhesh Prasad', party: 'SP', margin: '54,567' },
+      { name: 'Gorakhpur', candidate: 'Ravi Kishan', party: 'BJP', margin: '1,03,526' },
+    ]
+  },
+  {
+    id: 'MH',
+    state: 'Maharashtra',
+    seats: 48,
+    winner: 'BJP',
+    won: 23,
+    partyBreakdown: [
+      { name: 'INC',  seats: 13, color: '#6366f1', share: 16.92 },
+      { name: 'BJP',  seats: 9,  color: '#f97316', share: 26.17 },
+      { name: 'SSUBT',seats: 9,  color: '#f59e0b', share: 16.72 },
+      { name: 'NCPST',seats: 8,  color: '#8b5cf6', share: 10.27 },
+      { name: 'SHS',  seats: 7,  color: '#fb923c', share: 12.95 },
+      { name: 'NCP',  seats: 1,  color: '#f59e0b', share: 3.60  },
+      { name: 'Ind',  seats: 1,  color: '#94a3b8', share: 1.20  },
+    ],
+    turnout: 61.39,
+    constituencies: [
+      { name: 'Mumbai North', candidate: 'Piyush Goyal', party: 'BJP', margin: '3,57,608' },
+      { name: 'Baramati', candidate: 'Supriya Sule', party: 'NCPST', margin: '1,58,333' },
+      { name: 'Nagpur', candidate: 'Nitin Gadkari', party: 'BJP', margin: '1,37,603' },
+      { name: 'Amravati', candidate: 'Balwant Wankhade', party: 'INC', margin: '19,731' },
+      { name: 'Nanded', candidate: 'Vasantrao Chavan', party: 'INC', margin: '59,442' },
+      { name: 'Satara', candidate: 'Udayanraje Bhonsle', party: 'BJP', margin: '32,771' },
+    ]
+  },
+  {
+    id: 'WB',
+    state: 'West Bengal',
+    seats: 42,
+    winner: 'TMC',
+    won: 29,
+    partyBreakdown: [
+      { name: 'TMC', seats: 29, color: '#22c55e', share: 45.76 },
+      { name: 'BJP', seats: 12, color: '#f97316', share: 38.73 },
+      { name: 'INC', seats: 1,  color: '#6366f1', share: 4.68  },
+    ],
+    turnout: 79.29,
+    constituencies: [
+      { name: 'Diamond Harbour', candidate: 'Abhishek Banerjee', party: 'TMC', margin: '7,10,930' },
+      { name: 'Asansol', candidate: 'Shatrughan Sinha', party: 'TMC', margin: '59,564' },
+      { name: 'Baharampur', candidate: 'Yusuf Pathan', party: 'TMC', margin: '85,022' },
+      { name: 'Darjeeling', candidate: 'Raju Bista', party: 'BJP', margin: '1,78,525' },
+    ]
+  },
+  {
+    id: 'BR',
+    state: 'Bihar',
+    seats: 40,
+    winner: 'BJP',
+    won: 12,
+    partyBreakdown: [
+      { name: 'BJP', seats: 12, color: '#f97316', share: 20.52 },
+      { name: 'JDU', seats: 12, color: '#6366f1', share: 18.52 },
+      { name: 'LJP', seats: 5,  color: '#f59e0b', share: 6.47  },
+      { name: 'RJD', seats: 4,  color: '#22c55e', share: 22.14 },
+      { name: 'INC', seats: 3,  color: '#6366f1', share: 9.20  },
+      { name: 'CPIML',seats: 2,  color: '#ef4444', share: 3.47  },
+      { name: 'HAM', seats: 1,  color: '#94a3b8', share: 1.10  },
+      { name: 'Ind', seats: 1,  color: '#94a3b8', share: 1.05  },
+    ],
+    turnout: 56.19,
+  },
+  {
+    id: 'TN',
+    state: 'Tamil Nadu',
+    seats: 39,
+    winner: 'DMK',
+    won: 22,
+    partyBreakdown: [
+      { name: 'DMK',   seats: 22, color: '#7c3aed', share: 26.93 },
+      { name: 'INC',   seats: 9,  color: '#6366f1', share: 10.67 },
+      { name: 'VCK',   seats: 2,  color: '#8b5cf6', share: 2.30  },
+      { name: 'CPI',   seats: 2,  color: '#ef4444', share: 2.15  },
+      { name: 'CPIM',  seats: 2,  color: '#b91c1c', share: 2.00  },
+      { name: 'MDMK',  seats: 1,  color: '#9333ea', share: 1.15  },
+      { name: 'IUML',  seats: 1,  color: '#10b981', share: 0.95  },
+    ],
+    turnout: 69.72,
+  },
 ];
 
 /** Per-year state highlights (new reference per year so map re-renders with year change) */

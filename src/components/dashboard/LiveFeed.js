@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const FEED_ITEMS = [
   { time: '10:36', text: 'UP: BJP leads in 24/80 seats, SP ahead in 36', tag: 'UP', color: '#f97316' },
@@ -26,18 +27,26 @@ export default function LiveFeed() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-1 overflow-y-auto space-y-1 pr-0.5">
-        {FEED_ITEMS.map((item, i) => (
-          <div key={i} className="flex items-start gap-1.5 text-[10px] py-1 border-b border-[var(--t-border)]">
-            <span className="text-[var(--t-textMut)] flex-shrink-0 mt-0.5">{item.time}</span>
-            <span
-              className="px-1 rounded text-[9px] font-bold flex-shrink-0 mt-0.5"
-              style={{ backgroundColor: item.color + '22', color: item.color }}
+        <AnimatePresence initial={false}>
+          {FEED_ITEMS.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-start gap-1.5 text-[10px] py-1 border-b border-[var(--t-border)]"
             >
-              {item.tag}
-            </span>
-            <span className="text-[var(--t-textSec)] leading-tight">{item.text}</span>
-          </div>
-        ))}
+              <span className="text-[var(--t-textMut)] flex-shrink-0 mt-0.5">{item.time}</span>
+              <span
+                className="px-1 rounded text-[9px] font-bold flex-shrink-0 mt-0.5"
+                style={{ backgroundColor: item.color + '22', color: item.color }}
+              >
+                {item.tag}
+              </span>
+              <span className="text-[var(--t-textSec)] leading-tight">{item.text}</span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
       <div className="mt-1 text-[10px] text-[var(--t-textMut)] flex items-center gap-1">
         <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot inline-block" />

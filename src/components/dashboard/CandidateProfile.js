@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CANDIDATES = [
   {
@@ -67,19 +68,36 @@ export default function CandidateProfile() {
       </div>
 
       <div className="grid grid-cols-2 gap-1 text-[10px] flex-1">
-        {[
-          ['Age', c.age + ' yrs'],
-          ['Education', c.education],
-          ['Assets', c.assets],
-          ['Cases', c.cases === 0 ? 'None' : c.cases],
-          ['Votes', c.votes],
-          ['Margin', c.margin],
-        ].map(([k, v]) => (
-          <div key={k} className="bg-[var(--t-bgCard)] rounded px-2 py-1">
-            <div className="text-[var(--t-textMut)]">{k}</div>
-            <div className="text-[var(--t-text)] font-semibold truncate">{v}</div>
-          </div>
-        ))}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-2 gap-1 col-span-2"
+          >
+            {[
+              ['Age', c.age + ' yrs'],
+              ['Education', c.education],
+              ['Assets', c.assets],
+              ['Cases', c.cases === 0 ? 'None' : c.cases],
+              ['Votes', c.votes],
+              ['Margin', c.margin],
+            ].map(([k, v], i) => (
+              <motion.div
+                key={k}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-[var(--t-bgCard)] rounded px-2 py-1 border border-transparent hover:border-[var(--t-border)] transition-colors"
+              >
+                <div className="text-[var(--t-textMut)]">{k}</div>
+                <div className="text-[var(--t-text)] font-semibold truncate">{v}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="flex items-center justify-between mt-2">

@@ -30,6 +30,8 @@
   --t-tblStripe:    rgba(255,255,255,0.015);
   --t-tblHov:       rgba(255,255,255,0.04);
   --t-shadow:       rgba(0,0,0,0.5);
+  --t-shadow-elevated: 0 12px 30px -4px rgba(0, 0, 0, 0.6), 0 8px 12px -5px rgba(0, 0, 0, 0.4);
+  --t-glow-elevated: 0 0 15px -2px rgba(245, 158, 11, 0.15), 0 0 6px -3px rgba(255, 255, 255, 0.05);
 
   /* legacy aliases used by older components */
   --background: var(--t-bg);
@@ -67,6 +69,8 @@
   --t-tblStripe:   #f8fafd;
   --t-tblHov:      #f0f5ff;
   --t-shadow:      rgba(20,184,166,0.10);
+  --t-shadow-elevated: 0 14px 40px -6px rgba(15, 23, 42, 0.1), 0 10px 15px -8px rgba(15, 23, 42, 0.08);
+  --t-glow-elevated: 0 4px 20px -2px rgba(20, 184, 166, 0.08);
 
   --background: var(--t-bg);
   --foreground: var(--t-text);
@@ -104,9 +108,26 @@
   .bg-accent-soft { background-color: var(--t-accentBg); }
 }
 
-/* Card elevation in light mode */
-[data-theme="light"] .rounded-lg {
-  box-shadow: 0 2px 16px rgba(99,102,241,0.07), 0 1px 4px rgba(0,0,0,0.04);
+/* Card enhancement utilities */
+.card-elevated {
+  box-shadow: var(--t-shadow-elevated);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-elevated:hover {
+  box-shadow: 0 20px 50px -12px var(--t-shadow);
+  border-color: var(--t-borderHi);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .card-elevated {
+  background: linear-gradient(135deg, var(--t-bgCardSolid), #26334d);
+  box-shadow: var(--t-shadow-elevated), var(--t-glow-elevated);
+}
+
+[data-theme="light"] .card-elevated {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.02);
 }
 
 /* Smooth transitions */

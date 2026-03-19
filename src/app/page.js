@@ -10,10 +10,11 @@ import {
   GitCompare,
   Sun,
   Moon,
+  Search,
   Menu,
   X,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ELECTION_DATA_BY_YEAR, PARTY_COLORS } from "@/data/dummy";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -31,18 +32,23 @@ const SentimentGauge     = dynamic(() => import("@/components/charts/SentimentGa
 const CandidateProfile   = dynamic(() => import("@/components/dashboard/CandidateProfile"),         { ssr: false });
 const LiveFeed           = dynamic(() => import("@/components/dashboard/LiveFeed"),                 { ssr: false });
 const FiltersPanel       = dynamic(() => import("@/components/dashboard/FiltersPanel"),             { ssr: false });
+// const StateDetailModal   = dynamic(() => import("@/components/dashboard/StateDetailModal"),         { ssr: false });
 
 // ── Animation variants ────────────────────────────────────────────────────────
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 30, scale: 0.98 },
   visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.06, duration: 0.35, ease: "easeOut" },
+    opacity: 1, y: 0, scale: 1,
+    transition: {
+      delay: i * 0.08,
+      duration: 0.6,
+      ease: [0.21, 0.47, 0.32, 0.98]
+    },
   }),
 };
-const fadeIn    = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } };
-const slideLeft = { hidden: { opacity: 0, x: -24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4 } } };
-const slideRight= { hidden: { opacity: 0, x:  24 }, visible: { opacity: 1, x: 0, transition: { duration: 0.4 } } };
+const fadeIn    = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.8, ease: "easeOut" } } };
+const slideLeft = { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } } };
+const slideRight= { hidden: { opacity: 0, x:  40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } } };
 
 // ── Card wrapper ──────────────────────────────────────────────────────────────
 function DCard({ title, children, className = "", action, onAction, headerRight }) {
@@ -51,8 +57,7 @@ function DCard({ title, children, className = "", action, onAction, headerRight 
       variants={fadeUp}
       initial="hidden"
       animate="visible"
-      whileHover={{ scale: 1.005, transition: { duration: 0.15 } }}
-      className={`bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col ${className}`}
+      className={`bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col card-elevated ${className}`}
     >
       {title && (
         <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
@@ -82,8 +87,8 @@ function StatCard({ title, value, sub1, sub2, sub3, color = "#3b82f6", children,
       custom={index}
       initial="hidden"
       animate="visible"
-      whileHover={{ scale: 1.03, y: -2, transition: { duration: 0.18 } }}
-      className="bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg p-2 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1 hover:border-[var(--t-borderHi)] transition-colors relative overflow-hidden flex-1 min-w-[110px] sm:min-w-[140px]"
+      whileHover={{ scale: 1.04, y: -5, transition: { duration: 0.2, ease: "easeOut" } }}
+      className="bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg p-2 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1 hover:border-[var(--t-accent)] transition-all relative overflow-hidden flex-1 min-w-[110px] sm:min-w-[140px] card-elevated"
     >
       <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-lg" style={{ backgroundColor: color }} />
       <div className="text-[9px] sm:text-[10px] text-[var(--t-textSec)] font-medium leading-tight">{title}</div>
@@ -152,14 +157,28 @@ const STATE_COLORS = {
 export default function Home() {
   const [selectedYear, setSelectedYear]     = useState("2024");
   const [selectedMapState, setSelectedMapState] = useState(null);
+  const [searchTerm, setSearchTerm]             = useState("");
   const [liveUpdates, setLiveUpdates]       = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { themeName, toggle: toggleTheme }  = useTheme();
+  
 
   const yearData     = ELECTION_DATA_BY_YEAR[selectedYear] || ELECTION_DATA_BY_YEAR["2024"];
   const summary      = yearData.summary;
   const partiesData  = yearData.parties;
   const stateHighlights = yearData.stateHighlights;
+
+  // ── Layout helper for State Details ──
+  const selectedStateData = stateHighlights.find(s => 
+    (s.id && s.id === selectedMapState?.id) || 
+    (s.state && s.state === selectedMapState?.name)
+  ) || selectedMapState;
+  
+  const filteredConstituencies = (selectedStateData?.constituencies || []).filter(c => 
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.candidate.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.party.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--t-bg)] text-[var(--t-text)] overflow-x-hidden">
@@ -301,11 +320,17 @@ export default function Home() {
           </StatCard>
 
           {/* Coalition mini card */}
-          <div className="col-span-2 sm:col-span-1 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg p-2 flex-1 min-w-[160px] hover:border-[var(--t-borderHi)] transition-colors relative overflow-hidden">
+          <motion.div
+            variants={fadeUp}
+            custom={5}
+            initial="hidden"
+            animate="visible"
+            className="col-span-2 sm:col-span-1 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg p-2 flex-1 min-w-[160px] hover:border-[var(--t-accent)] transition-all relative overflow-hidden card-elevated"
+          >
             <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-lg bg-gradient-to-r from-teal-400 via-violet-500 to-pink-500" />
             <div className="text-[9px] sm:text-[10px] text-[var(--t-textSec)] font-medium mb-1">Coalition Dynamics</div>
             <CoalitionDonut />
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -365,7 +390,13 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row gap-2 flex-1 min-h-0">
 
             {/* India Map */}
-            <div className="flex-1 min-w-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden h-[360px] sm:h-[420px] lg:h-auto">
+            <motion.div
+              variants={fadeUp}
+              custom={2}
+              initial="hidden"
+              animate="visible"
+              className="flex-1 min-w-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden h-[400px] sm:h-[460px] lg:h-full card-elevated"
+            >
               <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
                 <span className="text-[11px] font-semibold text-[var(--t-textSec)] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot inline-block" />
@@ -395,91 +426,209 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Key States panel */}
-            <div className="w-full lg:w-[240px] xl:w-[260px] lg:flex-shrink-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden max-h-[400px] lg:max-h-none">
-              <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
-                <span className="text-[10px] font-bold text-[var(--t-textSec)] tracking-widest uppercase">Key States</span>
-                <span className="text-[9px] text-green-400 flex items-center gap-1">
-                  <span className="w-1 h-1 rounded-full bg-green-400 pulse-dot inline-block" />live
-                </span>
-              </div>
-
-              {/* State rows — 1-col on mobile/sm, 2-col on md, 1-col on lg */}
-              <div className="flex-1 overflow-y-auto px-2 py-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 min-h-0">
-                {KEY_STATES.map((s, i) => (
+            {/* Side Panel (Key States / State Details) */}
+            <motion.div
+              variants={fadeUp}
+              custom={3}
+              initial="hidden"
+              animate="visible"
+              className="w-full lg:w-[260px] xl:w-[280px] lg:flex-shrink-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden max-h-[460px] lg:max-h-none lg:h-full card-elevated"
+            >
+              <AnimatePresence mode="wait">
+                {!selectedMapState ? (
                   <motion.div
-                    key={i}
-                    variants={fadeUp}
-                    custom={i}
-                    initial="hidden"
-                    animate="visible"
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-[var(--t-bgCard)] rounded-md px-2 py-1.5 border border-[var(--t-border)] hover:border-[var(--t-borderHi)] transition-colors cursor-pointer"
+                    key="key-states"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="flex flex-col h-full"
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] font-semibold text-[var(--t-text)] truncate flex-1 mr-1">{s.state}</span>
-                      <span
-                        className="text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0"
-                        style={{ backgroundColor: s.color + "25", color: s.color, border: `1px solid ${s.color}55` }}
-                      >{s.party}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="flex-1 bg-[var(--t-bgCard)] rounded-full h-1 overflow-hidden">
-                        <motion.div
-                          className="h-full rounded-full"
-                          style={{ backgroundColor: s.color }}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${(s.won / s.seats) * 100}%` }}
-                          transition={{ duration: 0.8, delay: 0.2 + i * 0.08 }}
-                        />
-                      </div>
-                      <span className="text-[9px] text-[var(--t-textSec)] flex-shrink-0 font-mono">
-                        {s.won}<span className="text-[var(--t-textMut)]">/{s.seats}</span>
+                    <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
+                      <span className="text-[10px] font-bold text-[var(--t-textSec)] tracking-widest uppercase">Key States</span>
+                      <span className="text-[9px] text-green-400 flex items-center gap-1">
+                        <span className="w-1 h-1 rounded-full bg-green-400 pulse-dot inline-block" />live
                       </span>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
 
-              {/* Live states mini chart */}
-              <div className="border-t border-[var(--t-border)] flex-shrink-0">
-                <div className="px-2.5 py-1 text-[9px] font-bold text-[var(--t-textMut)] uppercase tracking-widest">Live States</div>
-                <div className="px-2 pb-2 space-y-1">
-                  {LIVE_STATES.map((ls, i) => {
-                    const entries = Object.entries(ls).filter(([k]) => k !== "state");
-                    const total   = entries.reduce((a, [, v]) => a + v, 0);
-                    return (
-                      <div key={i} className="flex items-center gap-1">
-                        <span className="text-[9px] text-[var(--t-textMut)] w-5 flex-shrink-0">{ls.state}</span>
-                        <div className="flex-1 h-2 rounded-full overflow-hidden flex">
-                          {entries.filter(([, v]) => v > 0).map(([party, v]) => (
-                            <div
-                              key={party}
-                              className="h-full"
-                              style={{ width: `${(v / total) * 100}%`, backgroundColor: STATE_COLORS[party] || "#64748b" }}
-                              title={`${party}: ${v}`}
-                            />
+                    <div className="flex-1 overflow-y-auto px-2 py-1.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 min-h-0">
+                      {KEY_STATES.map((s, i) => (
+                        <motion.div
+                          key={i}
+                          variants={fadeUp}
+                          custom={i}
+                          initial="hidden"
+                          animate="visible"
+                          whileHover={{ scale: 1.02 }}
+                          onClick={() => setSelectedMapState({ id: s.id || (s.state === 'Uttar Pradesh' ? 'UP' : s.state), name: s.state, ...s })}
+                          className="bg-[var(--t-bgCard)] rounded-md px-2 py-1.5 border border-[var(--t-border)] hover:border-[var(--t-borderHi)] transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] font-semibold text-[var(--t-text)] truncate flex-1 mr-1">{s.state}</span>
+                            <span
+                              className="text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0"
+                              style={{ backgroundColor: s.color + "25", color: s.color, border: `1px solid ${s.color}55` }}
+                            >{s.party}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <div className="flex-1 bg-[var(--t-bgCard)] rounded-full h-1 overflow-hidden">
+                              <motion.div
+                                className="h-full rounded-full"
+                                style={{ backgroundColor: s.color }}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(s.won / s.seats) * 100}%` }}
+                                transition={{ duration: 0.8, delay: 0.2 + i * 0.08 }}
+                              />
+                            </div>
+                            <span className="text-[9px] text-[var(--t-textSec)] flex-shrink-0 font-mono">{s.won}<span className="text-[var(--t-textMut)]">/{s.seats}</span></span>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    <div className="border-t border-[var(--t-border)] flex-shrink-0">
+                      <div className="px-2.5 py-1 text-[9px] font-bold text-[var(--t-textMut)] uppercase tracking-widest border-b border-[var(--t-border)]">Live Status</div>
+                      <div className="px-2 py-1.5 space-y-1">
+                        {LIVE_STATES.map((ls, i) => {
+                          const entries = Object.entries(ls).filter(([k]) => k !== "state");
+                          const total   = entries.reduce((a, [, v]) => a + v, 0);
+                          return (
+                            <div key={i} className="flex items-center gap-1">
+                              <span className="text-[9px] text-[var(--t-textMut)] w-5 flex-shrink-0">{ls.state}</span>
+                              <div className="flex-1 h-1.5 rounded-full overflow-hidden flex">
+                                {entries.filter(([, v]) => v > 0).map(([party, v]) => (
+                                  <div key={party} className="h-full" style={{ width: `${(v / total) * 100}%`, backgroundColor: STATE_COLORS[party] || "#64748b" }} />
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="state-details"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="flex flex-col h-full"
+                  >
+                    <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <button onClick={() => setSelectedMapState(null)} className="p-1 hover:bg-[var(--t-bgCard)] rounded text-[var(--t-textSec)]">
+                          <X size={12} />
+                        </button>
+                        <span className="text-[10px] font-bold text-[var(--t-accent)] uppercase truncate">{selectedStateData?.name}</span>
+                      </div>
+                      <span className="text-[9px] font-bold text-green-400 bg-green-400/10 px-1 rounded uppercase">Details</span>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-2.5 space-y-4">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-[var(--t-bgCard)] p-2 rounded-lg border border-[var(--t-border)]">
+                          <div className="text-[8px] text-[var(--t-textMut)] uppercase font-bold">Total Seats</div>
+                          <div className="text-sm font-bold">{selectedStateData?.seats}</div>
+                        </div>
+                        <div className="bg-[var(--t-bgCard)] p-2 rounded-lg border border-[var(--t-border)]">
+                          <div className="text-[8px] text-[var(--t-textMut)] uppercase font-bold">Turnout</div>
+                          <div className="text-sm font-bold">{selectedStateData?.turnout || 65}%</div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="text-[9px] font-bold text-[var(--t-textSec)] uppercase tracking-wider">Party Breakdown</div>
+                        <div className="space-y-1.5">
+                          {(selectedStateData?.partyBreakdown || [
+                            { name: selectedStateData?.winner || 'Others', seats: selectedStateData?.won || 0, color: selectedStateData?.colorParty || '#94a3b8', share: 'N/A' }
+                          ]).map((p, i) => (
+                            <div key={i} className="space-y-1">
+                              <div className="flex justify-between text-[9px]">
+                                <span className="font-semibold text-[var(--t-textSec)]">{p.name}</span>
+                                <span className="font-bold">{p.seats} <span className="text-[var(--t-textMut)] font-normal">sts</span></span>
+                              </div>
+                              <div className="h-1 bg-[var(--t-bgCard)] rounded-full overflow-hidden">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${(p.seats / selectedStateData.seats) * 100}%` }}
+                                  className="h-full rounded-full"
+                                  style={{ backgroundColor: p.color }}
+                                />
+                              </div>
+                            </div>
                           ))}
                         </div>
-                        <span className="text-[9px] text-[var(--t-textMut)] w-4 text-right flex-shrink-0">{total}</span>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
+                      
+                      <div className="space-y-4">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[9px] font-bold text-[var(--t-textSec)] uppercase tracking-wider">Constituency Results</span>
+                            <span className="text-[8px] text-[var(--t-textMut)] font-mono">{filteredConstituencies.length} items</span>
+                          </div>
+                          
+                          {/* Mini Search */}
+                          <div className="relative group">
+                            <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--t-textMut)] group-focus-within:text-blue-400" />
+                            <input 
+                              type="text" 
+                              placeholder="Search constituency..." 
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="w-full bg-[var(--t-bg)] border border-[var(--t-border)] rounded-md pl-6 pr-2 py-1 text-[9px] focus:outline-none focus:border-blue-500/50 transition-all"
+                            />
+                            {searchTerm && (
+                              <button onClick={() => setSearchTerm("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--t-textMut)] hover:text-white">
+                                <X size={8} />
+                              </button>
+                            )}
+                          </div>
+                        </div>
 
-              {/* Legend */}
-              <div className="px-2 py-1.5 border-t border-[var(--t-border)] flex flex-wrap gap-x-2 gap-y-0.5 flex-shrink-0">
-                {Object.entries(PARTY_COLORS).map(([p, c]) => (
-                  <div key={p} className="flex items-center gap-0.5">
-                    <div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: c }} />
-                    <span className="text-[8px] text-[var(--t-textMut)]">{p}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+                        <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1 custom-scrollbar">
+                          {filteredConstituencies.length > 0 ? (
+                            filteredConstituencies.map((c, i) => (
+                              <motion.div 
+                                key={i}
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: i * 0.03 }}
+                                className="bg-[var(--t-bg)] border border-[var(--t-border)] rounded-md p-1.5 hover:border-[var(--t-borderHi)] transition-colors"
+                              >
+                                <div className="flex justify-between items-start mb-0.5">
+                                  <span className="text-[10px] font-bold truncate flex-1 pr-1">{c.name}</span>
+                                  <span className="text-[8px] font-black px-1 rounded flex-shrink-0" style={{ backgroundColor: STATE_COLORS[c.party] + "22", color: STATE_COLORS[c.party], border: `1px solid ${STATE_COLORS[c.party]}44` }}>
+                                    {c.party}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-[9px] text-[var(--t-textSec)] truncate pr-1">{c.candidate}</span>
+                                  <span className="text-[8px] text-green-400 font-mono">+{c.margin}</span>
+                                </div>
+                              </motion.div>
+                            ))
+                          ) : (
+                            <div className="text-center py-4 text-[9px] text-[var(--t-textMut)] italic">
+                              No results found for "{searchTerm}"
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="pt-2">
+                        <button 
+                          onClick={() => { setSelectedMapState(null); setSearchTerm(""); }}
+                          className="w-full py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold rounded-lg transition-all"
+                        >
+                          Back to Key States
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </div>
 
           {/* Bottom charts row */}
@@ -584,6 +733,7 @@ export default function Home() {
           <div className="hidden lg:block text-[10px] text-[var(--t-textMut)]">© 2024 ECI | {selectedYear}</div>
         </div>
       </div>
+
     </div>
   );
 }
