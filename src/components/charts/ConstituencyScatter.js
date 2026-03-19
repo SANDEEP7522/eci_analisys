@@ -31,8 +31,8 @@ export default function ConstituencyScatter() {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <ScatterChart margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
-        <XAxis dataKey="x" type="number" domain={[0,100]} tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
-        <YAxis dataKey="y" type="number" domain={[0,100]} tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="x" type="number" domain={[0,100]} tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <YAxis dataKey="y" type="number" domain={[0,100]} tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'var(--t-border)' }} />
         <Scatter data={DATA} fillOpacity={0.8}>
           {DATA.map((d, i) => (

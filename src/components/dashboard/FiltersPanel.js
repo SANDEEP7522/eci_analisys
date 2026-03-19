@@ -110,7 +110,7 @@ export default function FiltersPanel({ selectedYear, onApply }) {
       {/* ── Trigger ──────────────────────────────────────────────── */}
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] hover:border-[var(--t-accent)] rounded-lg text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-all text-[11px] font-medium group"
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] hover:border-blue-500 rounded-lg text-[var(--t-textSec)] hover:text-white transition-all text-[11px] font-medium group"
         title="Open Filters"
       >
         <SlidersHorizontal size={13} className="text-blue-400 group-hover:text-blue-300" />
@@ -135,14 +135,14 @@ export default function FiltersPanel({ selectedYear, onApply }) {
           <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
             <div className="flex items-center gap-2">
               <SlidersHorizontal size={15} className="text-blue-400" />
-              <span className="text-[13px] font-bold text-[var(--t-text)]">Filter Options</span>
+              <span className="text-[13px] font-bold text-white">Filter Options</span>
               {activeCount > 0 && (
                 <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[10px] px-2 py-0.5 rounded-full">
                   {activeCount} active
                 </span>
               )}
             </div>
-            <button onClick={() => setOpen(false)} className="p-1 rounded-md hover:bg-[var(--t-bgCard)] text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-colors">
+            <button onClick={() => setOpen(false)} className="p-1 rounded-md hover:bg-[var(--t-bgCard)] text-[var(--t-textSec)] hover:text-white transition-colors">
               <X size={15} />
             </button>
           </div>

@@ -30,8 +30,8 @@ export default function StatePerformanceChart() {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={DATA} margin={{ top: 4, right: 4, bottom: 4, left: -25 }} barSize={6} barGap={1}>
-        <XAxis dataKey="state" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="state" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {['BJP','INC','SP','TMC','DMK','JDU','Others'].map((k, i) => (
           <Bar key={k} dataKey={k} fill={COLORS[i]} stackId="a" radius={i === 6 ? [3,3,0,0] : [0,0,0,0]} />

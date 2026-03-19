@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 const FEED_ITEMS = [
   { time: '10:36', text: 'UP: BJP leads in 24/80 seats, SP ahead in 36', tag: 'UP', color: '#f97316' },
   { time: '10:34', text: 'Kerala: LDF sweeping with 16/20 leads', tag: 'KL', color: '#22c55e' },
-  { time: '10:32', text: 'Tamil Nadu: DMK dominates — leads in 34/39', tag: 'TN', color: '#a855f7' },
-  { time: '10:30', text: 'Maharashtra: MVA vs MahaYuti close contest', tag: 'MH', color: '#6366f1' },
+  { time: '10:32', text: 'Tamil Nadu: DMK dominates — leads in 34/39', tag: 'TN', color: '#7c3aed' },
+  { time: '10:30', text: 'Maharashtra: MVA vs MahaYuti close contest', tag: 'MH', color: '#3b82f6' },
   { time: '10:28', text: 'West Bengal: TMC leads in 28/42 constituencies', tag: 'WB', color: '#22c55e' },
-  { time: '10:25', text: 'Rajasthan: INC recovering, leads 12/25', tag: 'RJ', color: '#6366f1' },
+  { time: '10:25', text: 'Rajasthan: INC recovering, leads 12/25', tag: 'RJ', color: '#1e3a8a' },
   { time: '10:22', text: 'Bihar: NDA holds advantage, 24/40 leads', tag: 'BR', color: '#f97316' },
   { time: '10:20', text: 'Gujarat: BJP dominant with 22/26 leads', tag: 'GJ', color: '#f97316' },
   { time: '10:18', text: 'Andhra: TDP leading in 20/25 constituencies', tag: 'AP', color: '#06b6d4' },
