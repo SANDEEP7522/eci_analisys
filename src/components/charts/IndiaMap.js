@@ -7,7 +7,7 @@ import { ELECTION_BY_CODE, ELECTION_STATES } from '@/data/electionData';
 import { getStateByCode, ALL_STATES } from '@/data/statesData';
 import { PARTY_COLORS } from '@/data/dummy';
 
-const DEFAULT_FILL = '#1e3a5f';
+const DEFAULT_FILL = '#1a2a4a';
 
 const OPTIONS = [
   { id: 'parties',  label: 'By Parties'  },
@@ -49,8 +49,8 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
 
   const getFill = geo => {
     const code = getStateCode(geo);
-    if (hovered === code)      return '#fbbf24';
-    if (highlightState === code) return '#2563eb';
+    if (hovered === code)        return '#ff8c3a';
+    if (highlightState === code) return '#4f8eff';
     const s = stateByCode[code] || ELECTION_BY_CODE[code];
     if (!s) return DEFAULT_FILL;
     if (viewMode === 'alliance') return s.colorAlliance || DEFAULT_FILL;
@@ -71,12 +71,12 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
     const s    = stateByCode[hovered] || ELECTION_BY_CODE[hovered] || {};
     const info = getStateByCode ? getStateByCode(hovered) : null;
     return {
-      name:       s.name || s.state || info?.name || hovered,
-      party:      s.party ?? s.winner ?? 'N/A',
-      alliance:   s.alliance ?? 'N/A',
+      name:        s.name || s.state || info?.name || hovered,
+      party:       s.party ?? s.winner ?? 'N/A',
+      alliance:    s.alliance ?? 'N/A',
       rulingSeats: s.rulingSeats ?? s.seats ?? 0,
-      totalSeats: s.totalSeats ?? 0,
-      color:      s.colorParty || PARTY_COLORS[s.party] || '#fff',
+      totalSeats:  s.totalSeats ?? 0,
+      color:       s.colorParty || PARTY_COLORS[s.party] || '#ff6b00',
     };
   }, [hovered, stateByCode]);
 
@@ -101,11 +101,21 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
             <button
               key={opt.id}
               onClick={() => setViewMode(opt.id)}
-              className={`px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all ${
+              className="px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all"
+              style={
                 viewMode === opt.id
-                  ? 'bg-blue-600 text-white shadow shadow-blue-900/50'
-                  : 'bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] hover:border-blue-500 hover:text-[var(--t-text)]'
-              }`}
+                  ? {
+                      background: 'rgba(255,107,0,0.15)',
+                      color: '#ff6b00',
+                      border: '1px solid rgba(255,107,0,0.35)',
+                      boxShadow: '0 0 10px rgba(255,107,0,0.2)',
+                    }
+                  : {
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      color: 'rgba(220,228,255,0.45)',
+                    }
+              }
             >
               {opt.label}
             </button>
@@ -115,14 +125,24 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
           {legendEntries.map(([p, c]) => (
             <div key={p} className="flex items-center gap-1">
               <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: c }} />
-              <span className="text-[9px] text-[var(--t-textSec)] whitespace-nowrap">{p}</span>
+              <span className="text-[9px] text-white/40 whitespace-nowrap">{p}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Map fills remaining height */}
+      {/* Map */}
       <div className="flex-1 min-h-0 overflow-hidden relative">
+        {/* SVG filter for glow */}
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <defs>
+            <filter id="state-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+        </svg>
+
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{ center: [82, 23], scale: 1000 }}
@@ -131,17 +151,19 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
           <Geographies geography={INDIA_TOPOLOGY_URL}>
             {({ geographies }) =>
               geographies.map(geo => {
-                const code = getStateCode(geo);
+                const code     = getStateCode(geo);
+                const isHov    = hovered === code;
+                const isSelect = highlightState === code;
                 return (
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
                     fill={getFill(geo)}
-                    stroke="#0b1120"
-                    strokeWidth={0.6}
+                    stroke={isHov ? 'rgba(255,140,58,0.8)' : isSelect ? 'rgba(79,142,255,0.8)' : 'rgba(255,255,255,0.08)'}
+                    strokeWidth={isHov || isSelect ? 1.2 : 0.4}
                     style={{
-                      default: { outline: 'none' },
-                      hover:   { outline: 'none', fill: '#fbbf24', cursor: 'pointer' },
+                      default: { outline: 'none', filter: isHov ? 'url(#state-glow)' : 'none', transition: 'fill 0.2s ease' },
+                      hover:   { outline: 'none', fill: '#ff8c3a', cursor: 'pointer', filter: 'url(#state-glow)' },
                       pressed: { outline: 'none' },
                     }}
                     onMouseEnter={() => code && setHovered(code)}
@@ -154,17 +176,43 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [] 
           </Geographies>
         </ComposableMap>
 
-        {/* Hover tooltip */}
+        {/* Hover tooltip — glassmorphic */}
         {hoveredPayload && (
-          <div className="absolute top-2 left-2 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] text-[var(--t-text)] px-3 py-2 rounded-lg text-[11px] shadow-xl pointer-events-none z-10">
-            <div className="font-bold text-[var(--t-text)] mb-0.5">{hoveredPayload.name}</div>
+          <div
+            className="absolute top-2 left-2 text-[11px] pointer-events-none z-10 rounded-xl overflow-hidden"
+            style={{
+              background: 'rgba(3,4,13,0.88)',
+              backdropFilter: 'blur(20px)',
+              border: `1px solid ${hoveredPayload.color}40`,
+              boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 20px ${hoveredPayload.color}25`,
+              padding: '8px 12px',
+            }}
+          >
+            <div
+              className="font-black text-[12px] mb-1"
+              style={{ color: 'rgba(255,255,255,0.9)' }}
+            >
+              {hoveredPayload.name}
+            </div>
             <div className="flex items-center gap-2">
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: hoveredPayload.color + '33', color: hoveredPayload.color }}>
+              <span
+                className="px-1.5 py-0.5 rounded text-[10px] font-black"
+                style={{
+                  background: `${hoveredPayload.color}22`,
+                  color: hoveredPayload.color,
+                  border: `1px solid ${hoveredPayload.color}50`,
+                  textShadow: `0 0 8px ${hoveredPayload.color}80`,
+                }}
+              >
                 {viewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
               </span>
               {hoveredPayload.rulingSeats > 0 && (
-                <span className="text-[var(--t-textSec)]">{hoveredPayload.rulingSeats}
-                  {hoveredPayload.totalSeats > 0 && <span className="text-[var(--t-textMut)]">/{hoveredPayload.totalSeats}</span>} seats
+                <span className="text-white/50 text-[10px]">
+                  <span style={{ color: hoveredPayload.color }}>{hoveredPayload.rulingSeats}</span>
+                  {hoveredPayload.totalSeats > 0 && (
+                    <span className="text-white/28">/{hoveredPayload.totalSeats}</span>
+                  )}
+                  {' seats'}
                 </span>
               )}
             </div>

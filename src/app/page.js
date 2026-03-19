@@ -1,122 +1,274 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
-  TrendingUp,
-  BarChart2,
-  Download,
-  Radio,
-  GitCompare,
-  Sun,
-  Moon,
-  Search,
-  Menu,
-  X,
+  TrendingUp, BarChart2, Download, Radio, GitCompare, Sun, Moon, Menu, X,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion, useMotionValue, useTransform, useSpring, AnimatePresence,
+} from "framer-motion";
 import { ELECTION_DATA_BY_YEAR, PARTY_COLORS } from "@/data/dummy";
 import { useTheme } from "@/context/ThemeContext";
 
-// ── Dynamic imports (no SSR) ──────────────────────────────────────────────────
-const IndiaMap           = dynamic(() => import("@/components/charts/IndiaMap"),                    { ssr: false });
-const VoteSharePie       = dynamic(() => import("@/components/charts/VoteSharePie"),                { ssr: false });
-const ConstituencyScatter= dynamic(() => import("@/components/charts/ConstituencyScatter"),         { ssr: false });
-const SeatShareArea      = dynamic(() => import("@/components/charts/SeatShareArea"),               { ssr: false });
-const StatePerformanceChart = dynamic(() => import("@/components/charts/StatePerformanceChart"),    { ssr: false });
-const VoteShareTrendLine = dynamic(() => import("@/components/charts/VoteShareTrendLine"),          { ssr: false });
-const CoalitionDonut     = dynamic(() => import("@/components/charts/CoalitionDonut"),              { ssr: false });
-const CoalitionRose      = dynamic(() => import("@/components/charts/CoalitionRose"),               { ssr: false });
-const SentimentSparkline = dynamic(() => import("@/components/charts/SentimentSparkline"),          { ssr: false });
-const SentimentGauge     = dynamic(() => import("@/components/charts/SentimentGauge"),              { ssr: false });
-const CandidateProfile   = dynamic(() => import("@/components/dashboard/CandidateProfile"),         { ssr: false });
-const LiveFeed           = dynamic(() => import("@/components/dashboard/LiveFeed"),                 { ssr: false });
-const FiltersPanel       = dynamic(() => import("@/components/dashboard/FiltersPanel"),             { ssr: false });
-// const StateDetailModal   = dynamic(() => import("@/components/dashboard/StateDetailModal"),         { ssr: false });
+// ── Dynamic imports ───────────────────────────────────────────────────────────
+const IndiaMap            = dynamic(() => import("@/components/charts/IndiaMap"),                 { ssr: false });
+const VoteSharePie        = dynamic(() => import("@/components/charts/VoteSharePie"),             { ssr: false });
+const ConstituencyScatter = dynamic(() => import("@/components/charts/ConstituencyScatter"),      { ssr: false });
+const SeatShareArea       = dynamic(() => import("@/components/charts/SeatShareArea"),            { ssr: false });
+const StatePerformanceChart = dynamic(() => import("@/components/charts/StatePerformanceChart"),  { ssr: false });
+const VoteShareTrendLine  = dynamic(() => import("@/components/charts/VoteShareTrendLine"),       { ssr: false });
+const CoalitionDonut      = dynamic(() => import("@/components/charts/CoalitionDonut"),           { ssr: false });
+const CoalitionRose       = dynamic(() => import("@/components/charts/CoalitionRose"),            { ssr: false });
+const SentimentSparkline  = dynamic(() => import("@/components/charts/SentimentSparkline"),       { ssr: false });
+const SentimentGauge      = dynamic(() => import("@/components/charts/SentimentGauge"),           { ssr: false });
+const CandidateProfile    = dynamic(() => import("@/components/dashboard/CandidateProfile"),      { ssr: false });
+const LiveFeed            = dynamic(() => import("@/components/dashboard/LiveFeed"),              { ssr: false });
+const FiltersPanel        = dynamic(() => import("@/components/dashboard/FiltersPanel"),          { ssr: false });
 
-// ── Animation variants ────────────────────────────────────────────────────────
-const fadeUp = {
-  hidden: { opacity: 0, y: 30, scale: 0.98 },
+// ── Motion variants ───────────────────────────────────────────────────────────
+const cardReveal = {
+  hidden: { opacity: 0, y: 22, scale: 0.97 },
   visible: (i = 0) => ({
     opacity: 1, y: 0, scale: 1,
-    transition: {
-      delay: i * 0.08,
-      duration: 0.6,
-      ease: [0.21, 0.47, 0.32, 0.98]
-    },
+    transition: { delay: i * 0.07, duration: 0.55, ease: [0.23, 1, 0.32, 1] },
   }),
 };
-const fadeIn    = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.8, ease: "easeOut" } } };
-const slideLeft = { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } } };
-const slideRight= { hidden: { opacity: 0, x:  40 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } } };
+const slideLeft  = { hidden: { opacity: 0, x: -28 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.23,1,0.32,1] } } };
+const slideRight = { hidden: { opacity: 0, x:  28 }, visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.23,1,0.32,1] } } };
+const fadeIn     = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5 } } };
 
-// ── Card wrapper ──────────────────────────────────────────────────────────────
-function DCard({ title, children, className = "", action, onAction, headerRight }) {
+// ── Theme-aware background ────────────────────────────────────────────────────
+function AuroraBg({ isDark }) {
+  if (!isDark) {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #f0f4ff 0%, #fef6ee 50%, #f0f9f4 100%)" }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+    );
+  }
   return (
-    <motion.div
-      variants={fadeUp}
-      initial="hidden"
-      animate="visible"
-      className={`bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col card-elevated ${className}`}
-    >
-      {title && (
-        <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
-          <span className="text-[11px] font-semibold text-[var(--t-textSec)] tracking-wide truncate mr-2">
-            {title}
-          </span>
-          {headerRight || (action && (
-            <button
-              onClick={onAction}
-              className="text-[10px] text-blue-400 hover:text-blue-300 flex-shrink-0 font-medium"
-            >
-              {action}
-            </button>
-          ))}
-        </div>
-      )}
-      <div className="flex-1 p-2 min-h-0 overflow-hidden">{children}</div>
-    </motion.div>
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      <div className="absolute inset-0" style={{ background: "#03040d" }} />
+      <div className="aurora aurora-1" />
+      <div className="aurora aurora-2" />
+      <div className="aurora aurora-3" />
+      <div className="absolute inset-0 bg-grid" />
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(3,4,13,0.88) 100%)" }}
+      />
+    </div>
   );
 }
 
-// ── Stat card ─────────────────────────────────────────────────────────────────
-function StatCard({ title, value, sub1, sub2, sub3, color = "#3b82f6", children, index = 0 }) {
+// ── Live clock ────────────────────────────────────────────────────────────────
+function LiveClock() {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    const tick = () =>
+      setTime(new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <span className="font-mono text-[10px] tabular-nums" style={{ color: "var(--t-accent)" }}>
+      {time}
+    </span>
+  );
+}
+
+// ── Animated counter ──────────────────────────────────────────────────────────
+function AnimCounter({ target, duration = 1400, suffix = "", prefix = "" }) {
+  const [val, setVal] = useState(0);
+  const ref  = useRef(null);
+  const done = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !done.current) {
+        done.current = true;
+        let start = null;
+        const step = ts => {
+          if (!start) start = ts;
+          const p = Math.min((ts - start) / duration, 1);
+          const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+          setVal(Math.round(eased * target));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration]);
+  return <span ref={ref}>{prefix}{val.toLocaleString("en-IN")}{suffix}</span>;
+}
+
+// ── 3D Tilt card ──────────────────────────────────────────────────────────────
+function TiltCard({ children, className = "", intensity = 7 }) {
+  const ref  = useRef(null);
+  const mx   = useMotionValue(0);
+  const my   = useMotionValue(0);
+  const rotX = useTransform(my, [-80, 80], [ intensity, -intensity]);
+  const rotY = useTransform(mx, [-80, 80], [-intensity,  intensity]);
+  const srX  = useSpring(rotX, { stiffness: 300, damping: 30 });
+  const srY  = useSpring(rotY, { stiffness: 300, damping: 30 });
+
+  const onMove  = e => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set(e.clientX - (r.left + r.width  / 2));
+    my.set(e.clientY - (r.top  + r.height / 2));
+  };
+  const onLeave = () => { mx.set(0); my.set(0); };
+
   return (
     <motion.div
-      variants={fadeUp}
-      custom={index}
-      initial="hidden"
-      animate="visible"
-      whileHover={{ scale: 1.04, y: -5, transition: { duration: 0.2, ease: "easeOut" } }}
-      className="bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg p-2 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1 hover:border-[var(--t-accent)] transition-all relative overflow-hidden flex-1 min-w-[110px] sm:min-w-[140px] card-elevated"
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{ rotateX: srX, rotateY: srY, transformStyle: "preserve-3d", perspective: 900 }}
+      className={className}
     >
-      <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-lg" style={{ backgroundColor: color }} />
-      <div className="text-[9px] sm:text-[10px] text-[var(--t-textSec)] font-medium leading-tight">{title}</div>
-      <div className="text-base sm:text-lg font-bold" style={{ color }}>{value}</div>
-      {sub1 && <div className="text-[9px] sm:text-[10px] text-[var(--t-textSec)] truncate">{sub1}</div>}
-      {sub2 && <div className="text-[9px] sm:text-[10px] text-[var(--t-textMut)] truncate">{sub2}</div>}
-      {sub3 && <div className="hidden sm:block text-[9px] text-[var(--t-textMut)] truncate">{sub3}</div>}
       {children}
     </motion.div>
   );
 }
 
+// ── Glassmorphic card ─────────────────────────────────────────────────────────
+function GlassCard({ title, children, className = "", headerRight, action, onAction, custom = 0 }) {
+  return (
+    <motion.div
+      variants={cardReveal}
+      initial="hidden"
+      animate="visible"
+      custom={custom}
+      whileHover={{ y: -3, transition: { duration: 0.2 } }}
+      className={`relative overflow-hidden rounded-2xl glass-card flex flex-col ${className}`}
+    >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+      {title && (
+        <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
+          <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">
+            {title}
+          </span>
+          {headerRight || (action && (
+            <button onClick={onAction} className="text-[10px] font-semibold hover:opacity-80" style={{ color: "var(--t-accent)" }}>
+              {action}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="flex-1 p-2.5 min-h-0 overflow-hidden">{children}</div>
+    </motion.div>
+  );
+}
+
+// ── Neon stat card ────────────────────────────────────────────────────────────
+function NeonStatCard({ title, value, sub1, sub2, color = "#ff6b00", children, index = 0 }) {
+  return (
+    <motion.div
+      variants={cardReveal}
+      initial="hidden"
+      animate="visible"
+      custom={index}
+      whileHover={{ scale: 1.02, y: -2, transition: { duration: 0.2 } }}
+      className="glass-card rounded-xl p-2.5 flex flex-col gap-1 relative overflow-hidden flex-1 min-w-[110px] cursor-default"
+    >
+      <div
+        className="absolute inset-x-0 top-0 h-0.5 rounded-t-xl"
+        style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
+      />
+      <div className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider leading-tight text-[var(--t-textMut)]">
+        {title}
+      </div>
+      <div
+        className="text-base sm:text-xl font-black leading-tight"
+        style={{ color, textShadow: `0 0 16px ${color}40` }}
+      >
+        {value}
+      </div>
+      {sub1 && <div className="text-[9px] truncate leading-tight text-[var(--t-textSec)]">{sub1}</div>}
+      {sub2 && <div className="text-[9px] truncate leading-tight text-[var(--t-textMut)]">{sub2}</div>}
+      {children}
+    </motion.div>
+  );
+}
+
+// ── Coalition race bar ────────────────────────────────────────────────────────
+function CoalitionRaceBar({ label, seats, total, color, delay = 0 }) {
+  const pct = (seats / total) * 100;
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[10px] font-black w-12 flex-shrink-0" style={{ color }}>{label}</span>
+      <div className="flex-1 h-2.5 rounded-full overflow-hidden bg-[var(--t-bgCard)]">
+        <motion.div
+          className="h-full rounded-full"
+          style={{
+            background: `linear-gradient(90deg, ${color}bb, ${color})`,
+            boxShadow: `0 0 10px ${color}55`,
+          }}
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 1.3, delay, ease: [0.23, 1, 0.32, 1] }}
+        />
+      </div>
+      <motion.span
+        className="text-[11px] font-black w-8 text-right flex-shrink-0"
+        style={{ color }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: delay + 0.6 }}
+      >
+        {seats}
+      </motion.span>
+    </div>
+  );
+}
+
+function CoalitionRaceWidget() {
+  return (
+    <div className="space-y-3 pt-1">
+      <CoalitionRaceBar label="NDA"    seats={293} total={543} color="#ff6b00" delay={0.15} />
+      <CoalitionRaceBar label="INDIA"  seats={231} total={543} color="#4f8eff" delay={0.30} />
+      <CoalitionRaceBar label="Others" seats={19}  total={543} color="#94a3b8" delay={0.45} />
+      <div className="pt-2 border-t border-[var(--t-border)] flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+          <span className="text-[9px] text-[var(--t-textMut)]">Majority: 272</span>
+        </div>
+        <span className="text-[10px] font-black" style={{ color: "#ff6b00" }}>NDA +21 ↑</span>
+      </div>
+    </div>
+  );
+}
+
 // ── Static data ───────────────────────────────────────────────────────────────
 const KEY_STATES = [
-  { state: "Uttar Pradesh", seats: 80, party: "SP",  won: 37, color: "#ef4444" },
-  { state: "Maharashtra",   seats: 48, party: "BJP", won: 23, color: "#f97316" },
-  { state: "West Bengal",   seats: 42, party: "TMC", won: 29, color: "#22c55e" },
-  { state: "Madhya Pradesh",seats: 29, party: "BJP", won: 29, color: "#f97316" },
-  { state: "Bihar",         seats: 40, party: "JDU", won: 12, color: "#6366f1" },
-  { state: "Tamil Nadu",    seats: 39, party: "DMK", won: 22, color: "#7c3aed" },
+  { state: "Uttar Pradesh",  seats: 80, party: "SP",  won: 37, color: "#ef4444" },
+  { state: "Maharashtra",    seats: 48, party: "BJP", won: 23, color: "#ff6b00" },
+  { state: "West Bengal",    seats: 42, party: "TMC", won: 29, color: "#22c55e" },
+  { state: "Madhya Pradesh", seats: 29, party: "BJP", won: 29, color: "#ff6b00" },
+  { state: "Bihar",          seats: 40, party: "JDU", won: 12, color: "#8b5cf6" },
+  { state: "Tamil Nadu",     seats: 39, party: "DMK", won: 22, color: "#a855f7" },
 ];
 
 const LIVE_STATES = [
-  { state: "UP", BJP: 33, SP: 37, INC: 6,  Others: 4 },
-  { state: "MH", BJP: 23, INC: 13, SS: 9,  Others: 3 },
-  { state: "WB", TMC: 29, BJP: 12, INC: 1, Others: 0 },
-  { state: "TN", DMK: 22, INC: 9,  BJP: 0, Others: 8 },
-  { state: "BR", JDU: 12, BJP: 17, INC: 3, Others: 8 },
+  { state: "UP", BJP: 33, SP: 37,  INC: 6,  Others: 4 },
+  { state: "MH", BJP: 23, INC: 13, SS: 9,   Others: 3 },
+  { state: "WB", TMC: 29, BJP: 12, INC: 1,  Others: 0 },
+  { state: "TN", DMK: 22, INC: 9,  BJP: 0,  Others: 8 },
+  { state: "BR", JDU: 12, BJP: 17, INC: 3,  Others: 8 },
 ];
 
 const TICKER_ITEMS = [
@@ -136,82 +288,114 @@ const PARTIES_TICKER = [
   { name: "AAP", color: "#14b8a6", seats: 3   },
   { name: "TMC", color: "#22c55e", seats: 29  },
   { name: "DMK", color: "#a855f7", seats: 22  },
-  { name: "BJP", color: "#f97316", seats: 240 },
+  { name: "BJP", color: "#ff6b00", seats: 240 },
   { name: "SHS", color: "#fb923c", seats: 7   },
 ];
 
 const SOCIAL_BUZZ = [
+  { party: "BJP", platform: "𝕏",  engagement: "+38%", color: "#ff6b00", seats: 55 },
   { party: "INC", platform: "𝕏",  engagement: "+45%", color: "#6366f1", seats: 45 },
-  { party: "BJP", platform: "𝕏",  engagement: "+38%", color: "#f97316", seats: 55 },
-  { party: "INC", platform: "FB", engagement: "+29%", color: "#14b8a6", seats: 29 },
-  { party: "BJP", platform: "FB", engagement: "+41%", color: "#f97316", seats: 41 },
+  { party: "BJP", platform: "FB", engagement: "+41%", color: "#ff6b00", seats: 41 },
+  { party: "INC", platform: "FB", engagement: "+29%", color: "#6366f1", seats: 29 },
   { party: "TMC", platform: "IG", engagement: "+22%", color: "#22c55e", seats: 22 },
 ];
 
 const STATE_COLORS = {
-  BJP: "#f97316", INC: "#6366f1", SP: "#ef4444", TMC: "#22c55e",
-  DMK: "#a855f7", JDU: "#8b5cf6", SS: "#f59e0b", Others: "#94a3b8",
+  BJP: "#ff6b00", INC: "#6366f1", SP: "#ef4444", TMC: "#22c55e",
+  DMK: "#a855f7", JDU: "#8b5cf6", SS: "#f59e0b", Others: "#64748b",
 };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [selectedYear, setSelectedYear]     = useState("2024");
+  const [selectedYear, setSelectedYear]         = useState("2024");
   const [selectedMapState, setSelectedMapState] = useState(null);
-  const [searchTerm, setSearchTerm]             = useState("");
-  const [liveUpdates, setLiveUpdates]       = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { themeName, toggle: toggleTheme }  = useTheme();
-  
+  const [liveUpdates, setLiveUpdates]           = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen]     = useState(false);
+  const { themeName, toggle: toggleTheme }      = useTheme();
+  const isDark = themeName === "dark";
 
-  const yearData     = ELECTION_DATA_BY_YEAR[selectedYear] || ELECTION_DATA_BY_YEAR["2024"];
-  const summary      = yearData.summary;
-  const partiesData  = yearData.parties;
+  const yearData        = ELECTION_DATA_BY_YEAR[selectedYear] || ELECTION_DATA_BY_YEAR["2024"];
+  const summary         = yearData.summary;
+  const partiesData     = yearData.parties;
   const stateHighlights = yearData.stateHighlights;
 
-  // ── Layout helper for State Details ──
-  const selectedStateData = stateHighlights.find(s => 
-    (s.id && s.id === selectedMapState?.id) || 
-    (s.state && s.state === selectedMapState?.name)
-  ) || selectedMapState;
-  
-  const filteredConstituencies = (selectedStateData?.constituencies || []).filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    c.candidate.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.party.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--t-bg)] text-[var(--t-text)] overflow-x-hidden">
+    <div className="flex flex-col min-h-screen relative bg-[var(--t-bg)] text-[var(--t-text)]">
+      <AuroraBg isDark={isDark} />
 
       {/* ══ NAVBAR ══════════════════════════════════════════════════════════ */}
-      <nav className="sticky top-0 z-50 bg-[var(--t-sidebar)] border-b border-[var(--t-border)]">
-        <div className="flex items-center justify-between px-3 py-1.5">
+      <nav
+        className="sticky top-0 z-50 border-b border-[var(--t-border)]"
+        style={{ background: "var(--t-header)", backdropFilter: "blur(28px)" }}
+      >
+        <div className="flex items-center justify-between px-4 py-2">
           {/* Brand */}
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md overflow-hidden border border-[var(--t-border)] flex-shrink-0">
-              <img src="/icons.jpg" alt="ECI Logo" className="w-full h-full object-cover" />
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg overflow-hidden border border-[var(--t-border)] flex-shrink-0">
+              <img src="/icons.jpg" alt="ECI" className="w-full h-full object-cover" />
             </div>
             <div>
-              <div className="text-[11px] font-bold text-[var(--t-text)] leading-tight">ECI Election Analytics</div>
-              <div className="text-[9px] text-[var(--t-textMut)] leading-tight hidden xs:block">General Elections Dashboard</div>
+              <div className="text-[12px] font-black text-[var(--t-text)] leading-tight tracking-wide">
+                ECI{" "}
+                <span style={{ color: "var(--t-accent)" }}>Analytics</span>
+              </div>
+              <div className="text-[9px] text-[var(--t-textMut)] hidden xs:block leading-tight">
+                Lok Sabha General Elections
+              </div>
             </div>
+            {/* Live badge */}
+            <div
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border"
+              style={{ background: "var(--t-accentBg)", borderColor: "var(--t-borderHi)" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: "var(--t-accent)" }} />
+              <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: "var(--t-accent)" }}>Live</span>
+            </div>
+          </div>
+
+          {/* Center: year pills */}
+          <div className="hidden md:flex items-center gap-0.5">
+            {["2024", "2019", "2014", "2009"].map(yr => (
+              <motion.button
+                key={yr}
+                onClick={() => setSelectedYear(yr)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.97 }}
+                className="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all"
+                style={
+                  selectedYear === yr
+                    ? {
+                        background: "var(--t-accentBg)",
+                        color: "var(--t-accent)",
+                        border: "1px solid var(--t-borderHi)",
+                      }
+                    : {
+                        color: "var(--t-textMut)",
+                        border: "1px solid transparent",
+                      }
+                }
+              >
+                {yr}
+              </motion.button>
+            ))}
           </div>
 
           {/* Controls */}
           <div className="flex items-center gap-2">
-            <button
+            <LiveClock />
+            <motion.button
               onClick={toggleTheme}
-              title={`Switch to ${themeName === "dark" ? "light" : "dark"} theme`}
-              className="p-1.5 rounded-lg border border-[var(--t-border)] hover:border-[var(--t-accent)] bg-[var(--t-bgCardSolid)] hover:bg-[var(--t-accentBg)] text-[var(--t-textSec)] hover:text-[var(--t-accent)] transition-all"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.94 }}
+              className="p-1.5 rounded-lg border border-[var(--t-border)] hover:border-[var(--t-borderHi)] bg-[var(--t-bgCard)] text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-colors"
             >
-              {themeName === "dark" ? <Sun size={13} /> : <Moon size={13} />}
-            </button>
+              {isDark ? <Sun size={13} /> : <Moon size={13} />}
+            </motion.button>
             <div className="hidden sm:block">
               <FiltersPanel selectedYear={selectedYear} onApply={({ year }) => setSelectedYear(year)} />
             </div>
-            {/* Mobile menu toggle */}
             <button
-              className="sm:hidden p-1.5 rounded-lg border border-[var(--t-border)] bg-[var(--t-bgCardSolid)] text-[var(--t-textSec)]"
+              className="sm:hidden p-1.5 rounded-lg border border-[var(--t-border)] bg-[var(--t-bgCard)] text-[var(--t-textSec)]"
               onClick={() => setMobileMenuOpen(o => !o)}
             >
               {mobileMenuOpen ? <X size={13} /> : <Menu size={13} />}
@@ -219,85 +403,98 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden border-t border-[var(--t-border)] px-3 py-2 flex flex-col gap-2">
-            <FiltersPanel selectedYear={selectedYear} onApply={({ year }) => { setSelectedYear(year); setMobileMenuOpen(false); }} />
-            <div className="flex items-center gap-3 flex-wrap text-[10px] text-[var(--t-textSec)]">
-              <label className="flex items-center gap-1.5 cursor-pointer">
-                <Radio size={10} className="text-green-400" />
-                Live Updates
-                <div
-                  onClick={() => setLiveUpdates(l => !l)}
-                  className={`w-7 h-3.5 rounded-full relative cursor-pointer ${liveUpdates ? "bg-green-500" : "bg-slate-600"}`}
-                >
-                  <div className={`absolute top-0.5 w-2.5 h-2.5 bg-white rounded-full transition-all ${liveUpdates ? "left-4" : "left-0.5"}`} />
+        {/* Mobile slide-down */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="sm:hidden border-t border-[var(--t-border)] overflow-hidden"
+            >
+              <div className="px-4 py-3 flex flex-col gap-3">
+                <FiltersPanel
+                  selectedYear={selectedYear}
+                  onApply={({ year }) => { setSelectedYear(year); setMobileMenuOpen(false); }}
+                />
+                <div className="flex items-center gap-3 flex-wrap text-[10px] text-[var(--t-textSec)]">
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <Radio size={10} className="text-green-500" />
+                    Live Updates
+                    <div
+                      onClick={() => setLiveUpdates(l => !l)}
+                      className={`w-7 h-3.5 rounded-full relative cursor-pointer transition-colors ${liveUpdates ? "bg-green-500" : "bg-[var(--t-bgCard)]"}`}
+                    >
+                      <div className={`absolute top-0.5 w-2.5 h-2.5 bg-white rounded-full transition-all ${liveUpdates ? "left-4" : "left-0.5"}`} />
+                    </div>
+                  </label>
+                  <button
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-semibold"
+                    style={{ background: "var(--t-accentBg)", color: "var(--t-accent)", border: "1px solid var(--t-borderHi)" }}
+                  >
+                    <Download size={10} /> Export
+                  </button>
                 </div>
-              </label>
-              <button className="flex items-center gap-1 hover:text-[var(--t-text)]"><TrendingUp size={10} /> Prediction</button>
-              <button className="flex items-center gap-1 hover:text-[var(--t-text)]"><GitCompare size={10} /> Compare</button>
-              <button className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded">
-                <Download size={10} /> Export
-              </button>
-            </div>
-          </div>
-        )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* ══ TOP STATS BAR ════════════════════════════════════════════════════ */}
-      <div className="bg-[var(--t-sidebar)] border-b border-[var(--t-border)] px-2 sm:px-3 py-2 flex-shrink-0">
-        {/* Mobile: 2-col grid  |  sm+: horizontal flex */}
+      <div
+        className="border-b border-[var(--t-border)] px-3 py-2.5 flex-shrink-0 relative z-10"
+        style={{ background: "var(--t-sidebar)", backdropFilter: "blur(16px)" }}
+      >
         <div className="grid grid-cols-2 sm:flex sm:flex-nowrap gap-2 overflow-x-auto">
 
-          {/* Sentiment sparkline card */}
-          <StatCard title="Sentiment" value="" color="#14b8a6" index={0}>
-            <div className="h-7 mt-0.5">
-              <SentimentSparkline />
-            </div>
-            <div className="flex gap-2 text-[8px] sm:text-[9px] mt-0.5">
+          <NeonStatCard title="Sentiment" value="" color="#14b8a6" index={0}>
+            <div className="h-7"><SentimentSparkline /></div>
+            <div className="flex gap-2 text-[8px] mt-0.5">
               <span style={{ color: "#14b8a6" }}>▲ +54%</span>
-              <span className="text-red-400">▼ -46%</span>
+              <span style={{ color: "#ef4444" }}>▼ -46%</span>
             </div>
-          </StatCard>
+          </NeonStatCard>
 
-          <StatCard
+          <NeonStatCard
             title="Total Seats"
-            value={summary.totalSeats}
+            value={<AnimCounter target={summary.totalSeats} />}
             sub1={`Ph1: ${Math.floor(summary.totalSeats * 0.27)} | Ph2: ${Math.floor(summary.totalSeats * 0.32)}`}
             sub2={`Decided: ${summary.seatsDecided}`}
             color="#6366f1"
             index={1}
           />
 
-          <StatCard
+          <NeonStatCard
             title="Voter Turnout"
-            value={`${summary.turnoutPercentage}%`}
+            value={<><AnimCounter target={summary.turnoutPercentage} />%</>}
             sub1="M: 67.1% | F: 65.8%"
             sub2={`Voters: ${summary.totalVoters}`}
-            sub3="Avg: 65.4%"
             color="#22c55e"
             index={2}
           />
 
-          <StatCard
+          <NeonStatCard
             title="Leading Alliance"
             value={summary.leadingParty.name}
             sub1={`${summary.leadingParty.seats} seats`}
             sub2={`Maj: ${summary.majorityMark}`}
-            color={summary.leadingParty.color || "#f97316"}
+            color={summary.leadingParty.color || "#ff6b00"}
             index={3}
           >
-            <div className="w-full bg-[var(--t-bgCard)] rounded-full h-1 mt-1 overflow-hidden">
+            <div className="w-full rounded-full h-1 mt-1 overflow-hidden bg-[var(--t-bgCard)]">
               <motion.div
-                className="h-1 rounded-full bg-orange-500"
+                className="h-1 rounded-full"
+                style={{ background: "linear-gradient(90deg, #ff6b00, #ff9a3c)", boxShadow: "0 0 8px rgba(255,107,0,0.5)" }}
                 initial={{ width: 0 }}
                 animate={{ width: `${(summary.leadingParty.seats / summary.totalSeats) * 100}%` }}
-                transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                transition={{ duration: 1.2, delay: 0.5, ease: [0.23, 1, 0.32, 1] }}
               />
             </div>
-          </StatCard>
+          </NeonStatCard>
 
-          <StatCard
+          <NeonStatCard
             title="Majority Mark"
             value={`${summary.majorityMark}`}
             sub1={`Current: ${summary.leadingParty.seats}`}
@@ -307,8 +504,8 @@ export default function Home() {
           >
             <div className="relative w-full h-3 mt-1">
               <svg viewBox="0 0 100 12" className="w-full h-full">
-                <rect x="0" y="4" width="100" height="4" rx="2" fill="var(--t-border)" />
-                <rect x="0" y="4" width={`${(summary.majorityMark / summary.totalSeats) * 100}`} height="4" rx="2" fill="#8b5cf6" fillOpacity="0.25" />
+                <rect x="0" y="4" width="100" height="4" rx="2" fill="var(--t-bgCard)" />
+                <rect x="0" y="4" width={`${(summary.majorityMark / summary.totalSeats) * 100}`} height="4" rx="2" fill="rgba(139,92,246,0.2)" />
                 <rect x="0" y="4" width={`${(summary.leadingParty.seats / summary.totalSeats) * 100}`} height="4" rx="2" fill="#8b5cf6" />
                 <line
                   x1={`${(summary.majorityMark / summary.totalSeats) * 100}`} y1="1"
@@ -317,66 +514,68 @@ export default function Home() {
                 />
               </svg>
             </div>
-          </StatCard>
+          </NeonStatCard>
 
-          {/* Coalition mini card */}
+          {/* Coalition mini */}
           <motion.div
-            variants={fadeUp}
-            custom={5}
+            variants={cardReveal}
             initial="hidden"
             animate="visible"
-            className="col-span-2 sm:col-span-1 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg p-2 flex-1 min-w-[160px] hover:border-[var(--t-accent)] transition-all relative overflow-hidden card-elevated"
+            custom={5}
+            className="col-span-2 sm:col-span-1 glass-card rounded-xl p-2.5 flex-1 min-w-[160px] relative overflow-hidden"
           >
-            <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-lg bg-gradient-to-r from-teal-400 via-violet-500 to-pink-500" />
-            <div className="text-[9px] sm:text-[10px] text-[var(--t-textSec)] font-medium mb-1">Coalition Dynamics</div>
+            <div
+              className="absolute inset-x-0 top-0 h-0.5"
+              style={{ background: "linear-gradient(90deg, transparent, var(--t-accent) 30%, #138808 70%, transparent)" }}
+            />
+            <div className="text-[10px] font-bold uppercase tracking-widest mb-1.5 text-[var(--t-textMut)]">
+              Coalition Dynamics
+            </div>
             <CoalitionDonut />
           </motion.div>
         </div>
       </div>
 
       {/* ══ MAIN BODY ════════════════════════════════════════════════════════ */}
-      <div className="flex flex-col lg:flex-row gap-2 p-2 lg:flex-1 lg:min-h-0">
+      <div className="flex flex-col lg:flex-row gap-3 p-3 lg:flex-1 lg:min-h-0 relative z-10">
 
         {/* ── LEFT COLUMN ───────────────────────────────────────────────── */}
         <motion.div
           variants={slideLeft}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-2 w-full lg:w-[300px] xl:w-[320px] lg:flex-shrink-0"
+          className="flex flex-col gap-3 w-full lg:w-[288px] xl:w-[308px] lg:flex-shrink-0"
         >
-          {/* Sentiment + Coalition side-by-side on mobile/tablet, stacked on xl */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-            <DCard title="Sentiment Analysis" action="+17/95" className="min-h-[155px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
+            <GlassCard title="Sentiment Analysis" action="+17/95" className="min-h-[155px]">
               <SentimentGauge />
-            </DCard>
-            <DCard title="Coalition Race" action="543 seats" className="min-h-[155px]">
-              <CoalitionRose />
-            </DCard>
+            </GlassCard>
+            <GlassCard title="Coalition Race" action="543 seats" className="min-h-[155px]">
+              <CoalitionRaceWidget />
+            </GlassCard>
           </div>
 
-          {/* Candidate Profile */}
-          <DCard
+          <GlassCard
             title="Candidate Profile"
             action="View All"
-            onAction={() => alert("Redirecting to full Candidate Profiles list...")}
+            onAction={() => {}}
             className="flex-1 min-h-[200px] xl:min-h-0"
           >
             <CandidateProfile />
-          </DCard>
+          </GlassCard>
 
-          {/* Live updates */}
-          <DCard
+          <GlassCard
             title="Live Updates"
             headerRight={
-              <span className="text-[10px] text-green-400 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot inline-block" />
+              <span className="text-[10px] text-green-500 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
                 Live
               </span>
             }
             className="h-[130px]"
           >
             <LiveFeed />
-          </DCard>
+          </GlassCard>
         </motion.div>
 
         {/* ── CENTER COLUMN ─────────────────────────────────────────────── */}
@@ -384,27 +583,22 @@ export default function Home() {
           variants={fadeIn}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-2 w-full lg:flex-1 lg:min-w-0"
+          className="flex flex-col gap-3 w-full lg:flex-1 lg:min-w-0"
         >
-          {/* Map + Key States */}
-          <div className="flex flex-col lg:flex-row gap-2 flex-1 min-h-0">
+          <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
 
             {/* India Map */}
-            <motion.div
-              variants={fadeUp}
-              custom={2}
-              initial="hidden"
-              animate="visible"
-              className="flex-1 min-w-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden h-[400px] sm:h-[460px] lg:h-full card-elevated"
-            >
-              <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
-                <span className="text-[11px] font-semibold text-[var(--t-textSec)] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot inline-block" />
-                  State-wise Election Results Map
+            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[360px] sm:h-[420px] lg:h-auto">
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
+                <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
+                  State-wise Election Results
                 </span>
-                <span className="text-[10px] text-blue-400">{selectedYear}</span>
+                <span className="text-[10px] font-mono font-bold" style={{ color: "var(--t-accent)" }}>
+                  {selectedYear}
+                </span>
               </div>
-              <div className="flex-1 min-h-0 p-1.5 overflow-hidden">
+              <div className="flex-1 min-h-0 p-2 overflow-hidden">
                 <IndiaMap
                   key={selectedYear}
                   selectedYear={selectedYear}
@@ -413,235 +607,129 @@ export default function Home() {
                   stateData={stateHighlights}
                 />
               </div>
-              {/* Results ticker */}
-              <div className="flex-shrink-0 border-t border-[var(--t-border)] bg-[var(--t-sidebar)] py-1 px-2 overflow-hidden">
-                <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-orange-400 flex-shrink-0 uppercase">Live</span>
+              {/* Ticker */}
+              <div className="flex-shrink-0 border-t border-[var(--t-border)] py-1.5 px-3 overflow-hidden bg-[var(--t-sidebar)]">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[9px] font-black flex-shrink-0 uppercase tracking-widest" style={{ color: "var(--t-accent)" }}>Live</span>
                   <div className="flex-1 overflow-hidden">
-                    <div className="flex gap-6 ticker-inner whitespace-nowrap">
+                    <div className="flex gap-8 ticker-inner whitespace-nowrap">
                       {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
-                        <span key={i} className="text-[9px] text-[var(--t-textSec)] flex-shrink-0">{t}</span>
+                        <span key={i} className="text-[9px] flex-shrink-0 text-[var(--t-textMut)]">{t}</span>
                       ))}
                     </div>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            {/* Side Panel (Key States / State Details) */}
-            <motion.div
-              variants={fadeUp}
-              custom={3}
-              initial="hidden"
-              animate="visible"
-              className="w-full lg:w-[260px] xl:w-[280px] lg:flex-shrink-0 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-lg flex flex-col overflow-hidden max-h-[460px] lg:max-h-none lg:h-full card-elevated"
-            >
-              <AnimatePresence mode="wait">
-                {!selectedMapState ? (
-                  <motion.div
-                    key="key-states"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="flex flex-col h-full"
-                  >
-                    <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
-                      <span className="text-[10px] font-bold text-[var(--t-textSec)] tracking-widest uppercase">Key States</span>
-                      <span className="text-[9px] text-green-400 flex items-center gap-1">
-                        <span className="w-1 h-1 rounded-full bg-green-400 pulse-dot inline-block" />live
-                      </span>
-                    </div>
+            {/* Key States panel */}
+            <div className="w-full lg:w-[238px] xl:w-[252px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[400px] lg:max-h-none">
+              <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
+                <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">Key States</span>
+                <span className="text-[9px] text-green-500 flex items-center gap-1">
+                  <span className="w-1 h-1 rounded-full bg-green-500 pulse-dot" />live
+                </span>
+              </div>
 
-                    <div className="flex-1 overflow-y-auto px-2 py-1.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 min-h-0">
-                      {KEY_STATES.map((s, i) => (
-                        <motion.div
-                          key={i}
-                          variants={fadeUp}
-                          custom={i}
-                          initial="hidden"
-                          animate="visible"
-                          whileHover={{ scale: 1.02 }}
-                          onClick={() => setSelectedMapState({ id: s.id || (s.state === 'Uttar Pradesh' ? 'UP' : s.state), name: s.state, ...s })}
-                          className="bg-[var(--t-bgCard)] rounded-md px-2 py-1.5 border border-[var(--t-border)] hover:border-[var(--t-borderHi)] transition-colors cursor-pointer"
+              <div className="flex-1 overflow-y-auto px-2.5 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 min-h-0">
+                {KEY_STATES.map((s, i) => (
+                  <TiltCard key={i} intensity={5}>
+                    <motion.div
+                      variants={cardReveal}
+                      initial="hidden"
+                      animate="visible"
+                      custom={i}
+                      className="rounded-xl px-3 py-2.5 border cursor-pointer overflow-hidden"
+                      style={{
+                        background: `${s.color}08`,
+                        borderColor: `${s.color}22`,
+                      }}
+                      whileHover={{ borderColor: `${s.color}55` }}
+                    >
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] font-bold text-[var(--t-text)] truncate flex-1 mr-2">{s.state}</span>
+                        <span
+                          className="text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0"
+                          style={{ background: `${s.color}20`, color: s.color, border: `1px solid ${s.color}38` }}
                         >
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] font-semibold text-[var(--t-text)] truncate flex-1 mr-1">{s.state}</span>
-                            <span
-                              className="text-[9px] font-black px-1.5 py-0.5 rounded flex-shrink-0"
-                              style={{ backgroundColor: s.color + "25", color: s.color, border: `1px solid ${s.color}55` }}
-                            >{s.party}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <div className="flex-1 bg-[var(--t-bgCard)] rounded-full h-1 overflow-hidden">
-                              <motion.div
-                                className="h-full rounded-full"
-                                style={{ backgroundColor: s.color }}
-                                initial={{ width: 0 }}
-                                animate={{ width: `${(s.won / s.seats) * 100}%` }}
-                                transition={{ duration: 0.8, delay: 0.2 + i * 0.08 }}
-                              />
-                            </div>
-                            <span className="text-[9px] text-[var(--t-textSec)] flex-shrink-0 font-mono">{s.won}<span className="text-[var(--t-textMut)]">/{s.seats}</span></span>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-
-                    <div className="border-t border-[var(--t-border)] flex-shrink-0">
-                      <div className="px-2.5 py-1 text-[9px] font-bold text-[var(--t-textMut)] uppercase tracking-widest border-b border-[var(--t-border)]">Live Status</div>
-                      <div className="px-2 py-1.5 space-y-1">
-                        {LIVE_STATES.map((ls, i) => {
-                          const entries = Object.entries(ls).filter(([k]) => k !== "state");
-                          const total   = entries.reduce((a, [, v]) => a + v, 0);
-                          return (
-                            <div key={i} className="flex items-center gap-1">
-                              <span className="text-[9px] text-[var(--t-textMut)] w-5 flex-shrink-0">{ls.state}</span>
-                              <div className="flex-1 h-1.5 rounded-full overflow-hidden flex">
-                                {entries.filter(([, v]) => v > 0).map(([party, v]) => (
-                                  <div key={party} className="h-full" style={{ width: `${(v / total) * 100}%`, backgroundColor: STATE_COLORS[party] || "#64748b" }} />
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })}
+                          {s.party}
+                        </span>
                       </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="state-details"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    className="flex flex-col h-full"
-                  >
-                    <div className="flex items-center justify-between px-2.5 py-1.5 border-b border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
-                      <div className="flex items-center gap-2 overflow-hidden">
-                        <button onClick={() => setSelectedMapState(null)} className="p-1 hover:bg-[var(--t-bgCard)] rounded text-[var(--t-textSec)]">
-                          <X size={12} />
-                        </button>
-                        <span className="text-[10px] font-bold text-[var(--t-accent)] uppercase truncate">{selectedStateData?.name}</span>
-                      </div>
-                      <span className="text-[9px] font-bold text-green-400 bg-green-400/10 px-1 rounded uppercase">Details</span>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto p-2.5 space-y-4">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="bg-[var(--t-bgCard)] p-2 rounded-lg border border-[var(--t-border)]">
-                          <div className="text-[8px] text-[var(--t-textMut)] uppercase font-bold">Total Seats</div>
-                          <div className="text-sm font-bold">{selectedStateData?.seats}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 rounded-full h-1.5 overflow-hidden bg-[var(--t-bgCard)]">
+                          <motion.div
+                            className="h-full rounded-full"
+                            style={{
+                              background: `linear-gradient(90deg, ${s.color}70, ${s.color})`,
+                              boxShadow: `0 0 5px ${s.color}55`,
+                            }}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${(s.won / s.seats) * 100}%` }}
+                            transition={{ duration: 1, delay: 0.3 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
+                          />
                         </div>
-                        <div className="bg-[var(--t-bgCard)] p-2 rounded-lg border border-[var(--t-border)]">
-                          <div className="text-[8px] text-[var(--t-textMut)] uppercase font-bold">Turnout</div>
-                          <div className="text-sm font-bold">{selectedStateData?.turnout || 65}%</div>
-                        </div>
+                        <span className="text-[9px] text-[var(--t-textMut)] font-mono flex-shrink-0">
+                          <span style={{ color: s.color }}>{s.won}</span>/{s.seats}
+                        </span>
                       </div>
+                    </motion.div>
+                  </TiltCard>
+                ))}
+              </div>
 
-                      <div className="space-y-2">
-                        <div className="text-[9px] font-bold text-[var(--t-textSec)] uppercase tracking-wider">Party Breakdown</div>
-                        <div className="space-y-1.5">
-                          {(selectedStateData?.partyBreakdown || [
-                            { name: selectedStateData?.winner || 'Others', seats: selectedStateData?.won || 0, color: selectedStateData?.colorParty || '#94a3b8', share: 'N/A' }
-                          ]).map((p, i) => (
-                            <div key={i} className="space-y-1">
-                              <div className="flex justify-between text-[9px]">
-                                <span className="font-semibold text-[var(--t-textSec)]">{p.name}</span>
-                                <span className="font-bold">{p.seats} <span className="text-[var(--t-textMut)] font-normal">sts</span></span>
-                              </div>
-                              <div className="h-1 bg-[var(--t-bgCard)] rounded-full overflow-hidden">
-                                <motion.div
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${(p.seats / selectedStateData.seats) * 100}%` }}
-                                  className="h-full rounded-full"
-                                  style={{ backgroundColor: p.color }}
-                                />
-                              </div>
-                            </div>
+              {/* Live states mini bars */}
+              <div className="border-t border-[var(--t-border)] flex-shrink-0 px-3 py-2">
+                <div className="text-[9px] font-bold uppercase tracking-widest mb-2 text-[var(--t-textMut)]">Live States</div>
+                <div className="space-y-1.5">
+                  {LIVE_STATES.map((ls, i) => {
+                    const entries = Object.entries(ls).filter(([k]) => k !== "state");
+                    const total   = entries.reduce((a, [, v]) => a + v, 0);
+                    return (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <span className="text-[9px] text-[var(--t-textMut)] w-5 flex-shrink-0">{ls.state}</span>
+                        <div className="flex-1 h-2 rounded-full overflow-hidden flex">
+                          {entries.filter(([, v]) => v > 0).map(([party, v]) => (
+                            <motion.div
+                              key={party}
+                              className="h-full"
+                              style={{ backgroundColor: STATE_COLORS[party] || "#64748b" }}
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(v / total) * 100}%` }}
+                              transition={{ duration: 0.8, delay: i * 0.05 }}
+                              title={`${party}: ${v}`}
+                            />
                           ))}
                         </div>
+                        <span className="text-[9px] text-[var(--t-textMut)] w-4 text-right flex-shrink-0">{total}</span>
                       </div>
-                      
-                      <div className="space-y-4">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[9px] font-bold text-[var(--t-textSec)] uppercase tracking-wider">Constituency Results</span>
-                            <span className="text-[8px] text-[var(--t-textMut)] font-mono">{filteredConstituencies.length} items</span>
-                          </div>
-                          
-                          {/* Mini Search */}
-                          <div className="relative group">
-                            <Search size={10} className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--t-textMut)] group-focus-within:text-blue-400" />
-                            <input 
-                              type="text" 
-                              placeholder="Search constituency..." 
-                              value={searchTerm}
-                              onChange={(e) => setSearchTerm(e.target.value)}
-                              className="w-full bg-[var(--t-bg)] border border-[var(--t-border)] rounded-md pl-6 pr-2 py-1 text-[9px] focus:outline-none focus:border-blue-500/50 transition-all"
-                            />
-                            {searchTerm && (
-                              <button onClick={() => setSearchTerm("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--t-textMut)] hover:text-white">
-                                <X size={8} />
-                              </button>
-                            )}
-                          </div>
-                        </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                        <div className="space-y-1.5 max-h-[180px] overflow-y-auto pr-1 custom-scrollbar">
-                          {filteredConstituencies.length > 0 ? (
-                            filteredConstituencies.map((c, i) => (
-                              <motion.div 
-                                key={i}
-                                initial={{ opacity: 0, scale: 0.98 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: i * 0.03 }}
-                                className="bg-[var(--t-bg)] border border-[var(--t-border)] rounded-md p-1.5 hover:border-[var(--t-borderHi)] transition-colors"
-                              >
-                                <div className="flex justify-between items-start mb-0.5">
-                                  <span className="text-[10px] font-bold truncate flex-1 pr-1">{c.name}</span>
-                                  <span className="text-[8px] font-black px-1 rounded flex-shrink-0" style={{ backgroundColor: STATE_COLORS[c.party] + "22", color: STATE_COLORS[c.party], border: `1px solid ${STATE_COLORS[c.party]}44` }}>
-                                    {c.party}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                  <span className="text-[9px] text-[var(--t-textSec)] truncate pr-1">{c.candidate}</span>
-                                  <span className="text-[8px] text-green-400 font-mono">+{c.margin}</span>
-                                </div>
-                              </motion.div>
-                            ))
-                          ) : (
-                            <div className="text-center py-4 text-[9px] text-[var(--t-textMut)] italic">
-                              No results found for "{searchTerm}"
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className="pt-2">
-                        <button 
-                          onClick={() => { setSelectedMapState(null); setSearchTerm(""); }}
-                          className="w-full py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold rounded-lg transition-all"
-                        >
-                          Back to Key States
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              {/* Legend */}
+              <div className="px-3 py-2 border-t border-[var(--t-border)] flex flex-wrap gap-x-2 gap-y-0.5 flex-shrink-0">
+                {Object.entries(PARTY_COLORS).map(([p, c]) => (
+                  <div key={p} className="flex items-center gap-0.5">
+                    <div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: c }} />
+                    <span className="text-[8px] text-[var(--t-textMut)]">{p}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Bottom charts row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <DCard title="State Performance Index" action="+11" className="min-h-[180px]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <GlassCard title="State Performance Index" action="+11" className="min-h-[180px]">
               <StatePerformanceChart />
-            </DCard>
-            <DCard title="Seat Share Trend" action="+9" className="min-h-[180px]">
+            </GlassCard>
+            <GlassCard title="Seat Share Trend" action="+9" className="min-h-[180px]">
               <SeatShareArea />
-            </DCard>
-            <DCard title="Vote Share Trend" action="+8" className="min-h-[180px]">
+            </GlassCard>
+            <GlassCard title="Vote Share Trend" action="+8" className="min-h-[180px]">
               <VoteShareTrendLine />
-            </DCard>
+            </GlassCard>
           </div>
         </motion.div>
 
@@ -650,58 +738,71 @@ export default function Home() {
           variants={slideRight}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-2 w-full lg:w-[320px] xl:w-[360px] lg:flex-shrink-0"
+          className="flex flex-col gap-3 w-full lg:w-[308px] xl:w-[336px] lg:flex-shrink-0"
         >
-          {/* Vote share + Constituency side-by-side on mobile */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-2">
-            <DCard title="National Vote Share" action="2024" className="min-h-[273px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
+            <GlassCard title="National Vote Share" action="2024" className="min-h-[273px]">
               <VoteSharePie
-                data={partiesData.map((p) => ({ party: p.party, share: p.share }))}
+                data={partiesData.map(p => ({ party: p.party, share: p.share }))}
                 height={110}
               />
-            </DCard>
-
-            <DCard title="Constituency Analysis" action="Scatter" className="min-h-[200px] xl:flex-1">
+            </GlassCard>
+            <GlassCard title="Constituency Analysis" action="Scatter" className="min-h-[200px]">
               <ConstituencyScatter />
-            </DCard>
+            </GlassCard>
           </div>
 
-          <DCard title="Social Media Buzz" className="min-h-[160px]">
-            <div className="space-y-1.5">
+          <GlassCard title="Social Media Buzz" className="min-h-[160px]">
+            <div className="space-y-2.5">
               {SOCIAL_BUZZ.map((s, i) => (
-                <div key={i} className="flex items-center gap-1.5 text-[10px]">
-                  <span className="text-[9px] font-bold w-4 flex-shrink-0" style={{ color: s.color }}>
-                    {s.platform === "Twitter" ? "𝕏" : s.platform}
-                  </span>
-                  <span className="font-semibold w-6" style={{ color: s.color }}>{s.party}</span>
-                  <div className="flex-1 bg-[var(--t-bgCard)] rounded-full h-1.5 overflow-hidden">
-                    <div
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 18 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
+                  className="flex items-center gap-2"
+                >
+                  <span className="text-[9px] font-bold w-4 flex-shrink-0" style={{ color: s.color }}>{s.platform}</span>
+                  <span className="text-[10px] font-black w-7" style={{ color: s.color }}>{s.party}</span>
+                  <div className="flex-1 rounded-full h-2 overflow-hidden bg-[var(--t-bgCard)]">
+                    <motion.div
                       className="h-full rounded-full"
-                      style={{ width: `${s.seats}%`, backgroundColor: s.color, opacity: 0.8 }}
+                      style={{
+                        background: `linear-gradient(90deg, ${s.color}70, ${s.color})`,
+                        boxShadow: `0 0 5px ${s.color}45`,
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${s.seats}%` }}
+                      transition={{ duration: 1.1, delay: 0.5 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
                     />
                   </div>
-                  <span className="text-green-400 text-[9px] flex-shrink-0">{s.engagement}</span>
-                </div>
+                  <span className="text-green-500 text-[9px] flex-shrink-0 font-bold">{s.engagement}</span>
+                </motion.div>
               ))}
             </div>
-          </DCard>
+          </GlassCard>
         </motion.div>
       </div>
 
       {/* ══ BOTTOM BAR ═══════════════════════════════════════════════════════ */}
-      <div className="flex items-center bg-[var(--t-sidebar)] border-t border-[var(--t-border)] px-2 sm:px-3 py-1.5 gap-3 flex-shrink-0">
+      <div
+        className="flex items-center border-t border-[var(--t-border)] px-3 py-2 gap-3 flex-shrink-0 relative z-10"
+        style={{ background: "var(--t-sidebar)", backdropFilter: "blur(28px)" }}
+      >
         {/* Party ticker */}
         <div className="flex-1 overflow-hidden relative min-w-0">
           <div className="flex items-center gap-1 ticker-inner" style={{ width: "max-content" }}>
             {[...PARTIES_TICKER, ...PARTIES_TICKER].map((p, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="flex flex-col items-center justify-center w-9 h-7 sm:w-10 sm:h-8 rounded cursor-pointer hover:brightness-125 transition-all flex-shrink-0"
-                style={{ backgroundColor: p.color + "22", border: `1px solid ${p.color}44` }}
+                whileHover={{ scale: 1.1, y: -2 }}
+                transition={{ duration: 0.15 }}
+                className="flex flex-col items-center justify-center w-10 h-8 rounded-lg cursor-pointer flex-shrink-0"
+                style={{ background: `${p.color}12`, border: `1px solid ${p.color}28` }}
               >
-                <span className="text-[8px] sm:text-[9px] font-black" style={{ color: p.color }}>{p.name}</span>
-                <span className="text-[7px] sm:text-[8px] text-[var(--t-textMut)]">{p.seats}</span>
-              </div>
+                <span className="text-[9px] font-black" style={{ color: p.color }}>{p.name}</span>
+                <span className="text-[7px] text-[var(--t-textMut)]">{p.seats}</span>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -709,31 +810,40 @@ export default function Home() {
         {/* Desktop controls */}
         <div className="hidden sm:flex items-center gap-3 flex-shrink-0">
           <label className="flex items-center gap-1.5 text-[10px] text-[var(--t-textSec)] cursor-pointer">
-            <Radio size={10} className="text-green-400" />
+            <Radio size={10} className="text-green-500" />
             Live
             <div
               onClick={() => setLiveUpdates(l => !l)}
-              className={`w-7 h-3.5 rounded-full relative cursor-pointer ${liveUpdates ? "bg-green-500" : "bg-slate-600"}`}
+              className={`w-7 h-3.5 rounded-full relative cursor-pointer transition-colors ${liveUpdates ? "bg-green-500" : "bg-[var(--t-bgCard)]"}`}
             >
               <div className={`absolute top-0.5 w-2.5 h-2.5 bg-white rounded-full transition-all ${liveUpdates ? "left-4" : "left-0.5"}`} />
             </div>
           </label>
-          <button className="hidden md:flex items-center gap-1 text-[10px] text-[var(--t-textSec)] hover:text-[var(--t-text)]">
+          <button className="hidden md:flex items-center gap-1 text-[10px] text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-colors">
             <TrendingUp size={10} /> Prediction
           </button>
-          <button className="hidden md:flex items-center gap-1 text-[10px] text-[var(--t-textSec)] hover:text-[var(--t-text)]">
+          <button className="hidden md:flex items-center gap-1 text-[10px] text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-colors">
             <GitCompare size={10} /> Compare
           </button>
           <div className="hidden lg:flex items-center gap-1 text-[10px] text-[var(--t-textMut)]">
-            <BarChart2 size={10} /> <span className="text-[var(--t-textSec)]">CSDS, NES</span>
+            <BarChart2 size={10} />
+            <span className="text-[var(--t-textSec)]">CSDS, NES</span>
           </div>
-          <button className="flex items-center gap-1 text-[10px] bg-blue-600 hover:bg-blue-500 text-white px-2 py-1 rounded">
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center gap-1.5 text-[10px] px-2.5 py-1.5 rounded-lg font-semibold"
+            style={{
+              background: "var(--t-accentBg)",
+              border: "1px solid var(--t-borderHi)",
+              color: "var(--t-accent)",
+            }}
+          >
             <Download size={10} /> Export
-          </button>
-          <div className="hidden lg:block text-[10px] text-[var(--t-textMut)]">© 2024 ECI | {selectedYear}</div>
+          </motion.button>
+          <div className="hidden lg:block text-[10px] text-[var(--t-textMut)] font-mono">© 2024 ECI | {selectedYear}</div>
         </div>
       </div>
-
     </div>
   );
 }

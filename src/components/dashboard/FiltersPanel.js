@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { X, SlidersHorizontal, RotateCcw, ChevronDown } from 'lucide-react';
 
 const YEARS     = ['2024', '2019', '2014', '2009', '2004', '1999'];
@@ -21,9 +21,9 @@ const DEFAULTS = {
   status: 'All Results', dateFrom: '2024-04-19', dateTo: '2024-06-01',
 };
 
-function Row({ label, children, half }) {
+function Row({ label, children }) {
   return (
-    <div className={`flex flex-col gap-1 ${half ? '' : ''}`}>
+    <div className="flex flex-col gap-1">
       <span className="text-[10px] text-[var(--t-textMut)] font-semibold uppercase tracking-wider">{label}</span>
       {children}
     </div>
@@ -36,26 +36,28 @@ function Sel({ value, options, onChange }) {
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full appearance-none bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-text)] text-[11px] rounded-md pl-2.5 pr-7 py-1.5 focus:outline-none focus:border-blue-500 hover:border-[var(--t-borderHi)] transition-colors cursor-pointer"
+        className="w-full appearance-none bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-text)] text-[11px] rounded-md pl-2.5 pr-7 py-1.5 focus:outline-none focus:border-[var(--t-accent)] hover:border-[var(--t-borderHi)] transition-colors cursor-pointer"
       >
-        {options.map(o => <option key={o} value={o}>{o}</option>)}
+        {options.map(o => (
+          <option key={o} value={o} style={{ backgroundColor: 'var(--t-bgCardSolid)', color: 'var(--t-text)' }}>{o}</option>
+        ))}
       </select>
       <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--t-textMut)] pointer-events-none" />
     </div>
   );
 }
 
-function Pills({ value, options, onChange, colorActive = 'bg-blue-600 text-white', cols = 3 }) {
+function Pills({ value, options, onChange, cols = 3 }) {
   return (
-    <div className={`grid gap-1`} style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+    <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
       {options.map(o => (
         <button
           key={o}
           onClick={() => onChange(o)}
           className={`py-1 px-1 rounded text-[11px] font-semibold truncate transition-all ${
             value === o
-              ? `${colorActive} shadow shadow-blue-900/40`
-              : 'bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] hover:border-blue-500 hover:text-[var(--t-text)]'
+              ? 'bg-[var(--t-accent)] text-white shadow shadow-teal-900/40'
+              : 'bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] hover:border-[var(--t-accent)] hover:text-[var(--t-text)]'
           }`}
           title={o}
         >
@@ -84,78 +86,91 @@ function Section({ title, children, defaultOpen = true }) {
 
 export default function FiltersPanel({ selectedYear, onApply }) {
   const [open, setOpen] = useState(false);
-  const [f, setF] = useState({ ...DEFAULTS, year: selectedYear || '2024' });
+  const [f, setF]       = useState({ ...DEFAULTS, year: selectedYear || '2024' });
+  const wrapRef         = useRef(null);
 
   useEffect(() => { if (selectedYear) setF(p => ({ ...p, year: selectedYear })); }, [selectedYear]);
 
+  // Close on Escape
   useEffect(() => {
     if (!open) return;
-    const handle = e => { if (e.key === 'Escape') setOpen(false); };
-    window.addEventListener('keydown', handle);
-    return () => window.removeEventListener('keydown', handle);
+    const onKey = e => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const onClick = e => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
   }, [open]);
 
   const set = key => val => setF(p => ({ ...p, [key]: val }));
 
-  // Count active (non-default) filters
-  const activeCount = useMemo(() =>
-    Object.entries(f).filter(([k, v]) => v !== DEFAULTS[k]).length,
-  [f]);
+  const activeCount = useMemo(
+    () => Object.entries(f).filter(([k, v]) => v !== DEFAULTS[k]).length,
+    [f],
+  );
 
   const handleReset = () => setF({ ...DEFAULTS });
   const handleApply = () => { onApply?.(f); setOpen(false); };
 
   return (
-    <>
+    <div ref={wrapRef} className="relative">
+
       {/* ── Trigger ──────────────────────────────────────────────── */}
       <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] hover:border-blue-500 rounded-lg text-[var(--t-textSec)] hover:text-white transition-all text-[11px] font-medium group"
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] hover:border-[var(--t-accent)] rounded-lg text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-all text-[11px] font-medium group"
         title="Open Filters"
       >
-        <SlidersHorizontal size={13} className="text-blue-400 group-hover:text-blue-300" />
+        <SlidersHorizontal size={13} className="text-[var(--t-accent)]" />
         Filters
         {activeCount > 0 && (
-          <span className="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded-full min-w-[16px] text-center leading-none">
+          <span className="bg-[var(--t-accent)] text-white text-[9px] px-1.5 py-0.5 rounded-full min-w-[16px] text-center leading-none">
             {activeCount}
           </span>
         )}
+        <ChevronDown
+          size={11}
+          className={`text-[var(--t-textMut)] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
       </button>
 
-      {/* ── Backdrop ─────────────────────────────────────────────── */}
+      {/* ── Dropdown ─────────────────────────────────────────────── */}
       {open && (
-        <div className="fixed inset-0 z-40 bg-black/65 backdrop-blur-sm" onClick={() => setOpen(false)} />
-      )}
-
-      {/* ── Modal ────────────────────────────────────────────────── */}
-      {open && (
-        <div className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-1.5rem)] max-w-[420px] max-h-[88vh] bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-xl shadow-2xl shadow-black/70 flex flex-col overflow-hidden">
+        <div className="absolute top-full right-0 mt-1.5 z-50 w-[340px] max-h-[80vh] bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-xl shadow-[0_8px_32px_rgba(0,0,20,0.7),0_2px_8px_rgba(0,0,20,0.5)] flex flex-col overflow-hidden">
 
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
             <div className="flex items-center gap-2">
-              <SlidersHorizontal size={15} className="text-blue-400" />
-              <span className="text-[13px] font-bold text-white">Filter Options</span>
+              <SlidersHorizontal size={13} className="text-[var(--t-accent)]" />
+              <span className="text-[12px] font-bold text-[var(--t-text)]">Filter Options</span>
               {activeCount > 0 && (
-                <span className="bg-blue-600/20 text-blue-400 border border-blue-500/30 text-[10px] px-2 py-0.5 rounded-full">
+                <span className="bg-[var(--t-accentBg)] text-[var(--t-accent)] border border-[var(--t-borderHi)] text-[10px] px-2 py-0.5 rounded-full">
                   {activeCount} active
                 </span>
               )}
             </div>
-            <button onClick={() => setOpen(false)} className="p-1 rounded-md hover:bg-[var(--t-bgCard)] text-[var(--t-textSec)] hover:text-white transition-colors">
-              <X size={15} />
+            <button
+              onClick={() => setOpen(false)}
+              className="p-1 rounded-md hover:bg-[var(--t-bgCard)] text-[var(--t-textSec)] hover:text-[var(--t-text)] transition-colors"
+            >
+              <X size={13} />
             </button>
           </div>
 
           {/* Scrollable body */}
-          <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2.5">
+          <div className="flex-1 overflow-y-auto p-2.5 flex flex-col gap-2">
 
-            {/* ── Election Year ── */}
             <Section title="Election Year">
               <Pills value={f.year} options={YEARS} onChange={set('year')} cols={3} />
             </Section>
 
-            {/* ── Geography ── */}
             <Section title="Geography">
               <div className="grid grid-cols-2 gap-2">
                 <Row label="Region">
@@ -167,7 +182,6 @@ export default function FiltersPanel({ selectedYear, onApply }) {
               </div>
             </Section>
 
-            {/* ── Party & Alliance ── */}
             <Section title="Party & Alliance">
               <Row label="Party">
                 <Sel value={f.party} options={PARTIES} onChange={set('party')} />
@@ -177,7 +191,6 @@ export default function FiltersPanel({ selectedYear, onApply }) {
               </Row>
             </Section>
 
-            {/* ── Election Phase & Date ── */}
             <Section title="Phase & Date Range">
               <Row label="Phase">
                 <Sel value={f.phase} options={PHASES} onChange={set('phase')} />
@@ -185,14 +198,13 @@ export default function FiltersPanel({ selectedYear, onApply }) {
               <Row label="Date Range">
                 <div className="grid grid-cols-2 gap-2">
                   <input type="date" value={f.dateFrom} onChange={e => set('dateFrom')(e.target.value)}
-                    className="bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-text)] text-[11px] rounded-md px-2 py-1.5 focus:outline-none focus:border-blue-500 w-full" />
+                    className="bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-text)] text-[11px] rounded-md px-2 py-1.5 focus:outline-none focus:border-[var(--t-accent)] w-full" />
                   <input type="date" value={f.dateTo} onChange={e => set('dateTo')(e.target.value)}
-                    className="bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-text)] text-[11px] rounded-md px-2 py-1.5 focus:outline-none focus:border-blue-500 w-full" />
+                    className="bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-text)] text-[11px] rounded-md px-2 py-1.5 focus:outline-none focus:border-[var(--t-accent)] w-full" />
                 </div>
               </Row>
             </Section>
 
-            {/* ── Constituency & Result ── */}
             <Section title="Constituency & Result" defaultOpen={false}>
               <div className="grid grid-cols-2 gap-2">
                 <Row label="Constituency Type">
@@ -213,22 +225,22 @@ export default function FiltersPanel({ selectedYear, onApply }) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center gap-2 px-4 py-3 border-t border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
+          <div className="flex items-center gap-2 px-3 py-2 border-t border-[var(--t-border)] bg-[var(--t-sidebar)] flex-shrink-0">
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--t-bgCard)] hover:bg-slate-600 text-[var(--t-textSec)] text-[12px] rounded-md transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--t-bgCard)] hover:bg-[var(--t-bgCard)] border border-[var(--t-border)] text-[var(--t-textSec)] text-[11px] rounded-md transition-colors"
             >
-              <RotateCcw size={11} /> Reset All
+              <RotateCcw size={11} /> Reset
             </button>
             <button
               onClick={handleApply}
-              className="flex-1 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-[12px] font-semibold rounded-md transition-colors shadow-md shadow-blue-900/30"
+              className="flex-1 py-1.5 bg-[var(--t-accent)] hover:opacity-90 text-white text-[12px] font-semibold rounded-md transition-opacity shadow-md"
             >
-              Apply Filters {activeCount > 0 && `(${activeCount})`}
+              Apply {activeCount > 0 && `(${activeCount})`}
             </button>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
