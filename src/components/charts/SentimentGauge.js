@@ -83,11 +83,11 @@ export default function SentimentGauge({ positive = 54, neutral = 14, negative =
 
           {/* Percentage labels */}
           <text x={polarToXY(CX, CY, R_OUTER + 8, negEnd / 2).x} y={polarToXY(CX, CY, R_OUTER + 8, negEnd / 2).y}
-                textAnchor="middle" fontSize={8} fill="#FF6E7A" opacity={0.9}>{negative}%</text>
+                textAnchor="middle" fontSize={8} fill="var(--t-no)" opacity={0.9}>{negative}%</text>
           <text x={polarToXY(CX, CY, R_OUTER + 8, negEnd + (neutral / 100) * 90).x} y={polarToXY(CX, CY, R_OUTER + 8, negEnd + (neutral / 100) * 90).y}
-                textAnchor="middle" fontSize={8} fill="#FFD060" opacity={0.9}>{neutral}%</text>
+                textAnchor="middle" fontSize={8} fill="var(--t-accent)" opacity={0.9}>{neutral}%</text>
           <text x={polarToXY(CX, CY, R_OUTER + 8, neutralEnd + (positive / 100) * 90).x} y={polarToXY(CX, CY, R_OUTER + 8, neutralEnd + (positive / 100) * 90).y}
-                textAnchor="middle" fontSize={8} fill="#3DE8A0" opacity={0.9}>{positive}%</text>
+                textAnchor="middle" fontSize={8} fill="var(--t-ok)" opacity={0.9}>{positive}%</text>
 
           {/* Needle */}
           <line x1={CX} y1={CY} x2={needleTip.x} y2={needleTip.y}
@@ -95,11 +95,11 @@ export default function SentimentGauge({ positive = 54, neutral = 14, negative =
           <circle cx={CX} cy={CY} r={5} fill="var(--t-bgCardSolid)" stroke="var(--t-text)" strokeWidth={1.5} />
 
           {/* Central label */}
-          <text x={CX} y={CY - 10} textAnchor="middle" fontSize={16} fontWeight="bold" fill="#3DE8A0">{positive}%</text>
+          <text x={CX} y={CY - 10} textAnchor="middle" fontSize={16} fontWeight="bold" fill="var(--t-ok)">{positive}%</text>
           <text x={CX} y={CY + 2}  textAnchor="middle" fontSize={8} fill="var(--t-textMut)">Positive</text>
         </svg>
-        <span className="absolute bottom-0 left-4 text-[9px] font-semibold" style={{ color: '#FF6E7A' }}>Negative</span>
-        <span className="absolute bottom-0 right-4 text-[9px] font-semibold" style={{ color: '#3DE8A0' }}>Positive</span>
+        <span className="absolute bottom-0 left-4 text-[9px] font-semibold" style={{ color: 'var(--t-no)' }}>Negative</span>
+        <span className="absolute bottom-0 right-4 text-[9px] font-semibold" style={{ color: 'var(--t-ok)' }}>Positive</span>
       </div>
 
       {/* Party sentiment bars with gradient fills */}
@@ -111,7 +111,7 @@ export default function SentimentGauge({ positive = 54, neutral = 14, negative =
               <div className="h-full rounded-full transition-all duration-700"
                    style={{ width: `${p.pos}%`, background: `linear-gradient(90deg, ${p.color}99, ${p.color})` }} />
             </div>
-            <span className="text-[8px] text-[var(--t-textMut)] w-5 text-right">{p.pos}%</span>
+            <span className="text-[8px] text-[var(--t-textSec)] w-5 text-right font-bold">{p.pos}%</span>
           </div>
         ))}
       </div>

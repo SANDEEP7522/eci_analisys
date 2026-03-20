@@ -13,8 +13,8 @@ export default function HourlyTrendChart({ data, height = 200 }) {
       <ResponsiveContainer>
         <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-          <XAxis dataKey="hour" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} interval={3} />
-          <YAxis tick={{ fontSize: 10, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+          <XAxis dataKey="hour" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} interval={3} />
+          <YAxis tick={{ fontSize: 10, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
           <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.15)' }} />
           <Line
             type="monotone"

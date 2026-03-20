@@ -34,7 +34,7 @@ export default function SentimentCloud() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            filter: `drop-shadow(0 0 6px ${w.g[1]}60)`,
+            filter: `drop-shadow(0 1px 2px var(--t-shadow)) drop-shadow(0 0 5px ${w.g[1]}40)`,
             transform: 'translate(-50%, -50%)',
             whiteSpace: 'nowrap',
           }}

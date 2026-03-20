@@ -184,7 +184,7 @@ export default function CandidateProfile() {
                 transition={{ delay: i * 0.04 }}
                 className="bg-[var(--t-bgCard)] rounded px-1 py-[2px] border border-transparent hover:border-[var(--t-border)] transition-colors leading-tight"
               >
-                <div className="text-[var(--t-textMut)] leading-none p-1">{k}</div>
+                <div className="text-[var(--t-textSec)] leading-none p-1 font-medium">{k}</div>
                 <div className="text-[var(--t-text)] font-semibold truncate leading-none p-1">{v}</div>
               </motion.div>
             ))}

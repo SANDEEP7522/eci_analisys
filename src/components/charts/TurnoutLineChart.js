@@ -15,7 +15,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function TurnoutLineChart({ data, height = 300 }) {
   if (!data || data.length === 0) {
     return (
-      <div className="flex items-center justify-center bg-[var(--t-bgCard)] rounded-xl border border-dashed border-[var(--t-border)] text-[var(--t-textMut)] text-sm" style={{ height }}>
+      <div className="flex items-center justify-center bg-[var(--t-bgCard)] rounded-xl border border-dashed border-[var(--t-border)] text-[var(--t-textSec)] font-bold text-sm" style={{ height }}>
         No turnout data
       </div>
     );

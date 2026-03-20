@@ -46,8 +46,8 @@ export default function SeatShareArea({ activeParties }) {
             </linearGradient>
           ))}
         </defs>
-        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="year" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {visibleKeys.filter(k => COLORS[k]).map(k => (
           <Area key={k} type="monotone" dataKey={k}

@@ -24,7 +24,7 @@ const DEFAULTS = {
 function Row({ label, children }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-[10px] text-[var(--t-textMut)] font-semibold uppercase tracking-wider">{label}</span>
+      <span className="text-[10px] text-[var(--t-textSec)] font-bold uppercase tracking-wider">{label}</span>
       {children}
     </div>
   );
@@ -42,7 +42,7 @@ function Sel({ value, options, onChange }) {
           <option key={o} value={o} style={{ backgroundColor: 'var(--t-bgCardSolid)', color: 'var(--t-text)' }}>{o}</option>
         ))}
       </select>
-      <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--t-textMut)] pointer-events-none" />
+      <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--t-textSec)] pointer-events-none" />
     </div>
   );
 }
@@ -93,7 +93,7 @@ function SearchSel({ value, options, onChange }) {
         <span className="truncate flex-1 text-left" style={{ color: isDefault ? 'var(--t-textSec)' : 'var(--t-text)', fontWeight: isDefault ? 400 : 600 }}>
           {value}
         </span>
-        <ChevronDown size={11} style={{ color: 'var(--t-textMut)', flexShrink: 0, transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+        <ChevronDown size={11} style={{ color: 'var(--t-textSec)', flexShrink: 0, transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }} />
       </button>
 
       {/* Inline panel */}
@@ -107,7 +107,7 @@ function SearchSel({ value, options, onChange }) {
             className="flex items-center gap-1.5 px-2 py-1.5"
             style={{ borderBottom: '1px solid var(--t-border)' }}
           >
-            <Search size={11} style={{ color: 'var(--t-textMut)', flexShrink: 0 }} />
+            <Search size={11} style={{ color: 'var(--t-textSec)', flexShrink: 0 }} />
             <input
               ref={inputRef}
               type="text"
@@ -122,7 +122,7 @@ function SearchSel({ value, options, onChange }) {
                 type="button"
                 onClick={() => setQuery('')}
                 className="rounded hover:bg-[var(--t-bgCard)] p-0.5 transition-colors"
-                style={{ color: 'var(--t-textMut)' }}
+                style={{ color: 'var(--t-textSec)' }}
               >
                 <X size={10} />
               </button>
@@ -132,7 +132,7 @@ function SearchSel({ value, options, onChange }) {
           {/* Options list */}
           <div ref={listRef} className="overflow-y-auto" style={{ maxHeight: '160px' }}>
             {filtered.length === 0 ? (
-              <div className="px-3 py-3 text-[11px] italic text-center" style={{ color: 'var(--t-textMut)' }}>
+              <div className="px-3 py-3 text-[11px] italic text-center" style={{ color: 'var(--t-textSec)' }}>
                 No results for &ldquo;{query}&rdquo;
               </div>
             ) : filtered.map(o => {
@@ -194,7 +194,7 @@ function Section({ title, children, defaultOpen = true }) {
         className="w-full flex items-center justify-between px-1 py-1 bg-[var(--t-sidebar)] hover:bg-[var(--t-accentBg)] transition-colors"
       >
         <span className="text-[11px] font-bold text-[var(--t-textSec)]">{title}</span>
-        <ChevronDown size={12} className={`text-[var(--t-textMut)] transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown size={12} className={`text-[var(--t-textSec)] transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && <div className="p-3 flex flex-col gap-3 bg-[var(--t-bgCard)]">{children}</div>}
     </div>
@@ -254,7 +254,7 @@ export default function FiltersPanel({ selectedYear, onApply }) {
         )}
         <ChevronDown
           size={11}
-          className={`text-[var(--t-textMut)] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`text-[var(--t-textSec)] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />
       </button>
 

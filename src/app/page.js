@@ -180,7 +180,7 @@ function GlassCard({ title, children, className = "", headerRight, action, onAct
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
       {title && (
         <div className="flex items-center justify-between px-1 py-2 border-b border-[var(--t-border)] flex-shrink-0 h-2">
-          <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">{title}</span>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textSec)]">{title}</span>
           {headerRight || (action && <button onClick={onAction} className="text-[10px] font-semibold hover:opacity-80" style={{ color: "var(--t-accent)" }}>{action}</button>)}
         </div>
       )}
@@ -193,10 +193,10 @@ function NeonStatCard({ title, value, sub1, sub2, color = "#FF822D", children, i
   return (
     <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={index} whileHover={{ scale: 1.02, y: -2, transition: { duration: 0.2 } }} className="glass-card rounded-xl p-2.5 flex flex-col gap-1 relative overflow-hidden flex-1 min-w-[110px] cursor-default">
       <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-xl" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
-      <div className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider leading-tight text-[var(--t-textMut)]">{title}</div>
+      <div className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider leading-tight text-[var(--t-textSec)]">{title}</div>
       <div className="text-base sm:text-xl font-black leading-tight" style={{ color, textShadow: `0 0 16px ${color}40` }}>{value}</div>
       {sub1 && <div className="text-[9px] truncate leading-tight text-[var(--t-textSec)]">{sub1}</div>}
-      {sub2 && <div className="text-[9px] truncate leading-tight text-[var(--t-textMut)]">{sub2}</div>}
+      {sub2 && <div className="text-[9px] truncate leading-tight text-[var(--t-textSec)] font-medium">{sub2}</div>}
       {children}
     </motion.div>
   );
@@ -226,7 +226,7 @@ function CoalitionRaceWidget({ alliancesData = [], majorityMark = 272 }) {
       <div className="pt-2 border-t border-[var(--t-border)] flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-          <span className="text-[9px] text-[var(--t-textMut)]">Majority: {majorityMark}</span>
+          <span className="text-[9px] text-[var(--t-textSec)]">Majority: {majorityMark}</span>
         </div>
         <span className="text-[10px] font-black" style={{ color: leader.color || "#FF822D" }}>
           {leader.name} {margin >= 0 ? `+${margin} ↑` : `${margin} ↓`}
@@ -438,7 +438,7 @@ export default function Home() {
               <div className="text-[12px] font-black text-[var(--t-text)] leading-tight tracking-wide">
                 ECI <span style={{ color: "var(--t-accent)" }}>Analytics</span>
               </div>
-              <div className="text-[9px] text-[var(--t-textMut)] hidden xs:block leading-tight">Lok Sabha General Elections</div>
+              <div className="text-[9px] text-[var(--t-textSec)] hidden xs:block leading-tight font-medium">Lok Sabha General Elections</div>
             </div>
             <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border" style={{ background: "var(--t-accentBg)", borderColor: "var(--t-borderHi)" }}>
               <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: "var(--t-accent)" }} />
@@ -502,11 +502,11 @@ export default function Home() {
             className="border-b border-[var(--t-border)] px-4 py-1.5 flex items-center gap-2 flex-wrap relative z-10 overflow-hidden"
             style={{ background: "var(--t-accentBg)" }}
           >
-            <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--t-textMut)]">Filters:</span>
+            <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--t-textSec)]">Filters:</span>
             {activePills.map(p => (
               <FilterPill key={p.key} label={p.label} onRemove={() => clearFilter(p.key)} />
             ))}
-            <button onClick={clearAll} className="ml-auto text-[9px] font-bold text-[var(--t-textMut)] hover:text-[var(--t-accent)] transition-colors flex items-center gap-1">
+            <button onClick={clearAll} className="ml-auto text-[9px] font-bold text-[var(--t-textSec)] hover:text-[var(--t-accent)] transition-colors flex items-center gap-1">
               <X size={10} /> Clear All
             </button>
           </motion.div>
@@ -613,7 +613,7 @@ export default function Home() {
             {/* India Map */}
             <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[370px] sm:h-[420px] lg:h-auto lg:min-h-[500px]">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)] flex items-center gap-1.5">
+                <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textSec)] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
                   State-wise Election Results
                   {(mapHighlightParty || mapExternalViewMode) && (
@@ -631,7 +631,7 @@ export default function Home() {
                   <div className="flex-1 overflow-hidden">
                     <div className="flex gap-8 ticker-inner whitespace-nowrap">
                       {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
-                        <span key={i} className="text-[9px] flex-shrink-0 text-[var(--t-textMut)]">{t}</span>
+                        <span key={i} className="text-[9px] flex-shrink-0 text-[var(--t-textSec)]">{t}</span>
                       ))}
                     </div>
                   </div>
@@ -666,7 +666,7 @@ export default function Home() {
                     <span className="text-[10px] font-bold truncate text-[var(--t-text)]">{selectedMapState.name}</span>
                   </div>
                 ) : (
-                  <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)]">
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textSec)]">
                     Key States
                     {activePills.length > 0 && <span className="ml-1.5 text-[8px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "var(--t-accentBg)", color: "var(--t-accent)" }}>{filteredKeyStates.length}</span>}
                   </span>
@@ -678,7 +678,7 @@ export default function Home() {
                 <div className="flex-1 flex items-center justify-center p-4">
                   <div className="text-center">
                     <div className="text-2xl mb-2">🗺️</div>
-                    <div className="text-[11px] text-[var(--t-textMut)]">No states match current filters</div>
+                    <div className="text-[11px] text-[var(--t-textSec)] font-medium">No states match current filters</div>
                     <button onClick={clearAll} className="mt-2 text-[10px] font-bold" style={{ color: "var(--t-accent)" }}>Clear filters</button>
                   </div>
                 </div>
@@ -730,7 +730,7 @@ export default function Home() {
                       const total = entries.reduce((a, [, v]) => a + v, 0);
                       return (
                         <div key={i} className="flex items-center gap-1.5">
-                          <span className="text-[9px] text-[var(--t-textMut)] w-5 flex-shrink-0">{ls.state}</span>
+                          <span className="text-[9px] text-[var(--t-textSec)] w-5 flex-shrink-0 font-medium">{ls.state}</span>
                           <div className="flex-1 h-2 rounded-full overflow-hidden flex">
                             {entries.filter(([,v]) => v > 0).map(([party, v]) => (
                               <motion.div key={party} className="h-full" style={{ backgroundColor: STATE_COLORS[party] || "#8E9CAE" }}
@@ -738,7 +738,7 @@ export default function Home() {
                                 transition={{ duration: 0.8, delay: i * 0.05 }} title={`${party}: ${v}`} />
                             ))}
                           </div>
-                          <span className="text-[9px] text-[var(--t-textMut)] w-4 text-right flex-shrink-0">{total}</span>
+                          <span className="text-[9px] text-[var(--t-textSec)] w-4 text-right flex-shrink-0 font-bold">{total}</span>
                         </div>
                       );
                     })}
@@ -853,7 +853,7 @@ export default function Home() {
             style={{ background: "var(--t-accentBg)", border: "1px solid var(--t-borderHi)", color: "var(--t-accent)" }}>
             <Download size={10} /> Export
           </motion.button>
-          <div className="hidden lg:block text-[10px] text-[var(--t-textMut)] font-mono">© 2024 ECI | {selectedYear}</div>
+          <div className="hidden lg:block text-[10px] text-[var(--t-textSec)] font-black tracking-tighter">© 2024 ECI | {selectedYear}</div>
         </div>
       </div>
     </div>

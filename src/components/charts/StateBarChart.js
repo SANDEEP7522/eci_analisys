@@ -22,11 +22,11 @@ export default function StateBarChart({ data, dataKey = 'turnout', nameKey = 'st
             textAnchor="end"
             height={90}
             interval={0}
-            tick={{ fill: '#8E9CAE', fontSize: 10 }}
+            tick={{ fill: 'var(--t-textMut)', fontSize: 10 }}
             axisLine={{ stroke: 'rgba(148,163,184,0.3)' }}
           />
           <YAxis
-            tick={{ fill: '#8E9CAE', fontSize: 11 }}
+            tick={{ fill: 'var(--t-textMut)', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             tickFormatter={(v) => dataKey === 'turnout' ? `${v}%` : v}

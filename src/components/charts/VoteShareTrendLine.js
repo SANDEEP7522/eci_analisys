@@ -39,8 +39,8 @@ export default function VoteShareTrendLine({ highlightYear, highlightParty }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={DATA} margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
-        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="year" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {activeLabel && (
           <ReferenceLine x={activeLabel} stroke="var(--t-accent)" strokeDasharray="3 3" strokeWidth={1.5} />

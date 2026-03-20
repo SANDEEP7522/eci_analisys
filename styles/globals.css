@@ -9,10 +9,10 @@
   --t-bgCardSolid:  #0a0b18;
   --t-border:       rgba(255,255,255,0.07);
   --t-borderHi:     rgba(255,130,45,0.45);
-  --t-text:         #e8edf8;
-  --t-textSec:      rgba(220,228,255,0.55);
-  --t-textMut:      rgba(220,228,255,0.28);
-  --t-textGhost:    rgba(220,228,255,0.08);
+  --t-text:         #f1f5f9;  /* Brighter slate */
+  --t-textSec:      rgba(241,245,249,0.85); /* 85% opacity */
+  --t-textMut:      rgba(241,245,249,0.55); /* 55% opacity */
+  --t-textGhost:    rgba(220,228,255,0.15);
   --t-sidebar:      #020309;
   --t-header:       rgba(2,3,9,0.96);
   --t-accent:       #FF822D;
@@ -45,10 +45,10 @@
   --t-bgCardSolid: #ffffff;
   --t-border:      #e4eaf5;
   --t-borderHi:    #FF822D;
-  --t-text:        #0f172a;
-  --t-textSec:     #475569;
-  --t-textMut:     #64748b;
-  --t-textGhost:   #cbd5e1;
+  --t-text:        #020617;  /* Slate 950 */
+  --t-textSec:     #0f172a;  /* Slate 900 */
+  --t-textMut:     #1E293B;  /* Slate 800 */
+  --t-textGhost:   #475569;  /* Slate 600 */
   --t-sidebar:     #f8faff;
   --t-header:      rgba(248,250,255,0.97);
   --t-accent:      #FF822D;
@@ -61,11 +61,11 @@
   --t-no:          #F04F5C;
   --t-info:        #4271FE;
   --t-mapBase:     #dce8f8;
-  --t-mapStroke:   #ffffff;  /* Increased stroke contrast */
+  --t-mapStroke:   #ffffff;
   --t-mapHi:       #FF822D;
   --t-tblStripe:   #f8fafd;
   --t-tblHov:      #fff5f0;
-  --t-shadow:      rgba(255,130,45,0.10);
+  --t-shadow:      rgba(15,23,42,0.4);
 
   --background: var(--t-bg);
   --foreground: var(--t-text);
@@ -75,13 +75,23 @@
 }
 
 @layer base {
-  * { border-color: var(--t-border); }
+  * { 
+    border-color: var(--t-border); 
+  }
   body {
     background-color: var(--t-bg);
     color: var(--t-text);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 450; /* Slightly thicker than normal for a "highlighted" feel */
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Global text "highlighting" glow for Dark Mode */
+:root:not([data-theme="light"]) body {
+  text-shadow: 0 0 1px rgba(255,255,255,0.1);
 }
 
 /* Utility classes */

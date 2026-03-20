@@ -15,8 +15,8 @@ export default function WeeklyTrendChart({ data, height = 220 }) {
       <ResponsiveContainer>
         <BarChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }} barSize={8}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-          <XAxis dataKey="week" tick={{ fontSize: 10, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 10, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+          <XAxis dataKey="week" tick={{ fontSize: 10, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
+          <YAxis tick={{ fontSize: 10, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
           <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.15)' }} />
           <Legend iconSize={8} iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
           <Bar dataKey="Facebook" stackId="a" fill="#1877F2" radius={[0, 0, 0, 0]} />

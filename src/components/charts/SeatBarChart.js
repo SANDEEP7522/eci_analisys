@@ -27,11 +27,11 @@ export default function SeatBarChart({ data, height = 360 }) {
             textAnchor="end"
             height={70}
             interval={0}
-            tick={{ fill: '#8E9CAE', fontSize: 11 }}
+            tick={{ fill: 'var(--t-textMut)', fontSize: 11 }}
             axisLine={{ stroke: 'rgba(148,163,184,0.3)' }}
           />
           <YAxis
-            tick={{ fill: '#8E9CAE', fontSize: 11 }}
+            tick={{ fill: 'var(--t-textMut)', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />

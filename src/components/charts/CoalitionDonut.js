@@ -32,7 +32,7 @@ export default function CoalitionRadar({ alliances, majorityMark = 272 }) {
         <ResponsiveContainer width="100%" height={120}>
           <RadarChart data={data}>
             <PolarGrid stroke="var(--t-border)" />
-            <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: '#8E9CAE' }} />
+            <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--t-textMut)' }} />
             <PolarRadiusAxis angle={30} domain={[0, Math.max(...data.map(d => d.value)) + 20]} tick={false} />
             <Radar name="Seats" dataKey="value" stroke={leader.color} fill={leader.color} fillOpacity={0.4} />
             <Tooltip content={<CustomTooltip />} />
@@ -54,7 +54,7 @@ export default function CoalitionRadar({ alliances, majorityMark = 272 }) {
             <span className="font-bold ml-auto pl-2" style={{ color: d.color }}>{d.value}</span>
           </div>
         ))}
-        <div className="text-[10px] text-[var(--t-textMut)] border-t border-[var(--t-border)] pt-1 mt-1">
+        <div className="text-[10px] text-[var(--t-textSec)] font-medium border-t border-[var(--t-border)] pt-1 mt-1">
           {leader.name}:&nbsp;
           <span style={{ color: margin >= 0 ? '#15B77E' : '#F04F5C', fontWeight: 600 }}>
             {margin >= 0 ? `+${margin}` : margin}

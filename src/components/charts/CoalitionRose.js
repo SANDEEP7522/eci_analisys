@@ -27,7 +27,7 @@ const CustomTooltip = ({ active, payload }) => {
   return (
     <div className="bg-[var(--t-bgCardSolid)] border border-[var(--t-border)] rounded-md px-2.5 py-1.5 text-[10px] shadow-xl">
       <div className="font-bold text-[var(--t-text)] mb-0.5">{d.name}</div>
-      <div className="text-[var(--t-textMut)]">{d.seats} seats</div>
+      <div className="text-[var(--t-textSec)] font-bold">{d.seats} seats</div>
       <div style={{ color: d.color }} className="font-semibold">{d.pct}% share</div>
     </div>
   );
@@ -102,7 +102,7 @@ export default function CoalitionRose() {
         {/* Majority bar */}
         <div className="bg-[var(--t-bgCard)] rounded-md px-2 py-1.5 border border-[var(--t-border)]">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[8px] text-[var(--t-textMut)] uppercase tracking-wider">Majority Mark</span>
+            <span className="text-[8px] text-[var(--t-textSec)] uppercase tracking-wider font-black">Majority Mark</span>
             <span className="text-[9px] font-bold text-[var(--t-text)]">{MAJORITY}</span>
           </div>
           <div className="relative w-full h-2 bg-[var(--t-border)] rounded-full overflow-hidden">
@@ -117,7 +117,7 @@ export default function CoalitionRose() {
           </div>
           <div className="flex justify-between mt-0.5">
             <span className="text-[8px] text-orange-400 font-semibold">NDA +{293 - MAJORITY}</span>
-            <span className="text-[8px] text-[var(--t-textMut)]">{TOTAL} total</span>
+            <span className="text-[8px] text-[var(--t-textSec)] font-bold">{TOTAL} total</span>
           </div>
         </div>
 
@@ -147,7 +147,7 @@ export default function CoalitionRose() {
               style={{ backgroundColor: d.color + '18', border: `1px solid ${d.color}44` }}
             >
               <div className="text-[8px] font-black" style={{ color: d.color }}>{d.name}</div>
-              <div className="text-[7px] text-[var(--t-textMut)]">{d.seats}</div>
+              <div className="text-[7px] text-[var(--t-textSec)] font-black">{d.seats}</div>
             </div>
           ))}
         </div>

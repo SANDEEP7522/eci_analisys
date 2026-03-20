@@ -319,8 +319,8 @@ export default function ConstituencyScatter({ selectedState, richState, selected
     return (
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 8, right: 8, bottom: 14, left: -16 }}>
-          <XAxis dataKey="x" type="number" name="Vote %" domain={[0, 42]} unit="%" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} label={{ value: 'Vote Share %', position: 'insideBottom', offset: -2, fontSize: 8, fill: '#8E9CAE' }} />
-          <YAxis dataKey="y" type="number" name="Seats" domain={[0, maxSeats + 30]} tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+          <XAxis dataKey="x" type="number" name="Vote %" domain={[0, 42]} unit="%" tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} label={{ value: 'Vote Share %', position: 'insideBottom', offset: -2, fontSize: 8, fill: 'var(--t-textMut)' }} />
+          <YAxis dataKey="y" type="number" name="Seats" domain={[0, maxSeats + 30]} tick={{ fontSize: 9, fill: 'var(--t-textMut)' }} axisLine={false} tickLine={false} />
           <ZAxis dataKey="z" range={[60, 1100]} />
           <Tooltip content={<BubbleTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'var(--t-border)' }} />
           <Scatter data={bubbleData} fillOpacity={0.75}>
@@ -348,7 +348,7 @@ export default function ConstituencyScatter({ selectedState, richState, selected
       {/* State name + total */}
       <div className="flex items-center justify-between flex-shrink-0">
         <span className="text-[10px] font-black text-[var(--t-text)] truncate">{selectedState.name}</span>
-        <span className="text-[9px] text-[var(--t-textMut)]">{seats.length} seats</span>
+        <span className="text-[9px] text-[var(--t-textSec)] font-medium">{seats.length} seats</span>
       </div>
 
       {/* Waffle grid */}
@@ -382,7 +382,7 @@ export default function ConstituencyScatter({ selectedState, richState, selected
             <span className="text-[var(--t-textSec)] ml-1.5">{hov.name}</span>
           </>
         ) : (
-          <span className="text-[var(--t-textMut)]">Hover a cell to see constituency</span>
+          <span className="text-[var(--t-textSec)] font-bold">Hover a cell to see constituency</span>
         )}
       </div>
 
@@ -392,7 +392,7 @@ export default function ConstituencyScatter({ selectedState, richState, selected
           <div key={party} className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: CSS_COLORS[party] || '#8E9CAE' }} />
             <span className="text-[9px] font-bold" style={{ color: RAW_COLORS[party] || '#8E9CAE' }}>{party}</span>
-            <span className="text-[9px] text-[var(--t-textMut)]">{count}</span>
+            <span className="text-[9px] text-[var(--t-textSec)] font-black">{count}</span>
           </div>
         ))}
       </div>

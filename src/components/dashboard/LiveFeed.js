@@ -44,7 +44,7 @@ export default function LiveFeed() {
               transition={{ delay: i * 0.05 }}
               className="flex items-start gap-1.5 text-[10px] py-1 border-b border-[var(--t-border)]"
             >
-              <span className="text-[var(--t-textMut)] flex-shrink-0 mt-0.5">{item.time}</span>
+              <span className="text-[var(--t-textSec)] flex-shrink-0 mt-0.5">{item.time}</span>
               <span
                 className="px-1 rounded text-[9px] font-bold flex-shrink-0 mt-0.5"
                 style={{ backgroundColor: item.color + '22', color: item.color }}
@@ -56,9 +56,9 @@ export default function LiveFeed() {
           ))}
         </AnimatePresence>
       </div>
-      <div className="mt-1 text-[10px] text-[var(--t-textMut)] flex items-center gap-1">
+      <div className="mt-1 text-[10px] flex items-center gap-1">
         <span className="w-1.5 h-1.5 rounded-full bg-green-400 pulse-dot inline-block" />
-        {count} updates today
+        <span className="text-[var(--t-textSec)]">{count} updates today</span>
       </div>
     </div>
   );

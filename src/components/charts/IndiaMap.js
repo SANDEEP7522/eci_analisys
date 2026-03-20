@@ -164,7 +164,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
         <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5 items-end pointer-events-auto max-h-[95%] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
           {legendEntries.map(([p, c]) => (
             <div key={p} className="flex items-center gap-1.5 px-2 py-1 rounded border shadow-sm" style={{ background: 'var(--t-bgCard)', borderColor: 'var(--t-border)' }}>
-              <span className="text-[9px] text-[var(--t-textSec)] font-bold whitespace-nowrap">{p}</span>
+              <span className="text-[10px] text-[var(--t-textSec)] font-black whitespace-nowrap">{p}</span>
               <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
             </div>
           ))}
@@ -263,16 +263,16 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
                 {hoveredPayload.rulingSeats > 0 && (
                   <span className="text-[var(--t-textSec)] text-[11px] font-mono">
                     <span className="font-bold" style={{ color: hoveredPayload.color }}>{hoveredPayload.rulingSeats}</span>
-                    {hoveredPayload.totalSeats > 0 && <span className="text-[var(--t-textMut)]">/{hoveredPayload.totalSeats}</span>}
+                    {hoveredPayload.totalSeats > 0 && <span className="text-[var(--t-textSec)]">/{hoveredPayload.totalSeats}</span>}
                   </span>
                 )}
               </div>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-[9px] text-[var(--t-textMut)] uppercase tracking-wider font-bold">Turnout</span>
+                <span className="text-[9px] text-[var(--t-textSec)] uppercase tracking-wider font-black">Turnout</span>
                 <span className="text-[10px] text-green-500 font-bold">{hoveredPayload.turnout}</span>
               </div>
               <div className="flex items-center justify-between mt-0.5">
-                <span className="text-[9px] text-[var(--t-textMut)] uppercase tracking-wider font-bold">Key Lead</span>
+                <span className="text-[9px] text-[var(--t-textSec)] uppercase tracking-wider font-black">Key Lead</span>
                 <span className="text-[10px] text-[var(--t-text)] font-semibold truncate max-w-[85px] text-right">{hoveredPayload.candidate}</span>
               </div>
             </div>
