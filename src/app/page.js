@@ -406,6 +406,27 @@ export default function Home() {
     <div className="flex flex-col min-h-screen lg:h-screen lg:overflow-hidden relative bg-[var(--t-bg)] text-[var(--t-text)]">
       <AuroraBg isDark={isDark} />
 
+      {/* ── Global SVG gradient defs (referenced by charts & map) ─────────── */}
+      <svg width="0" height="0" style={{ position: 'absolute', pointerEvents: 'none' }}>
+        <defs>
+          <linearGradient id="grad-orange"   x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#FF5500"/><stop offset="100%" stopColor="#FFB347"/></linearGradient>
+          <linearGradient id="grad-orange-h" x1="0" y1="0" x2="1" y2="0"><stop offset="0%"   stopColor="#FF6B2B"/><stop offset="100%" stopColor="#FFAB5E"/></linearGradient>
+          <linearGradient id="grad-blue"     x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#1E50CC"/><stop offset="100%" stopColor="#78AAFF"/></linearGradient>
+          <linearGradient id="grad-blue-h"   x1="0" y1="0" x2="1" y2="0"><stop offset="0%"   stopColor="#2B5FF5"/><stop offset="100%" stopColor="#7FB3FF"/></linearGradient>
+          <linearGradient id="grad-red"      x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#C82035"/><stop offset="100%" stopColor="#FF6E7A"/></linearGradient>
+          <linearGradient id="grad-red-h"    x1="0" y1="0" x2="1" y2="0"><stop offset="0%"   stopColor="#E02540"/><stop offset="100%" stopColor="#FF7080"/></linearGradient>
+          <linearGradient id="grad-green"    x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#0A8055"/><stop offset="100%" stopColor="#3DE8A0"/></linearGradient>
+          <linearGradient id="grad-green-h"  x1="0" y1="0" x2="1" y2="0"><stop offset="0%"   stopColor="#11996A"/><stop offset="100%" stopColor="#55EABB"/></linearGradient>
+          <linearGradient id="grad-purple"   x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#7E2ECC"/><stop offset="100%" stopColor="#CF9BFF"/></linearGradient>
+          <linearGradient id="grad-purple-h" x1="0" y1="0" x2="1" y2="0"><stop offset="0%"   stopColor="#9040EE"/><stop offset="100%" stopColor="#D5AAFF"/></linearGradient>
+          <linearGradient id="grad-cyan"     x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#0894AA"/><stop offset="100%" stopColor="#5AE2F8"/></linearGradient>
+          <linearGradient id="grad-cyan-h"   x1="0" y1="0" x2="1" y2="0"><stop offset="0%"   stopColor="#0FA8C2"/><stop offset="100%" stopColor="#69E8FF"/></linearGradient>
+          <linearGradient id="grad-amber"    x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#C87A00"/><stop offset="100%" stopColor="#FFD060"/></linearGradient>
+          <linearGradient id="grad-gray"     x1="0" y1="1" x2="0" y2="0"><stop offset="0%"   stopColor="#506078"/><stop offset="100%" stopColor="#A8BCCC"/></linearGradient>
+          <linearGradient id="map-orange-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%"   stopColor="#FF5500"/><stop offset="55%"  stopColor="#FF822D"/><stop offset="100%" stopColor="#FFBE6A"/></linearGradient>
+        </defs>
+      </svg>
+
       {/* ══ NAVBAR ══════════════════════════════════════════════════════════ */}
       <nav className="sticky top-0 z-50 border-b border-[var(--t-border)]" style={{ background: "var(--t-header)", backdropFilter: "blur(28px)" }}>
         <div className="flex items-center justify-between px-4 py-2">
@@ -590,7 +611,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
 
             {/* India Map */}
-            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[320px] sm:h-[370px] lg:h-auto lg:min-h-[500px]">
+            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[370px] sm:h-[420px] lg:h-auto lg:min-h-[500px]">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
@@ -603,18 +624,8 @@ export default function Home() {
                 </span>
                 <span className="text-[10px] font-mono font-bold" style={{ color: "var(--t-accent)" }}>{selectedYear}</span>
               </div>
-              <div className="flex-1 min-h-0 p-2 overflow-hidden">
-                <IndiaMap
-                  key={`${selectedYear}-${mapExternalViewMode}-${mapHighlightParty}`}
-                  selectedYear={selectedYear}
-                  onStateClick={setSelectedMapState}
-                  highlightState={mapHighlightState}
-                  stateData={stateHighlights}
-                  externalViewMode={mapExternalViewMode}
-                  highlightParty={mapHighlightParty}
-                />
-              </div>
-              <div className="flex-shrink-0 border-t border-[var(--t-border)] py-1.5 px-3 overflow-hidden bg-[var(--t-sidebar)]">
+              {/* Live ticker — directly below heading */}
+              <div className="flex-shrink-0 border-b border-[var(--t-border)] py-1 px-3 overflow-hidden bg-[var(--t-sidebar)]">
                 <div className="flex items-center gap-2.5">
                   <span className="text-[9px] font-black flex-shrink-0 uppercase tracking-widest" style={{ color: "var(--t-accent)" }}>Live</span>
                   <div className="flex-1 overflow-hidden">
@@ -626,6 +637,18 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              <div className="flex-1 min-h-0 p-2 overflow-hidden">
+                <IndiaMap
+                  key={`${selectedYear}-${mapExternalViewMode}-${mapHighlightParty}`}
+                  selectedYear={selectedYear}
+                  onStateClick={setSelectedMapState}
+                  highlightState={mapHighlightState}
+                  stateData={stateHighlights}
+                  externalViewMode={mapExternalViewMode}
+                  highlightParty={mapHighlightParty}
+                />
+              </div>
+
             </div>
 
             {/* Key States panel */}

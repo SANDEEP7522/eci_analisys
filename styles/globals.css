@@ -45,10 +45,10 @@
   --t-bgCardSolid: #ffffff;
   --t-border:      #e4eaf5;
   --t-borderHi:    #FF822D;
-  --t-text:        #1a2035;
-  --t-textSec:     #5a6480;
-  --t-textMut:     #9aa5be;
-  --t-textGhost:   #d0d8ed;
+  --t-text:        #0f172a;
+  --t-textSec:     #475569;
+  --t-textMut:     #64748b;
+  --t-textGhost:   #cbd5e1;
   --t-sidebar:     #f8faff;
   --t-header:      rgba(248,250,255,0.97);
   --t-accent:      #FF822D;
@@ -61,7 +61,7 @@
   --t-no:          #F04F5C;
   --t-info:        #4271FE;
   --t-mapBase:     #dce8f8;
-  --t-mapStroke:   #a8b8d0;
+  --t-mapStroke:   #ffffff;  /* Increased stroke contrast */
   --t-mapHi:       #FF822D;
   --t-tblStripe:   #f8fafd;
   --t-tblHov:      #fff5f0;

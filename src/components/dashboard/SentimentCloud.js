@@ -1,21 +1,22 @@
 'use client';
 
+// Each word gets a gradient pair for clip-text effect
 const WORDS = [
-  { text: 'Development', size: 22, color: '#15B77E', x: 10, y: 15 },
-  { text: 'Corruption', size: 14, color: '#F04F5C', x: 55, y: 10 },
-  { text: 'Governance', size: 18, color: '#4271FE', x: 30, y: 35 },
-  { text: 'Secularism', size: 26, color: '#FF822D', x: 8, y: 52 },
-  { text: 'Jobs', size: 16, color: '#15B77E', x: 68, y: 30 },
-  { text: 'Economy', size: 20, color: '#a78bfa', x: 55, y: 55 },
-  { text: 'Healthcare', size: 15, color: '#38bdf8', x: 12, y: 72 },
-  { text: 'Education', size: 17, color: '#F5A623', x: 60, y: 75 },
-  { text: 'Infrastructure', size: 13, color: '#4271FE', x: 35, y: 80 },
-  { text: 'Democracy', size: 19, color: '#ec4899', x: 20, y: 90 },
-  { text: 'Unity', size: 14, color: '#14C1D7', x: 72, y: 88 },
-  { text: 'Reform', size: 16, color: '#84cc16', x: 45, y: 20 },
-  { text: 'Welfare', size: 13, color: '#FF822D', x: 80, y: 50 },
-  { text: 'Tax', size: 12, color: '#8E9CAE', x: 85, y: 20 },
-  { text: 'Poverty', size: 15, color: '#f87171', x: 78, y: 70 },
+  { text: 'Development',    size: 22, g: ['#0A8055','#3DE8A0'], x: 10, y: 15 },
+  { text: 'Corruption',     size: 14, g: ['#C82035','#FF6E7A'], x: 55, y: 10 },
+  { text: 'Governance',     size: 18, g: ['#1E50CC','#78AAFF'], x: 30, y: 35 },
+  { text: 'Secularism',     size: 26, g: ['#FF5500','#FFB347'], x: 8,  y: 52 },
+  { text: 'Jobs',           size: 16, g: ['#0A8055','#3DE8A0'], x: 68, y: 30 },
+  { text: 'Economy',        size: 20, g: ['#7E2ECC','#CF9BFF'], x: 55, y: 55 },
+  { text: 'Healthcare',     size: 15, g: ['#0894AA','#5AE2F8'], x: 12, y: 72 },
+  { text: 'Education',      size: 17, g: ['#C87A00','#FFD060'], x: 60, y: 75 },
+  { text: 'Infrastructure', size: 13, g: ['#1E50CC','#78AAFF'], x: 35, y: 80 },
+  { text: 'Democracy',      size: 19, g: ['#C82035','#FF6E7A'], x: 20, y: 90 },
+  { text: 'Unity',          size: 14, g: ['#0894AA','#5AE2F8'], x: 72, y: 88 },
+  { text: 'Reform',         size: 16, g: ['#0A8055','#3DE8A0'], x: 45, y: 20 },
+  { text: 'Welfare',        size: 13, g: ['#FF5500','#FFB347'], x: 80, y: 50 },
+  { text: 'Tax',            size: 12, g: ['#506078','#A8BCCC'], x: 85, y: 20 },
+  { text: 'Poverty',        size: 15, g: ['#C82035','#FF6E7A'], x: 78, y: 70 },
 ];
 
 export default function SentimentCloud() {
@@ -24,13 +25,16 @@ export default function SentimentCloud() {
       {WORDS.map((w, i) => (
         <span
           key={i}
-          className="absolute font-bold select-none cursor-default transition-all duration-300 hover:brightness-125"
+          className="absolute font-black select-none cursor-default transition-all duration-300 hover:scale-110"
           style={{
             left: `${w.x}%`,
             top: `${w.y}%`,
             fontSize: `${w.size * 0.7}px`,
-            color: w.color,
-            textShadow: `0 0 8px ${w.color}55`,
+            background: `linear-gradient(135deg, ${w.g[0]}, ${w.g[1]})`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            filter: `drop-shadow(0 0 6px ${w.g[1]}60)`,
             transform: 'translate(-50%, -50%)',
             whiteSpace: 'nowrap',
           }}

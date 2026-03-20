@@ -3,9 +3,10 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const PARTY_COLORS = {
-  BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E',
-  DMK: '#B261EC', JDU: '#4271FE', TDP: '#14C1D7', SS: '#FF822D',
-  'CPI(M)': '#F04F5C', AIADMK: '#15B77E', BSP: '#8E9CAE', Others: '#8E9CAE',
+  BJP: 'url(#grad-orange)', INC: 'url(#grad-blue)', SP: 'url(#grad-red)', TMC: 'url(#grad-green)',
+  DMK: 'url(#grad-purple)', JDU: 'url(#grad-blue)', TDP: 'url(#grad-cyan)', SS: 'url(#grad-orange)',
+  'CPI(M)': 'url(#grad-red)', AIADMK: 'url(#grad-green)', BSP: 'url(#grad-gray)', Others: 'url(#grad-gray)',
+  NC: 'url(#grad-green)', YSRCP: 'url(#grad-purple)', JSP: 'url(#grad-cyan)',
 };
 
 const DEFAULT = [
@@ -53,9 +54,9 @@ export default function StatePerformanceChart({ stateData, richData }) {
         <YAxis tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {partyKeys.map(k => (
-          <Bar key={k} dataKey={k} fill={PARTY_COLORS[k] || '#8E9CAE'} stackId="a" />
+          <Bar key={k} dataKey={k} fill={PARTY_COLORS[k] || 'url(#grad-gray)'} stackId="a" />
         ))}
-        <Bar dataKey="Others" fill={PARTY_COLORS.Others} stackId="a" radius={[3, 3, 0, 0]} />
+        <Bar dataKey="Others" fill='url(#grad-gray)' stackId="a" radius={[3, 3, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

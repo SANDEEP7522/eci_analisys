@@ -4,10 +4,32 @@ import { useState, useMemo } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import { INDIA_TOPOLOGY_URL } from '@/data/indiaTopoUrl';
 import { ELECTION_BY_CODE, ELECTION_STATES } from '@/data/electionData';
-import { getStateByCode, ALL_STATES } from '@/data/statesData';
+import { getStateByCode, getStateByTopoName, ALL_STATES } from '@/data/statesData';
 import { PARTY_COLORS } from '@/data/dummy';
 
 const DEFAULT_FILL = '#1a2a4a';
+
+// Map each party hex → gradient URL that lives inside this component's SVG
+const PARTY_GRAD = {
+  '#FF822D': 'url(#mg-orange)',
+  '#ff822d': 'url(#mg-orange)',
+  '#4271FE': 'url(#mg-blue)',
+  '#4271fe': 'url(#mg-blue)',
+  '#F04F5C': 'url(#mg-red)',
+  '#f04f5c': 'url(#mg-red)',
+  '#15B77E': 'url(#mg-green)',
+  '#15b77e': 'url(#mg-green)',
+  '#B261EC': 'url(#mg-purple)',
+  '#b261ec': 'url(#mg-purple)',
+  '#14C1D7': 'url(#mg-cyan)',
+  '#14c1d7': 'url(#mg-cyan)',
+  '#F5A623': 'url(#mg-amber)',
+  '#f5a623': 'url(#mg-amber)',
+  '#8E9CAE': 'url(#mg-gray)',
+  '#8e9cae': 'url(#mg-gray)',
+  '#20BFA9': 'url(#mg-teal)',
+  '#20bfa9': 'url(#mg-teal)',
+};
 
 const OPTIONS = [
   { id: 'parties',  label: 'By Parties'  },
@@ -43,16 +65,21 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
   }, [stateData, nameToCode]);
 
   const getStateCode = geo => {
-    const id = geo.id ?? geo.properties?.id ?? geo.properties?.state_code;
-    if (id && id !== '-99') return id;
-    const info = getStateByCode ? getStateByCode(id) : null;
+    // 1. Try direct ID or property (e.g. "RJ")
+    let id = geo.id ?? geo.properties?.id ?? geo.properties?.state_code;
+    if (id && id !== '-99' && getStateByCode(id)) return id;
+
+    // 2. Try mapping by Name (e.g. "Rajasthan" -> "RJ")
+    const nameStr = geo.properties?.name || geo.properties?.st_nm || id;
+    const info = getStateByTopoName(nameStr) || (id ? getStateByCode(id) : null);
+    
     return info?.code || id;
   };
 
   const getFill = geo => {
     const code = getStateCode(geo);
-    if (hovered === code)        return '#ff8c3a';
-    if (highlightState === code) return '#4f8eff';
+    if (hovered === code)        return 'url(#mg-hover)';    // warm orange glow on hover
+    if (highlightState === code) return 'url(#mg-blue)';     // blue for active selected
     const s = stateByCode[code] || ELECTION_BY_CODE[code];
     if (!s) return DEFAULT_FILL;
     // Dim states that don't match the highlighted party
@@ -60,8 +87,13 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
       const stateParty = s.party ?? s.winner;
       if (stateParty !== highlightParty) return 'rgba(30,40,70,0.4)';
     }
-    if (activeViewMode === 'alliance') return s.colorAlliance || DEFAULT_FILL;
-    return s.colorParty || PARTY_COLORS[s.party] || PARTY_COLORS[s.winner] || DEFAULT_FILL;
+    if (activeViewMode === 'alliance') {
+      const aColor = s.colorAlliance || DEFAULT_FILL;
+      return PARTY_GRAD[aColor] || aColor;
+    }
+    const flat = s.colorParty || PARTY_COLORS[s.party] || PARTY_COLORS[s.winner] || DEFAULT_FILL;
+    // Convert any known hex to its named gradient
+    return PARTY_GRAD[flat] || flat;
   };
 
   const getClickPayload = geo => {
@@ -137,19 +169,39 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
             </div>
           ))}
         </div>
-        {/* SVG filter for glow */}
+        {/* SVG filter + ALL gradient defs — MUST be in same SVG context as map paths */}
         <svg width="0" height="0" style={{ position: 'absolute' }}>
           <defs>
             <filter id="state-glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
+            {/* Hover orange */}
+            <linearGradient id="mg-hover"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#FF5500"/><stop offset="100%" stopColor="#FFBE6A"/></linearGradient>
+            {/* BJP / SS — orange */}
+            <linearGradient id="mg-orange" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#FF5500"/><stop offset="55%"  stopColor="#FF822D"/><stop offset="100%" stopColor="#FFBE6A"/></linearGradient>
+            {/* INC / JDU — blue */}
+            <linearGradient id="mg-blue"   x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#1E50CC"/><stop offset="100%" stopColor="#78AAFF"/></linearGradient>
+            {/* SP / CPI(M) — red */}
+            <linearGradient id="mg-red"    x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#C82035"/><stop offset="100%" stopColor="#FF6E7A"/></linearGradient>
+            {/* TMC / NC — green */}
+            <linearGradient id="mg-green"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0A8055"/><stop offset="100%" stopColor="#3DE8A0"/></linearGradient>
+            {/* DMK — purple */}
+            <linearGradient id="mg-purple" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#7E2ECC"/><stop offset="100%" stopColor="#CF9BFF"/></linearGradient>
+            {/* TDP — cyan */}
+            <linearGradient id="mg-cyan"   x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0894AA"/><stop offset="100%" stopColor="#5AE2F8"/></linearGradient>
+            {/* NCP — amber */}
+            <linearGradient id="mg-amber"  x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#C87A00"/><stop offset="100%" stopColor="#FFD060"/></linearGradient>
+            {/* AIADMK — teal */}
+            <linearGradient id="mg-teal"   x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#0E8F82"/><stop offset="100%" stopColor="#59D3C0"/></linearGradient>
+            {/* Others — gray */}
+            <linearGradient id="mg-gray"   x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#506078"/><stop offset="100%" stopColor="#A8BCCC"/></linearGradient>
           </defs>
         </svg>
 
         <ComposableMap
           projection="geoMercator"
-          projectionConfig={{ center: [82.5, 21], scale: 1080 }}
+          projectionConfig={{ center: [82.5, 21], scale: 1000 }}
           style={{ width: '100%', height: '100%' }}
         >
           <Geographies geography={INDIA_TOPOLOGY_URL}>
@@ -164,7 +216,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
                     geography={geo}
                     fill={getFill(geo)}
                     stroke={isHov ? 'rgba(255,140,58,0.9)' : isSelect ? 'rgba(79,142,255,0.9)' : 'var(--t-mapStroke)'}
-                    strokeWidth={isHov || isSelect ? 1.2 : 0.4}
+                    strokeWidth={isHov || isSelect ? 1.5 : 0.8}
                     style={{
                       default: { outline: 'none', filter: isHov ? 'url(#state-glow)' : 'none', transition: 'fill 0.2s ease' },
                       hover:   { outline: 'none', fill: '#ff8c3a', cursor: 'pointer', filter: 'url(#state-glow)' },

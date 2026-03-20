@@ -2,7 +2,14 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-const COLORS = ['#FF822D','#4271FE','#F04F5C','#15B77E','#B261EC','#14C1D7','#F5A623','#8E9CAE'];
+const COLORS = [
+  'url(#grad-orange)', 'url(#grad-blue)', 'url(#grad-red)',
+  'url(#grad-green)', 'url(#grad-purple)', 'url(#grad-cyan)',
+  'url(#grad-amber)', 'url(#grad-gray)',
+];
+
+// Note: gradient defs are injected globally in page.js
+
 
 const renderLabel = ({ percent }) => (percent > 0.05 ? `${(percent * 100).toFixed(1)}%` : '');
 

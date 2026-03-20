@@ -3,8 +3,37 @@
 import { useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-// ── Colors ────────────────────────────────────────────────────────────────────
+// ── Colors: map to global gradient defs injected in page.js ───────────────────
 const COLORS = {
+  BJP: 'url(#grad-orange)', INC: 'url(#grad-blue)', SP: 'url(#grad-red)', TMC: 'url(#grad-green)',
+  DMK: 'url(#grad-purple)', TDP: 'url(#grad-cyan)', JDU: 'url(#grad-blue)', SS: 'url(#grad-orange)',
+  'CPI(M)': 'url(#grad-red)', AIADMK: 'url(#grad-cyan)', BSP: 'url(#grad-gray)',
+  NCP: 'url(#grad-amber)', RJD: 'url(#grad-cyan)', JDS: 'url(#grad-red)', Others: 'url(#grad-gray)',
+  NC: 'url(#grad-green)', YSRCP: 'url(#grad-purple)', JSP: 'url(#grad-cyan)',
+};
+
+const CSS_COLORS = {
+  BJP: 'linear-gradient(135deg, #FF5500, #FFB347)',
+  INC: 'linear-gradient(135deg, #1E50CC, #78AAFF)',
+  SP: 'linear-gradient(135deg, #C82035, #FF6E7A)',
+  TMC: 'linear-gradient(135deg, #0A8055, #3DE8A0)',
+  DMK: 'linear-gradient(135deg, #7E2ECC, #CF9BFF)',
+  TDP: 'linear-gradient(135deg, #0894AA, #5AE2F8)',
+  JDU: 'linear-gradient(135deg, #1E50CC, #78AAFF)',
+  SS: 'linear-gradient(135deg, #FF5500, #FFB347)',
+  'CPI(M)': 'linear-gradient(135deg, #C82035, #FF6E7A)',
+  AIADMK: 'linear-gradient(135deg, #0894AA, #5AE2F8)',
+  NCP: 'linear-gradient(135deg, #C87A00, #FFD060)',
+  BSP: 'linear-gradient(135deg, #506078, #A8BCCC)',
+  Others: 'linear-gradient(135deg, #506078, #A8BCCC)',
+  NC: 'linear-gradient(135deg, #0A8055, #3DE8A0)',
+  YSRCP: 'linear-gradient(135deg, #7E2ECC, #CF9BFF)',
+  JSP: 'linear-gradient(135deg, #0894AA, #5AE2F8)',
+  RJD: 'linear-gradient(135deg, #1E50CC, #78AAFF)',
+  JDS: 'linear-gradient(135deg, #C82035, #FF6E7A)',
+};
+
+const RAW_COLORS = {
   BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E',
   DMK: '#B261EC', TDP: '#14C1D7', JDU: '#4271FE', SS: '#FF822D',
   'CPI(M)': '#F04F5C', AIADMK: '#20BFA9', BSP: '#8E9CAE',
@@ -331,9 +360,9 @@ export default function ConstituencyScatter({ selectedState, richState, selected
               className="rounded-[2px] cursor-pointer transition-all duration-150 hover:scale-125 hover:z-10 relative"
               style={{
                 width: 13, height: 13,
-                backgroundColor: COLORS[s.party] || '#8E9CAE',
+                background: CSS_COLORS[s.party] || '#8E9CAE',
                 opacity: hov && hov.party !== s.party ? 0.2 : 1,
-                boxShadow: hov?.id === s.id ? `0 0 6px ${COLORS[s.party] || '#fff'}` : 'none',
+                boxShadow: hov?.id === s.id ? `0 0 6px ${RAW_COLORS[s.party] || '#fff'}` : 'none',
               }}
               onMouseEnter={() => setHov(s)}
               onMouseLeave={() => setHov(null)}
@@ -349,7 +378,7 @@ export default function ConstituencyScatter({ selectedState, richState, selected
       >
         {hov ? (
           <>
-            <span className="font-bold" style={{ color: COLORS[hov.party] || '#fff' }}>{hov.party}</span>
+            <span className="font-bold" style={{ color: RAW_COLORS[hov.party] || '#fff' }}>{hov.party}</span>
             <span className="text-[var(--t-textSec)] ml-1.5">{hov.name}</span>
           </>
         ) : (
@@ -361,8 +390,8 @@ export default function ConstituencyScatter({ selectedState, richState, selected
       <div className="flex-shrink-0 border-t border-[var(--t-border)] pt-1 flex flex-wrap gap-x-2.5 gap-y-0.5">
         {summaryEntries.map(([party, count]) => (
           <div key={party} className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: COLORS[party] || '#8E9CAE' }} />
-            <span className="text-[9px] font-bold" style={{ color: COLORS[party] || '#8E9CAE' }}>{party}</span>
+            <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: CSS_COLORS[party] || '#8E9CAE' }} />
+            <span className="text-[9px] font-bold" style={{ color: RAW_COLORS[party] || '#8E9CAE' }}>{party}</span>
             <span className="text-[9px] text-[var(--t-textMut)]">{count}</span>
           </div>
         ))}
