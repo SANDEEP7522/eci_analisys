@@ -3,9 +3,9 @@
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, ResponsiveContainer } from 'recharts';
 
 const DEFAULT_DATA = [
-  { name: 'NDA',    value: 293, color: '#f97316' },
-  { name: 'INDIA',  value: 232, color: '#3b82f6' },
-  { name: 'Others', value: 18,  color: '#64748b' },
+  { name: 'NDA',    value: 293, color: '#FF822D' },
+  { name: 'INDIA',  value: 232, color: '#4271FE' },
+  { name: 'Others', value: 18,  color: '#8E9CAE' },
 ];
 
 const CustomTooltip = ({ active, payload }) => {
@@ -32,7 +32,7 @@ export default function CoalitionRadar({ alliances, majorityMark = 272 }) {
         <ResponsiveContainer width="100%" height={120}>
           <RadarChart data={data}>
             <PolarGrid stroke="var(--t-border)" />
-            <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} />
+            <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: '#8E9CAE' }} />
             <PolarRadiusAxis angle={30} domain={[0, Math.max(...data.map(d => d.value)) + 20]} tick={false} />
             <Radar name="Seats" dataKey="value" stroke={leader.color} fill={leader.color} fillOpacity={0.4} />
             <Tooltip content={<CustomTooltip />} />
@@ -56,7 +56,7 @@ export default function CoalitionRadar({ alliances, majorityMark = 272 }) {
         ))}
         <div className="text-[10px] text-[var(--t-textMut)] border-t border-[var(--t-border)] pt-1 mt-1">
           {leader.name}:&nbsp;
-          <span style={{ color: margin >= 0 ? '#22c55e' : '#ef4444', fontWeight: 600 }}>
+          <span style={{ color: margin >= 0 ? '#15B77E' : '#F04F5C', fontWeight: 600 }}>
             {margin >= 0 ? `+${margin}` : margin}
           </span>
         </div>

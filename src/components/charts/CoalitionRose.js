@@ -3,17 +3,17 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const ALLIANCE_DATA = [
-  { name: 'NDA',    seats: 293, pct: 54, color: '#f97316' },
-  { name: 'INDIA',  seats: 232, pct: 43, color: '#3b82f6' },
-  { name: 'Others', seats: 18,  pct: 3,  color: '#64748b' },
+  { name: 'NDA',    seats: 293, pct: 54, color: '#FF822D' },
+  { name: 'INDIA',  seats: 232, pct: 43, color: '#4271FE' },
+  { name: 'Others', seats: 18,  pct: 3,  color: '#8E9CAE' },
 ];
 
 const PARTY_DATA = [
-  { name: 'BJP',    seats: 240, pct: 44, color: '#f97316' },
-  { name: 'INC',    seats: 99,  pct: 18, color: '#3b82f6' },
-  { name: 'SP',     seats: 37,  pct: 7,  color: '#ef4444' },
-  { name: 'TMC',    seats: 29,  pct: 5,  color: '#22c55e' },
-  { name: 'DMK',    seats: 22,  pct: 4,  color: '#7c3aed' },
+  { name: 'BJP',    seats: 240, pct: 44, color: '#FF822D' },
+  { name: 'INC',    seats: 99,  pct: 18, color: '#4271FE' },
+  { name: 'SP',     seats: 37,  pct: 7,  color: '#F04F5C' },
+  { name: 'TMC',    seats: 29,  pct: 5,  color: '#15B77E' },
+  { name: 'DMK',    seats: 22,  pct: 4,  color: '#B261EC' },
   { name: 'Others', seats: 116, pct: 22, color: '#475569' },
 ];
 
@@ -92,7 +92,7 @@ export default function CoalitionRose() {
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-[14px] font-black text-orange-400 leading-tight">293</span>
-          <span className="text-[7px] text-[#64748b] uppercase tracking-wider">NDA</span>
+          <span className="text-[7px] text-[#8E9CAE] uppercase tracking-wider">NDA</span>
         </div>
       </div>
 
@@ -108,7 +108,7 @@ export default function CoalitionRose() {
           <div className="relative w-full h-2 bg-[var(--t-border)] rounded-full overflow-hidden">
             <div
               className="absolute top-0 left-0 h-full rounded-full"
-              style={{ width: `${(293 / TOTAL) * 100}%`, background: 'linear-gradient(90deg,#f97316,#fb923c)' }}
+              style={{ width: `${(293 / TOTAL) * 100}%`, background: 'linear-gradient(90deg,#FF822D,#FF822D)' }}
             />
             <div
               className="absolute top-0 bottom-0 w-px opacity-60 bg-[var(--t-text)]"

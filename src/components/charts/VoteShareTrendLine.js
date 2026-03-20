@@ -11,7 +11,7 @@ const DATA = [
   { year: "'24", BJP: 36.6, INC: 21.2, SP: 4.6, TMC: 4.4, Others: 33.2 },
 ];
 
-const COLORS = { BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e', Others: '#94a3b8' };
+const COLORS = { BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E', Others: '#8E9CAE' };
 
 // Map full year to short label
 const YEAR_LABEL = { '1999': "'99", '2004': "'04", '2009': "'09", '2014': "'14", '2019': "'19", '2024': "'24" };
@@ -39,8 +39,8 @@ export default function VoteShareTrendLine({ highlightYear, highlightParty }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={DATA} margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
-        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {activeLabel && (
           <ReferenceLine x={activeLabel} stroke="var(--t-accent)" strokeDasharray="3 3" strokeWidth={1.5} />

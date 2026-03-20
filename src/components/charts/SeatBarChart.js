@@ -3,8 +3,8 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 const PARTY_COLORS = {
-  BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e',
-  DMK: '#7c3aed', TDP: '#06b6d4', JDU: '#6366f1', Others: '#94a3b8',
+  BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E',
+  DMK: '#B261EC', TDP: '#14C1D7', JDU: '#4271FE', Others: '#8E9CAE',
 };
 
 export default function SeatBarChart({ data, height = 360 }) {
@@ -27,11 +27,11 @@ export default function SeatBarChart({ data, height = 360 }) {
             textAnchor="end"
             height={70}
             interval={0}
-            tick={{ fill: '#64748b', fontSize: 11 }}
+            tick={{ fill: '#8E9CAE', fontSize: 11 }}
             axisLine={{ stroke: 'rgba(148,163,184,0.3)' }}
           />
           <YAxis
-            tick={{ fill: '#64748b', fontSize: 11 }}
+            tick={{ fill: '#8E9CAE', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
@@ -41,7 +41,7 @@ export default function SeatBarChart({ data, height = 360 }) {
           />
           <Bar dataKey="seats" name="Seats Won" radius={[5, 5, 0, 0]} maxBarSize={55}>
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={PARTY_COLORS[entry.party] || '#94a3b8'} />
+              <Cell key={`cell-${index}`} fill={PARTY_COLORS[entry.party] || '#8E9CAE'} />
             ))}
           </Bar>
         </BarChart>

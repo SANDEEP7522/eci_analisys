@@ -12,12 +12,12 @@ const StateBarChart = dynamic(() => import('@/components/charts/StateBarChart'),
 const MOCK_STATE = {
   stateName: 'Uttar Pradesh', totalSeats: 80, turnout: 56.92,
   partyBreakdown: [
-    { party: 'SP',       seats: 37, color: '#ef4444' },
-    { party: 'BJP',      seats: 33, color: '#f97316' },
-    { party: 'INC',      seats: 6,  color: '#1e3a8a' },
-    { party: 'RLD',      seats: 2,  color: '#10b981' },
-    { party: 'ASP(KR)',  seats: 1,  color: '#3b82f6' },
-    { party: 'ADAL',     seats: 1,  color: '#f59e0b' },
+    { party: 'SP',       seats: 37, color: '#F04F5C' },
+    { party: 'BJP',      seats: 33, color: '#FF822D' },
+    { party: 'INC',      seats: 6,  color: '#4271FE' },
+    { party: 'RLD',      seats: 2,  color: '#20BFA9' },
+    { party: 'ASP(KR)',  seats: 1,  color: '#4271FE' },
+    { party: 'ADAL',     seats: 1,  color: '#F5A623' },
   ],
 };
 

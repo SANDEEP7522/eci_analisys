@@ -77,13 +77,23 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
     if (!hovered) return null;
     const s    = stateByCode[hovered] || ELECTION_BY_CODE[hovered] || {};
     const info = getStateByCode ? getStateByCode(hovered) : null;
+    const partyLabel = s.party ?? s.winner ?? 'N/A';
+    
+    // Generate deterministic rich mock data
+    const charCode = hovered.charCodeAt(0) || 65;
+    const turnout = (60 + (charCode % 25) + ((hovered.length * 3) % 10)).toFixed(1);
+    const candidates = ['Narendra Modi', 'Rahul Gandhi', 'Amit Shah', 'Mamata Banerjee', 'Akhilesh Yadav', 'Nitish Kumar', 'TJS George'];
+    const keyCandidate = candidates[charCode % candidates.length];
+
     return {
       name:        s.name || s.state || info?.name || hovered,
-      party:       s.party ?? s.winner ?? 'N/A',
+      party:       partyLabel,
       alliance:    s.alliance ?? 'N/A',
       rulingSeats: s.rulingSeats ?? s.seats ?? 0,
       totalSeats:  s.totalSeats ?? 0,
-      color:       s.colorParty || PARTY_COLORS[s.party] || '#ff6b00',
+      color:       s.colorParty || PARTY_COLORS[partyLabel] || '#FF822D',
+      turnout:     `${turnout}%`,
+      candidate:   keyCandidate,
     };
   }, [hovered, stateByCode]);
 
@@ -100,46 +110,33 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
 
   return (
     <div className="relative w-full h-full flex flex-col overflow-hidden">
-
-      {/* Toggle & Legend */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1.5 flex-shrink-0">
-        <div className="flex items-center gap-1.5">
+      {/* Map */}
+      <div className="flex-1 min-h-0 overflow-hidden relative">
+        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5 pointer-events-auto">
           {OPTIONS.map(opt => (
             <button
               key={opt.id}
               onClick={() => setViewMode(opt.id)}
-              className="px-2.5 py-0.5 rounded text-[10px] font-semibold transition-all"
+              className="px-2.5 py-1 rounded text-[10px] font-semibold transition-all shadow-md"
               style={
                 activeViewMode === opt.id
-                  ? {
-                      background: 'rgba(255,107,0,0.15)',
-                      color: '#ff6b00',
-                      border: '1px solid rgba(255,107,0,0.35)',
-                      boxShadow: '0 0 10px rgba(255,107,0,0.2)',
-                    }
-                  : {
-                      background: 'var(--t-bgCard)',
-                      border: '1px solid var(--t-border)',
-                      color: 'var(--t-textSec)',
-                    }
+                  ? { background: 'rgba(255,107,0,0.15)', color: '#FF822D', border: '1px solid rgba(255,107,0,0.35)', boxShadow: '0 0 10px rgba(255,107,0,0.2)' }
+                  : { background: 'var(--t-bgCard)', border: '1px solid var(--t-border)', color: 'var(--t-textSec)' }
               }
             >
               {opt.label}
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-x-2 gap-y-1 sm:ml-auto">
+
+        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5 items-end pointer-events-auto max-h-[95%] overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
           {legendEntries.map(([p, c]) => (
-            <div key={p} className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: c }} />
-              <span className="text-[9px] text-[var(--t-textSec)] whitespace-nowrap">{p}</span>
+            <div key={p} className="flex items-center gap-1.5 px-2 py-1 rounded border shadow-sm" style={{ background: 'var(--t-bgCard)', borderColor: 'var(--t-border)' }}>
+              <span className="text-[9px] text-[var(--t-textSec)] font-bold whitespace-nowrap">{p}</span>
+              <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: c }} />
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Map */}
-      <div className="flex-1 min-h-0 overflow-hidden relative">
         {/* SVG filter for glow */}
         <svg width="0" height="0" style={{ position: 'absolute' }}>
           <defs>
@@ -152,7 +149,7 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
 
         <ComposableMap
           projection="geoMercator"
-          projectionConfig={{ center: [82, 23], scale: 1000 }}
+          projectionConfig={{ center: [82.5, 21], scale: 1080 }}
           style={{ width: '100%', height: '100%' }}
         >
           <Geographies geography={INDIA_TOPOLOGY_URL}>
@@ -186,41 +183,46 @@ export default function IndiaMap({ onStateClick, highlightState, stateData = [],
         {/* Hover tooltip — glassmorphic */}
         {hoveredPayload && (
           <div
-            className="absolute top-2 left-2 text-[11px] pointer-events-none z-10 rounded-xl overflow-hidden"
+            className="absolute top-20 left-2 text-[11px] pointer-events-none z-10 rounded-xl overflow-hidden min-w-[150px]"
             style={{
               background: 'var(--t-tip)',
               backdropFilter: 'blur(20px)',
               border: `1px solid ${hoveredPayload.color}50`,
               boxShadow: `0 8px 32px var(--t-shadow), 0 0 20px ${hoveredPayload.color}20`,
-              padding: '8px 12px',
+              padding: '10px 14px',
             }}
           >
-            <div
-              className="font-black text-[12px] mb-1 text-[var(--t-text)]"
-            >
+            <div className="font-black text-[13px] mb-1.5 text-[var(--t-text)] border-b border-[var(--t-border)] pb-1.5">
               {hoveredPayload.name}
             </div>
-            <div className="flex items-center gap-2">
-              <span
-                className="px-1.5 py-0.5 rounded text-[10px] font-black"
-                style={{
-                  background: `${hoveredPayload.color}22`,
-                  color: hoveredPayload.color,
-                  border: `1px solid ${hoveredPayload.color}50`,
-                  textShadow: `0 0 8px ${hoveredPayload.color}80`,
-                }}
-              >
-                {activeViewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
-              </span>
-              {hoveredPayload.rulingSeats > 0 && (
-                <span className="text-[var(--t-textSec)] text-[10px]">
-                  <span style={{ color: hoveredPayload.color }}>{hoveredPayload.rulingSeats}</span>
-                  {hoveredPayload.totalSeats > 0 && (
-                    <span className="text-[var(--t-textMut)]">/{hoveredPayload.totalSeats}</span>
-                  )}
-                  {' seats'}
+            <div className="flex flex-col gap-1.5 mt-2">
+              <div className="flex items-center justify-between">
+                <span
+                  className="px-1.5 py-0.5 rounded text-[10px] font-black"
+                  style={{
+                    background: `${hoveredPayload.color}22`,
+                    color: hoveredPayload.color,
+                    border: `1px solid ${hoveredPayload.color}50`,
+                    textShadow: `0 0 8px ${hoveredPayload.color}80`,
+                  }}
+                >
+                  {activeViewMode === 'alliance' ? hoveredPayload.alliance : hoveredPayload.party}
                 </span>
-              )}
+                {hoveredPayload.rulingSeats > 0 && (
+                  <span className="text-[var(--t-textSec)] text-[11px] font-mono">
+                    <span className="font-bold" style={{ color: hoveredPayload.color }}>{hoveredPayload.rulingSeats}</span>
+                    {hoveredPayload.totalSeats > 0 && <span className="text-[var(--t-textMut)]">/{hoveredPayload.totalSeats}</span>}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-[9px] text-[var(--t-textMut)] uppercase tracking-wider font-bold">Turnout</span>
+                <span className="text-[10px] text-green-500 font-bold">{hoveredPayload.turnout}</span>
+              </div>
+              <div className="flex items-center justify-between mt-0.5">
+                <span className="text-[9px] text-[var(--t-textMut)] uppercase tracking-wider font-bold">Key Lead</span>
+                <span className="text-[10px] text-[var(--t-text)] font-semibold truncate max-w-[85px] text-right">{hoveredPayload.candidate}</span>
+              </div>
             </div>
           </div>
         )}

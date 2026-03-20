@@ -32,10 +32,10 @@ export default function SentimentGauge({ positive = 54, neutral = 14, negative =
   const needleTip   = polarToXY(CX, CY, R_OUTER - 14, needleAngle);
 
   const PARTY_SENTIMENT = [
-    { name: 'BJP', pos: Math.min(99, Math.round(positive + 8)),  color: '#f97316' },
-    { name: 'INC', pos: Math.min(99, Math.round(positive - 6)),  color: '#3b82f6' },
-    { name: 'SP',  pos: Math.min(99, Math.round(positive - 13)), color: '#ef4444' },
-    { name: 'TMC', pos: Math.min(99, Math.round(positive + 1)),  color: '#22c55e' },
+    { name: 'BJP', pos: Math.min(99, Math.round(positive + 8)),  color: '#FF822D' },
+    { name: 'INC', pos: Math.min(99, Math.round(positive - 6)),  color: '#4271FE' },
+    { name: 'SP',  pos: Math.min(99, Math.round(positive - 13)), color: '#F04F5C' },
+    { name: 'TMC', pos: Math.min(99, Math.round(positive + 1)),  color: '#15B77E' },
   ];
 
   return (
@@ -43,26 +43,26 @@ export default function SentimentGauge({ positive = 54, neutral = 14, negative =
       <div className="relative flex justify-center w-full max-w-[240px] mx-auto">
         <svg viewBox="0 0 220 108" className="w-full h-auto">
           <path d={arcPath(CX, CY, R_INNER, R_OUTER, 0, 180)} fill="var(--t-bgCard)" opacity={1} />
-          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, 0, negEnd)} fill="#ef4444" opacity={0.85} />
-          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, negEnd, neutralEnd)} fill="#f59e0b" opacity={0.85} />
-          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, neutralEnd, 180)} fill="#22c55e" opacity={0.85} />
-          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, neutralEnd, 180)} fill="none" stroke="#22c55e" strokeWidth={1} opacity={0.5} />
+          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, 0, negEnd)} fill="#F04F5C" opacity={0.85} />
+          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, negEnd, neutralEnd)} fill="#F5A623" opacity={0.85} />
+          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, neutralEnd, 180)} fill="#15B77E" opacity={0.85} />
+          <path d={arcPath(CX, CY, R_INNER + 2, R_OUTER - 2, neutralEnd, 180)} fill="none" stroke="#15B77E" strokeWidth={1} opacity={0.5} />
 
           <text x={polarToXY(CX, CY, R_OUTER + 8, negEnd / 2).x}
                 y={polarToXY(CX, CY, R_OUTER + 8, negEnd / 2).y}
-                textAnchor="middle" fontSize={8} fill="#ef4444" opacity={0.9}>{negative}%</text>
+                textAnchor="middle" fontSize={8} fill="#F04F5C" opacity={0.9}>{negative}%</text>
           <text x={polarToXY(CX, CY, R_OUTER + 8, negEnd + (neutral / 100) * 90).x}
                 y={polarToXY(CX, CY, R_OUTER + 8, negEnd + (neutral / 100) * 90).y}
-                textAnchor="middle" fontSize={8} fill="#f59e0b" opacity={0.9}>{neutral}%</text>
+                textAnchor="middle" fontSize={8} fill="#F5A623" opacity={0.9}>{neutral}%</text>
           <text x={polarToXY(CX, CY, R_OUTER + 8, neutralEnd + (positive / 100) * 90).x}
                 y={polarToXY(CX, CY, R_OUTER + 8, neutralEnd + (positive / 100) * 90).y}
-                textAnchor="middle" fontSize={8} fill="#22c55e" opacity={0.9}>{positive}%</text>
+                textAnchor="middle" fontSize={8} fill="#15B77E" opacity={0.9}>{positive}%</text>
 
           <line x1={CX} y1={CY} x2={needleTip.x} y2={needleTip.y}
                 stroke="var(--t-text)" strokeWidth={2} strokeLinecap="round" />
           <circle cx={CX} cy={CY} r={5} fill="var(--t-bgCardSolid)" stroke="var(--t-text)" strokeWidth={1.5} />
 
-          <text x={CX} y={CY - 10} textAnchor="middle" fontSize={16} fontWeight="bold" fill="#22c55e">{positive}%</text>
+          <text x={CX} y={CY - 10} textAnchor="middle" fontSize={16} fontWeight="bold" fill="#15B77E">{positive}%</text>
           <text x={CX} y={CY + 2}  textAnchor="middle" fontSize={8}  fill="var(--t-textMut)">Positive</text>
         </svg>
         <span className="absolute bottom-0 left-4 text-[9px] text-red-400 font-semibold">Negative</span>

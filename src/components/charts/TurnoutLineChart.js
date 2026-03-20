@@ -37,8 +37,8 @@ export default function TurnoutLineChart({ data, height = 300 }) {
           />
           <Tooltip content={<CustomTooltip />} />
           <ReferenceLine
-            y={avg} stroke="#f97316" strokeDasharray="4 3"
-            label={{ value: `Avg ${avg.toFixed(1)}%`, fill: '#f97316', fontSize: 10, position: 'left' }}
+            y={avg} stroke="#FF822D" strokeDasharray="4 3"
+            label={{ value: `Avg ${avg.toFixed(1)}%`, fill: '#FF822D', fontSize: 10, position: 'left' }}
           />
           <Line
             type="monotone" dataKey="turnout"

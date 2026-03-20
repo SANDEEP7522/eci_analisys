@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const COLORS = ['#1877F2', '#8b5cf6', '#34d399'];
+const COLORS = ['#1877F2', '#9061F9', '#34d399'];
 
 export default function GenderPieChart({ data, height = 220 }) {
   const chartData = data || [

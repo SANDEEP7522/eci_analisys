@@ -3,9 +3,9 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const PARTY_COLORS = {
-  BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e',
-  DMK: '#7c3aed', JDU: '#6366f1', TDP: '#06b6d4', SS: '#fb923c',
-  'CPI(M)': '#b91c1c', AIADMK: '#22c55e', BSP: '#94a3b8', Others: '#64748b',
+  BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E',
+  DMK: '#B261EC', JDU: '#4271FE', TDP: '#14C1D7', SS: '#FF822D',
+  'CPI(M)': '#F04F5C', AIADMK: '#15B77E', BSP: '#8E9CAE', Others: '#8E9CAE',
 };
 
 const DEFAULT = [
@@ -29,29 +29,31 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-export default function StatePerformanceChart({ stateData }) {
-  // Build chart rows from stateData prop
-  const data = stateData && stateData.length > 0
-    ? stateData.map(s => ({
-        state: s.id,
-        [s.party]: s.won,
-        Others: Math.max(0, s.seats - s.won),
-      }))
-    : DEFAULT;
+export default function StatePerformanceChart({ stateData, richData }) {
+  // Build chart rows from rich data if available, else fallback to standard state mapping
+  const data = richData && richData.length > 0 
+    ? richData 
+    : (stateData && stateData.length > 0
+        ? stateData.map(s => ({
+            state: s.id,
+            [s.party]: s.won,
+            Others: Math.max(0, s.seats - s.won),
+          }))
+        : DEFAULT);
 
-  // Collect all unique party keys across rows (excluding state/Others)
+  // Collect all unique party keys across rows (excluding state/region/Others metadata)
   const partyKeys = [...new Set(
-    data.flatMap(d => Object.keys(d).filter(k => k !== 'state' && k !== 'Others'))
+    data.flatMap(d => Object.keys(d).filter(k => k !== 'state' && k !== 'Others' && k !== 'region'))
   )];
 
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data} margin={{ top: 4, right: 4, bottom: 4, left: -25 }} barSize={6} barGap={1}>
-        <XAxis dataKey="state" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="state" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {partyKeys.map(k => (
-          <Bar key={k} dataKey={k} fill={PARTY_COLORS[k] || '#94a3b8'} stackId="a" />
+          <Bar key={k} dataKey={k} fill={PARTY_COLORS[k] || '#8E9CAE'} stackId="a" />
         ))}
         <Bar dataKey="Others" fill={PARTY_COLORS.Others} stackId="a" radius={[3, 3, 0, 0]} />
       </BarChart>

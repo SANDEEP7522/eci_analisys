@@ -12,7 +12,7 @@ const DEMO_DATA = [
   { constituency: 'New Delhi',   state: 'Delhi',         candidate: 'Bansuri Swaraj', party: 'BJP', margin: 78370  },
 ];
 
-const PARTY_BADGE_COLOR = { BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e' };
+const PARTY_BADGE_COLOR = { BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E' };
 
 export default function ResultsPage() {
   const [search, setSearch] = useState('');
@@ -95,7 +95,7 @@ export default function ResultsPage() {
                 <td className="px-3 py-2 whitespace-nowrap">
                   <span
                     className="px-2 py-0.5 rounded text-[10px] font-bold"
-                    style={{ backgroundColor: (PARTY_BADGE_COLOR[row.party] || '#64748b') + '25', color: PARTY_BADGE_COLOR[row.party] || 'var(--t-textSec)' }}
+                    style={{ backgroundColor: (PARTY_BADGE_COLOR[row.party] || '#8E9CAE') + '25', color: PARTY_BADGE_COLOR[row.party] || 'var(--t-textSec)' }}
                   >
                     {row.party}
                   </span>

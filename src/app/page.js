@@ -84,27 +84,28 @@ const ALLIANCE_PARTIES = {
 
 // ── All states data (Lok Sabha 2024) ─────────────────────────────────────────
 const ALL_STATES_DATA = [
-  { id: "UP", state: "Uttar Pradesh",  seats: 80, party: "SP",  won: 37, color: "#ef4444", alliance: "INDIA",     region: "North India"     },
-  { id: "RJ", state: "Rajasthan",      seats: 25, party: "BJP", won: 14, color: "#ff6b00", alliance: "NDA",       region: "North India"     },
-  { id: "HR", state: "Haryana",        seats: 10, party: "BJP", won: 5,  color: "#ff6b00", alliance: "NDA",       region: "North India"     },
-  { id: "PB", state: "Punjab",         seats: 13, party: "INC", won: 7,  color: "#6366f1", alliance: "INDIA",     region: "North India"     },
-  { id: "DL", state: "Delhi",          seats: 7,  party: "BJP", won: 7,  color: "#ff6b00", alliance: "NDA",       region: "North India"     },
-  { id: "HP", state: "Himachal Pradesh",seats: 4, party: "INC", won: 4,  color: "#6366f1", alliance: "INDIA",     region: "North India"     },
-  { id: "WB", state: "West Bengal",    seats: 42, party: "TMC", won: 29, color: "#22c55e", alliance: "INDIA",     region: "East India"      },
-  { id: "BR", state: "Bihar",          seats: 40, party: "JDU", won: 12, color: "#8b5cf6", alliance: "NDA",       region: "East India"      },
-  { id: "OD", state: "Odisha",         seats: 21, party: "BJP", won: 20, color: "#ff6b00", alliance: "NDA",       region: "East India"      },
-  { id: "JH", state: "Jharkhand",      seats: 14, party: "BJP", won: 8,  color: "#ff6b00", alliance: "NDA",       region: "East India"      },
-  { id: "AS", state: "Assam",          seats: 14, party: "BJP", won: 9,  color: "#ff6b00", alliance: "NDA",       region: "Northeast India" },
-  { id: "MH", state: "Maharashtra",    seats: 48, party: "BJP", won: 23, color: "#ff6b00", alliance: "NDA",       region: "West India"      },
-  { id: "GJ", state: "Gujarat",        seats: 26, party: "BJP", won: 26, color: "#ff6b00", alliance: "NDA",       region: "West India"      },
-  { id: "GA", state: "Goa",            seats: 2,  party: "BJP", won: 2,  color: "#ff6b00", alliance: "NDA",       region: "West India"      },
-  { id: "MP", state: "Madhya Pradesh", seats: 29, party: "BJP", won: 29, color: "#ff6b00", alliance: "NDA",       region: "Central India"   },
-  { id: "CT", state: "Chhattisgarh",   seats: 11, party: "BJP", won: 10, color: "#ff6b00", alliance: "NDA",       region: "Central India"   },
-  { id: "TN", state: "Tamil Nadu",     seats: 39, party: "DMK", won: 22, color: "#a855f7", alliance: "INDIA",     region: "South India"     },
-  { id: "KA", state: "Karnataka",      seats: 28, party: "BJP", won: 17, color: "#ff6b00", alliance: "NDA",       region: "South India"     },
-  { id: "KL", state: "Kerala",         seats: 20, party: "INC", won: 18, color: "#6366f1", alliance: "INDIA",     region: "South India"     },
-  { id: "AP", state: "Andhra Pradesh", seats: 25, party: "TDP", won: 16, color: "#06b6d4", alliance: "NDA",       region: "South India"     },
-  { id: "TS", state: "Telangana",      seats: 17, party: "INC", won: 8,  color: "#6366f1", alliance: "INDIA",     region: "South India"     },
+  { id: "UP", state: "Uttar Pradesh",  seats: 80, party: "SP",  won: 37, color: "#F04F5C", alliance: "INDIA",     region: "North India"     },
+  { id: "RJ", state: "Rajasthan",      seats: 25, party: "BJP", won: 14, color: "#FF822D", alliance: "NDA",       region: "North India"     },
+  { id: "HR", state: "Haryana",        seats: 10, party: "BJP", won: 5,  color: "#FF822D", alliance: "NDA",       region: "North India"     },
+  { id: "PB", state: "Punjab",         seats: 13, party: "INC", won: 7,  color: "#4271FE", alliance: "INDIA",     region: "North India"     },
+  { id: "DL", state: "Delhi",          seats: 7,  party: "BJP", won: 7,  color: "#FF822D", alliance: "NDA",       region: "North India"     },
+  { id: "HP", state: "Himachal Pradesh",seats: 4, party: "INC", won: 4,  color: "#4271FE", alliance: "INDIA",     region: "North India"     },
+  { id: "WB", state: "West Bengal",    seats: 42, party: "TMC", won: 29, color: "#15B77E", alliance: "INDIA",     region: "East India"      },
+  { id: "BR", state: "Bihar",          seats: 40, party: "JDU", won: 12, color: "#9061F9", alliance: "NDA",       region: "East India"      },
+  { id: "OD", state: "Odisha",         seats: 21, party: "BJP", won: 20, color: "#FF822D", alliance: "NDA",       region: "East India"      },
+  { id: "JH", state: "Jharkhand",      seats: 14, party: "BJP", won: 8,  color: "#FF822D", alliance: "NDA",       region: "East India"      },
+  { id: "AS", state: "Assam",          seats: 14, party: "BJP", won: 9,  color: "#FF822D", alliance: "NDA",       region: "Northeast India" },
+  { id: "MH", state: "Maharashtra",    seats: 48, party: "BJP", won: 23, color: "#FF822D", alliance: "NDA",       region: "West India"      },
+  { id: "GJ", state: "Gujarat",        seats: 26, party: "BJP", won: 26, color: "#FF822D", alliance: "NDA",       region: "West India"      },
+  { id: "GA", state: "Goa",            seats: 2,  party: "BJP", won: 2,  color: "#FF822D", alliance: "NDA",       region: "West India"      },
+  { id: "MP", state: "Madhya Pradesh", seats: 29, party: "BJP", won: 29, color: "#FF822D", alliance: "NDA",       region: "Central India"   },
+  { id: "CT", state: "Chhattisgarh",   seats: 11, party: "BJP", won: 10, color: "#FF822D", alliance: "NDA",       region: "Central India"   },
+  { id: "TN", state: "Tamil Nadu",     seats: 39, party: "DMK", won: 22, color: "#B261EC", alliance: "INDIA",     region: "South India"     },
+  { id: "KA", state: "Karnataka",      seats: 28, party: "BJP", won: 17, color: "#FF822D", alliance: "NDA",       region: "South India"     },
+  { id: "KL", state: "Kerala",         seats: 20, party: "INC", won: 18, color: "#4271FE", alliance: "INDIA",     region: "South India"     },
+  { id: "AP", state: "Andhra Pradesh", seats: 25, party: "TDP", won: 16, color: "#14C1D7", alliance: "NDA",       region: "South India"     },
+  { id: "TS", state: "Telangana",      seats: 17, party: "INC", won: 8,  color: "#4271FE", alliance: "INDIA",     region: "South India"     },
+  { id: "JK", state: "Jammu & Kashmir",seats: 90, party: "NC",  won: 42, color: "#F04F5C", alliance: "INDIA",     region: "North India"     },
 ];
 
 // ── Motion helpers ────────────────────────────────────────────────────────────
@@ -188,7 +189,7 @@ function GlassCard({ title, children, className = "", headerRight, action, onAct
   );
 }
 
-function NeonStatCard({ title, value, sub1, sub2, color = "#ff6b00", children, index = 0 }) {
+function NeonStatCard({ title, value, sub1, sub2, color = "#FF822D", children, index = 0 }) {
   return (
     <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={index} whileHover={{ scale: 1.02, y: -2, transition: { duration: 0.2 } }} className="glass-card rounded-xl p-2.5 flex flex-col gap-1 relative overflow-hidden flex-1 min-w-[110px] cursor-default">
       <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-xl" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
@@ -227,7 +228,7 @@ function CoalitionRaceWidget({ alliancesData = [], majorityMark = 272 }) {
           <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
           <span className="text-[9px] text-[var(--t-textMut)]">Majority: {majorityMark}</span>
         </div>
-        <span className="text-[10px] font-black" style={{ color: leader.color || "#ff6b00" }}>
+        <span className="text-[10px] font-black" style={{ color: leader.color || "#FF822D" }}>
           {leader.name} {margin >= 0 ? `+${margin} ↑` : `${margin} ↓`}
         </span>
       </div>
@@ -243,26 +244,34 @@ const TICKER_ITEMS = [
 ];
 
 const PARTIES_TICKER = [
-  { name: "INC", color: "#6366f1", seats: 99  },
-  { name: "TDP", color: "#06b6d4", seats: 16  },
-  { name: "SP",  color: "#ef4444", seats: 37  },
-  { name: "NCP", color: "#f59e0b", seats: 8   },
-  { name: "JDU", color: "#8b5cf6", seats: 12  },
-  { name: "BSP", color: "#94a3b8", seats: 0   },
+  { name: "INC", color: "#4271FE", seats: 99  },
+  { name: "TDP", color: "#14C1D7", seats: 16  },
+  { name: "SP",  color: "#F04F5C", seats: 37  },
+  { name: "NCP", color: "#F5A623", seats: 8   },
+  { name: "JDU", color: "#9061F9", seats: 12  },
+  { name: "BSP", color: "#8E9CAE", seats: 0   },
   { name: "CPI", color: "#f43f5e", seats: 4   },
-  { name: "AAP", color: "#14b8a6", seats: 3   },
-  { name: "TMC", color: "#22c55e", seats: 29  },
-  { name: "DMK", color: "#a855f7", seats: 22  },
-  { name: "BJP", color: "#ff6b00", seats: 240 },
-  { name: "SHS", color: "#fb923c", seats: 7   },
+  { name: "AAP", color: "#14C1D7", seats: 3   },
+  { name: "TMC", color: "#15B77E", seats: 29  },
+  { name: "DMK", color: "#B261EC", seats: 22  },
+  { name: "BJP", color: "#FF822D", seats: 240 },
+  { name: "SHS", color: "#FF822D", seats: 7   },
 ];
 
 const SOCIAL_BUZZ = [
-  { party: "BJP", platform: "𝕏",  engagement: "+38%", color: "#ff6b00", seats: 55 },
-  { party: "INC", platform: "𝕏",  engagement: "+45%", color: "#6366f1", seats: 45 },
-  { party: "BJP", platform: "FB", engagement: "+41%", color: "#ff6b00", seats: 41 },
-  { party: "INC", platform: "FB", engagement: "+29%", color: "#6366f1", seats: 29 },
-  { party: "TMC", platform: "IG", engagement: "+22%", color: "#22c55e", seats: 22 },
+  { party: "BJP", platform: "𝕏",  engagement: "+38%", color: "#FF822D", seats: 55 },
+  { party: "INC", platform: "𝕏",  engagement: "+45%", color: "#4271FE", seats: 45 },
+  { party: "BJP", platform: "FB", engagement: "+41%", color: "#FF822D", seats: 41 },
+  { party: "INC", platform: "FB", engagement: "+29%", color: "#4271FE", seats: 29 },
+  { party: "TMC", platform: "IG", engagement: "+22%", color: "#15B77E", seats: 22 },
+  { party: "AAP", platform: "YT", engagement: "+52%", color: "#14C1D7", seats: 60 },
+  { party: "SP",  platform: "WA", engagement: "+18%", color: "#F04F5C", seats: 20 },
+  { party: "BJP", platform: "IG", engagement: "+47%", color: "#FF822D", seats: 47 },
+  { party: "DMK", platform: "𝕏",  engagement: "+31%", color: "#B261EC", seats: 31 },
+  { party: "INC", platform: "YT", engagement: "+39%", color: "#4271FE", seats: 39 },
+  { party: "TDP", platform: "FB", engagement: "+25%", color: "#14C1D7", seats: 25 },
+  { party: "JDU", platform: "WA", engagement: "+15%", color: "#9061F9", seats: 15 },
+  { party: "SS",  platform: "IG", engagement: "+28%", color: "#F5A623", seats: 28 },
 ];
 
 const ALL_LIVE_STATES = [
@@ -271,11 +280,17 @@ const ALL_LIVE_STATES = [
   { state: "WB", TMC: 29, BJP: 12, INC: 1,  Others: 0, region: "East India"  },
   { state: "TN", DMK: 22, INC: 9,  BJP: 0,  Others: 8, region: "South India" },
   { state: "BR", JDU: 12, BJP: 17, INC: 3,  Others: 8, region: "East India"  },
+  { state: "MP", BJP: 29, INC: 0,  Others: 0, region: "Central India" },
+  { state: "KA", BJP: 17, INC: 9,  JDS: 2,  Others: 0, region: "South India" },
+  { state: "GJ", BJP: 25, INC: 1,  Others: 0, region: "West India" },
+  { state: "RJ", BJP: 14, INC: 8,  Others: 3, region: "North India" },
+  { state: "AP", TDP: 16, YSRCP: 4, JSP: 2, BJP: 3, Others: 0, region: "South India" },
+  { state: "JK", NC: 42, BJP: 29, INC: 6, Others: 13, region: "North India" },
 ];
 
 const STATE_COLORS = {
-  BJP: "#ff6b00", INC: "#6366f1", SP: "#ef4444", TMC: "#22c55e",
-  DMK: "#a855f7", JDU: "#8b5cf6", SS: "#f59e0b", Others: "#64748b",
+  BJP: "#FF822D", INC: "#4271FE", SP: "#F04F5C", TMC: "#15B77E",
+  DMK: "#B261EC", JDU: "#9061F9", SS: "#F5A623", Others: "#8E9CAE",
 };
 
 // ── Active filter pill ────────────────────────────────────────────────────────
@@ -388,7 +403,7 @@ export default function Home() {
   const handleApply = filters => setActiveFilters(f => ({ ...f, ...filters }));
 
   return (
-    <div className="flex flex-col min-h-screen relative bg-[var(--t-bg)] text-[var(--t-text)]">
+    <div className="flex flex-col min-h-screen lg:h-screen lg:overflow-hidden relative bg-[var(--t-bg)] text-[var(--t-text)]">
       <AuroraBg isDark={isDark} />
 
       {/* ══ NAVBAR ══════════════════════════════════════════════════════════ */}
@@ -480,26 +495,26 @@ export default function Home() {
       {/* ══ TOP STATS BAR ════════════════════════════════════════════════════ */}
       <div className="border-b border-[var(--t-border)] px-3 py-2.5 flex-shrink-0 relative z-10" style={{ background: "var(--t-sidebar)", backdropFilter: "blur(16px)" }}>
         <div className="grid grid-cols-2 sm:flex sm:flex-nowrap gap-2 overflow-x-auto">
-          <NeonStatCard title="Sentiment" value="" color="#14b8a6" index={0}>
+          <NeonStatCard title="Sentiment" value="" color="#14C1D7" index={0}>
             <div className="h-7"><SentimentSparkline positive={yearSentiment.positive} negative={yearSentiment.negative} /></div>
             <div className="flex gap-2 text-[8px] mt-0.5">
-              <span style={{ color: "#14b8a6" }}>▲ +{yearSentiment.positive}%</span>
-              <span style={{ color: "#ef4444" }}>▼ -{yearSentiment.negative}%</span>
+              <span style={{ color: "#14C1D7" }}>▲ +{yearSentiment.positive}%</span>
+              <span style={{ color: "#F04F5C" }}>▼ -{yearSentiment.negative}%</span>
             </div>
           </NeonStatCard>
 
           <NeonStatCard title="Seats Won" value={<AnimCounter key={selectedYear} target={summary.leadingParty.seats} />}
             sub1={`${summary.leadingParty.name} | Total: ${summary.totalSeats}`}
-            sub2={`Decided: ${summary.seatsDecided}`} color="#6366f1" index={1} />
+            sub2={`Decided: ${summary.seatsDecided}`} color="#4271FE" index={1} />
 
           <NeonStatCard title="Voter Turnout" value={<><AnimCounter key={selectedYear} target={summary.turnoutPercentage} />%</>}
-            sub1="M: 67.1% | F: 65.8%" sub2={`Voters: ${summary.totalVoters}`} color="#22c55e" index={2} />
+            sub1="M: 67.1% | F: 65.8%" sub2={`Voters: ${summary.totalVoters}`} color="#15B77E" index={2} />
 
           <NeonStatCard title="Leading Alliance" value={summary.leadingParty.name}
             sub1={`${summary.leadingParty.seats} seats`} sub2={`Maj: ${summary.majorityMark}`}
-            color={summary.leadingParty.color || "#ff6b00"} index={3}>
+            color={summary.leadingParty.color || "#FF822D"} index={3}>
             <div className="w-full rounded-full h-1 mt-1 overflow-hidden bg-[var(--t-bgCard)]">
-              <motion.div className="h-1 rounded-full" style={{ background: "linear-gradient(90deg, #ff6b00, #ff9a3c)", boxShadow: "0 0 8px rgba(255,107,0,0.5)" }}
+              <motion.div className="h-1 rounded-full" style={{ background: "linear-gradient(90deg, #FF822D, #ff9a3c)", boxShadow: "0 0 8px rgba(255,107,0,0.5)" }}
                 initial={{ width: 0 }} animate={{ width: `${(summary.leadingParty.seats / summary.totalSeats) * 100}%` }}
                 transition={{ duration: 1.2, delay: 0.5, ease: [0.23,1,0.32,1] }} />
             </div>
@@ -508,13 +523,13 @@ export default function Home() {
           <NeonStatCard title="Majority Mark" value={<AnimCounter key={selectedYear} target={summary.majorityMark} />}
             sub1={`Won: ${summary.leadingParty.seats}`}
             sub2={(() => { const m = summary.leadingParty.seats - summary.majorityMark; return `Margin: ${m >= 0 ? '+' : ''}${m}`; })()}
-            color="#8b5cf6" index={4}>
+            color="#9061F9" index={4}>
             <div className="relative w-full h-3 mt-1">
               <svg viewBox="0 0 100 12" className="w-full h-full">
                 <rect x="0" y="4" width="100" height="4" rx="2" fill="var(--t-bgCard)" />
                 <rect x="0" y="4" width={`${(summary.majorityMark / summary.totalSeats) * 100}`} height="4" rx="2" fill="rgba(139,92,246,0.2)" />
-                <rect x="0" y="4" width={`${(summary.leadingParty.seats / summary.totalSeats) * 100}`} height="4" rx="2" fill="#8b5cf6" />
-                <line x1={`${(summary.majorityMark / summary.totalSeats) * 100}`} y1="1" x2={`${(summary.majorityMark / summary.totalSeats) * 100}`} y2="11" stroke="#ef4444" strokeWidth="1" strokeDasharray="2" />
+                <rect x="0" y="4" width={`${(summary.leadingParty.seats / summary.totalSeats) * 100}`} height="4" rx="2" fill="#9061F9" />
+                <line x1={`${(summary.majorityMark / summary.totalSeats) * 100}`} y1="1" x2={`${(summary.majorityMark / summary.totalSeats) * 100}`} y2="11" stroke="#F04F5C" strokeWidth="1" strokeDasharray="2" />
               </svg>
             </div>
           </NeonStatCard>
@@ -523,16 +538,16 @@ export default function Home() {
             const cur  = VOTES_CAST_CR[selectedYear];
             const prev = VOTES_CAST_CR[YEAR_ORDER[YEAR_ORDER.indexOf(selectedYear) - 1]];
             const pct  = prev ? (((cur - prev) / prev) * 100).toFixed(1) : null;
-            const color = pct !== null && parseFloat(pct) >= 0 ? '#22c55e' : '#ef4444';
+            const color = pct !== null && parseFloat(pct) >= 0 ? '#15B77E' : '#F04F5C';
             return (
               <NeonStatCard
                 title="New Votes %"
                 value={pct !== null
                   ? <span style={{ color }}>{parseFloat(pct) >= 0 ? '+' : ''}{pct}%</span>
-                  : <span style={{ color: '#94a3b8' }}>—</span>}
+                  : <span style={{ color: '#8E9CAE' }}>—</span>}
                 sub1={`Cast: ${cur} Cr`}
                 sub2={prev ? `Prev: ${prev} Cr` : 'Base year'}
-                color={pct !== null ? color : '#94a3b8'} index={5}
+                color={pct !== null ? color : '#8E9CAE'} index={5}
               />
             );
           })()}
@@ -545,7 +560,7 @@ export default function Home() {
                 value={<>{nonVoterPct}%</>}
                 sub1={`Turnout: ${summary.turnoutPercentage}%`}
                 sub2={`Non-Voters: ${nonVoterPct}%`}
-                color="#ef4444" index={6}
+                color="#F04F5C" index={6}
               />
             );
           })()}
@@ -554,10 +569,11 @@ export default function Home() {
       </div>
 
       {/* ══ MAIN BODY ════════════════════════════════════════════════════════ */}
-      <div className="flex flex-col lg:flex-row gap-3 p-3 lg:flex-1 lg:min-h-0 relative z-10">
+      <div className="flex flex-col lg:flex-row gap-3 p-3 flex-1 min-h-0 relative z-10 lg:overflow-hidden">
 
         {/* ── LEFT ──────────────────────────────────────────────────────── */}
-        <motion.div variants={slideLeft} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[288px] xl:w-[308px] lg:flex-shrink-0">
+        <motion.div variants={slideLeft} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[288px] xl:w-[308px] lg:flex-shrink-0 overflow-y-auto min-h-0 pr-1 pb-1">
+          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1 p-2 m-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="flex-1 min-h-[150px] p-1"><LiveFeed /></GlassCard>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
             <GlassCard title="Sentiment Analysis" action={`+${yearSentiment.positive}/${yearSentiment.positive + yearSentiment.neutral}`} className="min-h-[195px] p-1">
               <SentimentGauge positive={yearSentiment.positive} neutral={yearSentiment.neutral} negative={yearSentiment.negative} />
@@ -566,16 +582,15 @@ export default function Home() {
               <CoalitionRaceWidget alliancesData={yearAlliances} majorityMark={summary.majorityMark} />
             </GlassCard>
           </div>
-          <GlassCard title="Candidate Profile" action="View All" onAction={() => {}} className="p-1"><CandidateProfile /></GlassCard>
-          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1 p-2 m-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="flex-1 min-h-[150px] p-1"><LiveFeed /></GlassCard>
+          <GlassCard title="Candidate Profile" action="View All" onAction={() => {}} className="min-h-[240px] p-1 flex-shrink-0"><CandidateProfile /></GlassCard>
         </motion.div>
 
         {/* ── CENTER ────────────────────────────────────────────────────── */}
-        <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:flex-1 lg:min-w-0">
+        <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:flex-1 lg:min-w-0 overflow-y-auto min-h-0 pr-1 pb-1">
           <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
 
             {/* India Map */}
-            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[320px] sm:h-[370px] lg:h-auto">
+            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[320px] sm:h-[370px] lg:h-auto lg:min-h-[500px]">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
@@ -614,7 +629,7 @@ export default function Home() {
             </div>
 
             {/* Key States panel */}
-            <div className="w-full lg:w-[238px] xl:w-[252px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[120px] lg:max-h-none">
+            <div className="w-full lg:w-[288px] xl:w-[316px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[120px] lg:max-h-none">
               <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
                 {selectedMapState ? (
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -645,7 +660,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="flex-1 overflow-y-auto px-2.5 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 min-h-0 max-h-[380px]">
+                <div className="flex-1 overflow-y-auto px-2.5 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 min-h-[160px]">
                   {filteredKeyStates.map((s, i) => (
                     <TiltCard key={s.id} intensity={5}>
                       <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={i}
@@ -671,7 +686,7 @@ export default function Home() {
                         <div className="mt-1.5 flex items-center gap-1">
                           <span className="text-[8px] px-1.5 py-0.5 rounded-full font-bold"
                             style={{ background: s.alliance === "NDA" ? "rgba(255,107,0,0.12)" : s.alliance === "INDIA" ? "rgba(79,142,255,0.12)" : "rgba(100,116,139,0.12)",
-                                     color: s.alliance === "NDA" ? "#ff6b00" : s.alliance === "INDIA" ? "#4f8eff" : "#94a3b8" }}>
+                                     color: s.alliance === "NDA" ? "#FF822D" : s.alliance === "INDIA" ? "#4f8eff" : "#8E9CAE" }}>
                             {s.alliance}
                           </span>
                           <span className="text-[8px] text-[var(--t-textMut)]">{s.region}</span>
@@ -686,7 +701,7 @@ export default function Home() {
               {filteredLiveStates.length > 0 && (
                 <div className="border-t border-[var(--t-border)] flex-shrink-0 px-3 py-2">
                   <div className="text-[9px] font-bold uppercase tracking-widest mb-2 text-[var(--t-textMut)]">Live States</div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 max-h-[150px] overflow-y-auto pr-1">
                     {filteredLiveStates.map((ls, i) => {
                       const entries = Object.entries(ls).filter(([k]) => k !== "state" && k !== "region");
                       const total = entries.reduce((a, [, v]) => a + v, 0);
@@ -695,7 +710,7 @@ export default function Home() {
                           <span className="text-[9px] text-[var(--t-textMut)] w-5 flex-shrink-0">{ls.state}</span>
                           <div className="flex-1 h-2 rounded-full overflow-hidden flex">
                             {entries.filter(([,v]) => v > 0).map(([party, v]) => (
-                              <motion.div key={party} className="h-full" style={{ backgroundColor: STATE_COLORS[party] || "#64748b" }}
+                              <motion.div key={party} className="h-full" style={{ backgroundColor: STATE_COLORS[party] || "#8E9CAE" }}
                                 initial={{ width: 0 }} animate={{ width: `${(v/total)*100}%` }}
                                 transition={{ duration: 0.8, delay: i * 0.05 }} title={`${party}: ${v}`} />
                             ))}
@@ -708,24 +723,15 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Legend */}
-              <div className="px-3 py-2 border-t border-[var(--t-border)] flex flex-wrap gap-x-2 gap-y-0.5 flex-shrink-0">
-                {Object.entries(PARTY_COLORS).map(([p, c]) => (
-                  <div key={p} className="flex items-center gap-0.5">
-                    <div className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: c }} />
-                    <span className="text-[8px] text-[var(--t-textMut)]">{p}</span>
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
 
           {/* Bottom charts */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <GlassCard title="State Performance Index" action={selectedYear} className="min-h-[220px] p-1">
-              <StatePerformanceChart stateData={filteredKeyStates} />
+            <GlassCard title="State Performance Index" action={selectedYear} className="min-h-[150px] p-1">
+              <StatePerformanceChart stateData={filteredKeyStates} richData={filteredLiveStates} />
             </GlassCard>
-            <GlassCard title="Seat Share Trend" action={selectedYear} className="min-h-[220px] p-1">
+            <GlassCard title="Seat Share Trend" action={selectedYear} className="min-h-[150px] p-1">
               <SeatShareArea
                 activeParties={
                   activeFilters.party !== "All Parties"
@@ -736,7 +742,7 @@ export default function Home() {
                 }
               />
             </GlassCard>
-            <GlassCard title="Vote Share Trend" action={selectedYear} className="min-h-[220px] p-1">
+            <GlassCard title="Vote Share Trend" action={selectedYear} className="min-h-[150px] p-1">
               <VoteShareTrendLine
                 highlightYear={selectedYear}
                 highlightParty={activeFilters.party !== "All Parties" ? activeFilters.party : null}
@@ -746,7 +752,7 @@ export default function Home() {
         </motion.div>
 
         {/* ── RIGHT ─────────────────────────────────────────────────────── */}
-        <motion.div variants={slideRight} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[308px] xl:w-[336px] lg:flex-shrink-0">
+        <motion.div variants={slideRight} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[308px] xl:w-[336px] lg:flex-shrink-0 overflow-y-auto min-h-0 pr-1 pb-1">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
             <GlassCard title="National Vote Share" action={selectedYear} className="min-h-[280px] p-1">
               <VoteSharePie data={filteredPartiesData.map(p => ({ party: p.party, share: p.share }))} height={110} />
@@ -761,7 +767,7 @@ export default function Home() {
               action={selectedMapState ? `${selectedMapState.seats || '?'} seats` : "Scatter"}
               className="min-h-[230px] p-1"
             >
-              <ConstituencyScatter selectedState={selectedMapState} selectedYear={selectedYear} />
+              <ConstituencyScatter selectedState={selectedMapState} richState={selectedMapState ? filteredLiveStates[0] : null} selectedYear={selectedYear} />
             </GlassCard>
             <GlassCard title="Coalition Dynamics" action={selectedYear} className="min-h-[190px] p-1">
               <CoalitionDonut alliances={yearAlliances} majorityMark={summary.majorityMark} />
@@ -769,7 +775,7 @@ export default function Home() {
           </div>
 
           <GlassCard title="Social Media Buzz" className="flex-1 min-h-[190px] p-2">
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 overflow-y-auto h-full pr-1">
               {SOCIAL_BUZZ
                 .filter(s => activeFilters.party === "All Parties" || s.party === activeFilters.party)
                 .map((s, i) => (

@@ -5,10 +5,10 @@ import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, Tooltip, ResponsiveContaine
 
 // ── Colors ────────────────────────────────────────────────────────────────────
 const COLORS = {
-  BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e',
-  DMK: '#7c3aed', TDP: '#06b6d4', JDU: '#6366f1', SS: '#fb923c',
-  'CPI(M)': '#b91c1c', AIADMK: '#10b981', BSP: '#94a3b8',
-  NCP: '#f59e0b', RJD: '#22d3ee', JDS: '#f43f5e', Others: '#64748b',
+  BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E',
+  DMK: '#B261EC', TDP: '#14C1D7', JDU: '#4271FE', SS: '#FF822D',
+  'CPI(M)': '#F04F5C', AIADMK: '#20BFA9', BSP: '#8E9CAE',
+  NCP: '#F5A623', RJD: '#22d3ee', JDS: '#f43f5e', Others: '#8E9CAE',
 };
 
 // ── Constituency data per state (Lok Sabha 2024) ──────────────────────────────
@@ -178,12 +178,25 @@ const CONST_DATA = {
 };
 
 // ── Generate synthetic data for unlisted states ───────────────────────────────
-function generateFromState(s) {
+function generateFromState(s, rich) {
   if (!s) return [];
   const total = s.seats || 10;
+  const rows  = [];
+  if (rich) {
+    let c = 1;
+    Object.entries(rich).forEach(([k, v]) => {
+      if (k !== 'state' && k !== 'region') {
+        for (let i = 0; i < v; i++) { rows.push([`${s.id}-${c++}`, k]); }
+      }
+    });
+    // Fill remaining seats as others if there's any deficit
+    while (c <= total) { rows.push([`${s.id}-Oth-${c++}`, 'Others']); }
+    return rows;
+  }
+  
+  // Fallback to simplistic single party + Others logic if no rich data
   const won   = Math.min(s.won || Math.round(total * 0.5), total);
   const party = s.party || 'Others';
-  const rows  = [];
   for (let i = 0; i < won;          i++) rows.push([`${s.id}-${i + 1}`,       party]);
   for (let i = 0; i < total - won;  i++) rows.push([`${s.id}-Oth-${i + 1}`,   'Others']);
   return rows;
@@ -267,7 +280,7 @@ const BubbleTooltip = ({ active, payload }) => {
 };
 
 // ── Main component ────────────────────────────────────────────────────────────
-export default function ConstituencyScatter({ selectedState, selectedYear }) {
+export default function ConstituencyScatter({ selectedState, richState, selectedYear }) {
   const [hov, setHov] = useState(null);
 
   // ── No state selected: show bubble chart ─────────────────────────────────
@@ -277,13 +290,13 @@ export default function ConstituencyScatter({ selectedState, selectedYear }) {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 8, right: 8, bottom: 14, left: -16 }}>
-          <XAxis dataKey="x" type="number" name="Vote %" domain={[0, 42]} unit="%" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} label={{ value: 'Vote Share %', position: 'insideBottom', offset: -2, fontSize: 8, fill: '#64748b' }} />
-          <YAxis dataKey="y" type="number" name="Seats" domain={[0, maxSeats + 30]} tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+          <XAxis dataKey="x" type="number" name="Vote %" domain={[0, 42]} unit="%" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} label={{ value: 'Vote Share %', position: 'insideBottom', offset: -2, fontSize: 8, fill: '#8E9CAE' }} />
+          <YAxis dataKey="y" type="number" name="Seats" domain={[0, maxSeats + 30]} tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
           <ZAxis dataKey="z" range={[60, 1100]} />
           <Tooltip content={<BubbleTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'var(--t-border)' }} />
           <Scatter data={bubbleData} fillOpacity={0.75}>
             {bubbleData.map((d, i) => (
-              <Cell key={i} fill={COLORS[d.party] || '#94a3b8'} stroke={COLORS[d.party] || '#94a3b8'} strokeWidth={1} strokeOpacity={0.4} />
+              <Cell key={i} fill={COLORS[d.party] || '#8E9CAE'} stroke={COLORS[d.party] || '#8E9CAE'} strokeWidth={1} strokeOpacity={0.4} />
             ))}
           </Scatter>
         </ScatterChart>
@@ -292,7 +305,7 @@ export default function ConstituencyScatter({ selectedState, selectedYear }) {
   }
 
   // ── State selected: show constituency waffle grid ─────────────────────────
-  const rawData = CONST_DATA[selectedState.id] || generateFromState(selectedState);
+  const rawData = CONST_DATA[selectedState.id] || generateFromState(selectedState, richState);
   const seats   = rawData.map(([name, party], i) => ({ id: i, name, party }));
 
   // Party seat summary
@@ -318,7 +331,7 @@ export default function ConstituencyScatter({ selectedState, selectedYear }) {
               className="rounded-[2px] cursor-pointer transition-all duration-150 hover:scale-125 hover:z-10 relative"
               style={{
                 width: 13, height: 13,
-                backgroundColor: COLORS[s.party] || '#64748b',
+                backgroundColor: COLORS[s.party] || '#8E9CAE',
                 opacity: hov && hov.party !== s.party ? 0.2 : 1,
                 boxShadow: hov?.id === s.id ? `0 0 6px ${COLORS[s.party] || '#fff'}` : 'none',
               }}
@@ -348,8 +361,8 @@ export default function ConstituencyScatter({ selectedState, selectedYear }) {
       <div className="flex-shrink-0 border-t border-[var(--t-border)] pt-1 flex flex-wrap gap-x-2.5 gap-y-0.5">
         {summaryEntries.map(([party, count]) => (
           <div key={party} className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: COLORS[party] || '#64748b' }} />
-            <span className="text-[9px] font-bold" style={{ color: COLORS[party] || '#94a3b8' }}>{party}</span>
+            <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: COLORS[party] || '#8E9CAE' }} />
+            <span className="text-[9px] font-bold" style={{ color: COLORS[party] || '#8E9CAE' }}>{party}</span>
             <span className="text-[9px] text-[var(--t-textMut)]">{count}</span>
           </div>
         ))}

@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-const COLORS = ['#f97316','#6366f1','#ef4444','#22c55e','#a855f7','#14b8a6','#f59e0b','#94a3b8'];
+const COLORS = ['#FF822D','#4271FE','#F04F5C','#15B77E','#B261EC','#14C1D7','#F5A623','#8E9CAE'];
 
 const renderLabel = ({ percent }) => (percent > 0.05 ? `${(percent * 100).toFixed(1)}%` : '');
 

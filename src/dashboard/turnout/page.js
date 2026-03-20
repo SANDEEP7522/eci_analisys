@@ -15,13 +15,13 @@ const MOCK = {
     { year: '2019', turnout: 67.40 }, { year: '2024', turnout: 65.79 },
   ],
   states: [
-    { state: 'Lakshadweep', turnout: 84.16, color: '#10b981' },
-    { state: 'Assam',       turnout: 81.56, color: '#10b981' },
-    { state: 'Tripura',     turnout: 80.93, color: '#10b981' },
-    { state: 'West Bengal', turnout: 79.29, color: '#10b981' },
-    { state: 'Bihar',       turnout: 56.19, color: '#ef4444' },
-    { state: 'Mizoram',     turnout: 56.87, color: '#ef4444' },
-    { state: 'UP',          turnout: 56.92, color: '#ef4444' },
+    { state: 'Lakshadweep', turnout: 84.16, color: '#20BFA9' },
+    { state: 'Assam',       turnout: 81.56, color: '#20BFA9' },
+    { state: 'Tripura',     turnout: 80.93, color: '#20BFA9' },
+    { state: 'West Bengal', turnout: 79.29, color: '#20BFA9' },
+    { state: 'Bihar',       turnout: 56.19, color: '#F04F5C' },
+    { state: 'Mizoram',     turnout: 56.87, color: '#F04F5C' },
+    { state: 'UP',          turnout: 56.92, color: '#F04F5C' },
   ].sort((a, b) => b.turnout - a.turnout),
 };
 

@@ -12,7 +12,7 @@ const ALL_YEARS_DATA = [
   { year: "'24", BJP: 240, INC: 99,  SP: 37,  TMC: 29, Others: 138 },
 ];
 
-const COLORS = { BJP: '#f97316', INC: '#1e3a8a', SP: '#ef4444', TMC: '#22c55e', Others: '#94a3b8' };
+const COLORS = { BJP: '#FF822D', INC: '#4271FE', SP: '#F04F5C', TMC: '#15B77E', Others: '#8E9CAE' };
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -46,8 +46,8 @@ export default function SeatShareArea({ activeParties }) {
             </linearGradient>
           ))}
         </defs>
-        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 9, fill: '#64748b' }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="year" tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fontSize: 9, fill: '#8E9CAE' }} axisLine={false} tickLine={false} />
         <Tooltip content={<CustomTooltip />} />
         {visibleKeys.filter(k => COLORS[k]).map(k => (
           <Area key={k} type="monotone" dataKey={k}

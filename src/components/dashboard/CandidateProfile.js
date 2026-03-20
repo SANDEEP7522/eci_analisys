@@ -15,7 +15,7 @@ const CANDIDATES = [
     cases: 0,
     votes: '6,12,970',
     margin: '1,52,513',
-    color: '#f97316',
+    color: '#FF822D',
     initials: 'NM',
   },
   {
@@ -28,7 +28,7 @@ const CANDIDATES = [
     cases: 2,
     votes: '6,84,597',
     margin: '3,90,030',
-    color: '#1e3a8a',
+    color: '#4271FE',
     initials: 'RG',
   },
   {
@@ -41,7 +41,7 @@ const CANDIDATES = [
     cases: 1,
     votes: '6,27,472',
     margin: '1,70,922',
-    color: '#ef4444',
+    color: '#F04F5C',
     initials: 'AY',
   },
 
@@ -55,7 +55,7 @@ const CANDIDATES = [
     cases: 0,
     votes: '8,33,000',
     margin: '7,40,000',
-    color: '#f97316',
+    color: '#FF822D',
     initials: 'AS',
   },
   {
@@ -68,7 +68,7 @@ const CANDIDATES = [
     cases: 0,
     votes: '4,50,000',
     margin: '55,000',
-    color: '#f97316',
+    color: '#FF822D',
     initials: 'SI',
   },
   {
@@ -81,7 +81,7 @@ const CANDIDATES = [
     cases: 0,
     votes: '5,20,000',
     margin: '2,00,000',
-    color: '#1e3a8a',
+    color: '#4271FE',
     initials: 'PG',
   },
   {
@@ -94,7 +94,7 @@ const CANDIDATES = [
     cases: 0,
     votes: '85,000',
     margin: '58,000',
-    color: '#22c55e',
+    color: '#15B77E',
     initials: 'MB',
   },
   {
@@ -133,7 +133,7 @@ const CANDIDATES = [
     cases: 0,
     votes: '5,10,000',
     margin: '1,03,000',
-    color: '#f97316',
+    color: '#FF822D',
     initials: 'YA',
   },
 ];
@@ -198,7 +198,7 @@ export default function CandidateProfile() {
         </button>
         <div className="flex gap-1">
           {CANDIDATES.map((_, i) => (
-            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors`} style={{ backgroundColor: i === idx ? '#6366f1' : 'var(--t-border)' }} />
+            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors`} style={{ backgroundColor: i === idx ? '#4271FE' : 'var(--t-border)' }} />
           ))}
         </div>
         <button onClick={() => setIdx((idx + 1) % CANDIDATES.length)} className="p-1 rounded hover:bg-[var(--t-bgCard)] text-[var(--t-textSec)]">
