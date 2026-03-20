@@ -567,12 +567,12 @@ export default function Home() {
             </GlassCard>
           </div>
           <GlassCard title="Candidate Profile" action="View All" onAction={() => {}} className="p-1"><CandidateProfile /></GlassCard>
-          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1 p-2 m-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="h-[150px] p-1"><LiveFeed /></GlassCard>
+          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1 p-2 m-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="flex-1 min-h-[150px] p-1"><LiveFeed /></GlassCard>
         </motion.div>
 
         {/* ── CENTER ────────────────────────────────────────────────────── */}
         <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:flex-1 lg:min-w-0">
-          <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0 lg:max-h-[650px]">
+          <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
 
             {/* India Map */}
             <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[320px] sm:h-[370px] lg:h-auto">
@@ -768,7 +768,7 @@ export default function Home() {
             </GlassCard>
           </div>
 
-          <GlassCard title="Social Media Buzz" className="min-h-[190px] p-2">
+          <GlassCard title="Social Media Buzz" className="flex-1 min-h-[190px] p-2">
             <div className="space-y-2.5">
               {SOCIAL_BUZZ
                 .filter(s => activeFilters.party === "All Parties" || s.party === activeFilters.party)
