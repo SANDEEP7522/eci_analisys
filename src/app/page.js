@@ -183,7 +183,7 @@ function GlassCard({ title, children, className = "", headerRight, action, onAct
           {headerRight || (action && <button onClick={onAction} className="text-[10px] font-semibold hover:opacity-80" style={{ color: "var(--t-accent)" }}>{action}</button>)}
         </div>
       )}
-      <div className="flex-1 p-2.5 min-h-0 overflow-hidden">{children}</div>
+      <div className="flex-1 p-2 min-h-0 overflow-hidden">{children}</div>
     </motion.div>
   );
 }
@@ -443,7 +443,7 @@ export default function Home() {
                 <FiltersPanel selectedYear={selectedYear} onApply={f => { handleApply(f); setMobileMenuOpen(false); }} />
                 <div className="flex items-center gap-3 flex-wrap text-[10px] text-[var(--t-textSec)]">
                   <label className="flex items-center gap-1.5 cursor-pointer">
-                    <Radio size={10} className="text-green-500" /> Live Updates
+                    <Radio size={10} className="text-green-500 p-1" /> Live Updates
                     <div onClick={() => setLiveUpdates(l => !l)} className={`w-7 h-3.5 rounded-full relative cursor-pointer transition-colors ${liveUpdates ? "bg-green-500" : "bg-[var(--t-bgCard)]"}`}>
                       <div className={`absolute top-0.5 w-2.5 h-2.5 bg-white rounded-full transition-all ${liveUpdates ? "left-4" : "left-0.5"}`} />
                     </div>
@@ -537,11 +537,19 @@ export default function Home() {
             );
           })()}
 
-          <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={6} className="col-span-2 sm:col-span-1 glass-card rounded-xl p-2.5 flex-1 min-w-[160px] relative overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-0.5" style={{ background: "linear-gradient(90deg, transparent, var(--t-accent) 30%, #138808 70%, transparent)" }} />
-            <div className="text-[10px] font-bold uppercase tracking-widest mb-1.5 text-[var(--t-textMut)]">Coalition Dynamics</div>
-            <CoalitionDonut alliances={yearAlliances} majorityMark={summary.majorityMark} />
-          </motion.div>
+          {(() => {
+            const nonVoterPct = (100 - summary.turnoutPercentage).toFixed(1);
+            return (
+              <NeonStatCard
+                title="Votes Not Cast"
+                value={<>{nonVoterPct}%</>}
+                sub1={`Turnout: ${summary.turnoutPercentage}%`}
+                sub2={`Non-Voters: ${nonVoterPct}%`}
+                color="#ef4444" index={6}
+              />
+            );
+          })()}
+
         </div>
       </div>
 
@@ -551,23 +559,23 @@ export default function Home() {
         {/* ── LEFT ──────────────────────────────────────────────────────── */}
         <motion.div variants={slideLeft} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[288px] xl:w-[308px] lg:flex-shrink-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
-            <GlassCard title="Sentiment Analysis" action={`+${yearSentiment.positive}/${yearSentiment.positive + yearSentiment.neutral}`} className="min-h-[155px]">
+            <GlassCard title="Sentiment Analysis" action={`+${yearSentiment.positive}/${yearSentiment.positive + yearSentiment.neutral}`} className="min-h-[195px] p-1">
               <SentimentGauge positive={yearSentiment.positive} neutral={yearSentiment.neutral} negative={yearSentiment.negative} />
             </GlassCard>
-            <GlassCard title="Coalition Race" action={`${summary.totalSeats} seats`} className="min-h-[155px]">
+            <GlassCard title="Coalition Race" action={`${summary.totalSeats} seats`} className="min-h-[175px] p-1">
               <CoalitionRaceWidget alliancesData={yearAlliances} majorityMark={summary.majorityMark} />
             </GlassCard>
           </div>
-          <GlassCard title="Candidate Profile" action="View All" onAction={() => {}} className="flex-1 min-h-[200px] xl:min-h-0"><CandidateProfile /></GlassCard>
-          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="h-[130px]"><LiveFeed /></GlassCard>
+          <GlassCard title="Candidate Profile" action="View All" onAction={() => {}} className="p-1"><CandidateProfile /></GlassCard>
+          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1 p-2 m-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="h-[150px] p-1"><LiveFeed /></GlassCard>
         </motion.div>
 
         {/* ── CENTER ────────────────────────────────────────────────────── */}
         <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:flex-1 lg:min-w-0">
-          <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
+          <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0 lg:max-h-[650px]">
 
             {/* India Map */}
-            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[360px] sm:h-[420px] lg:h-auto">
+            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[320px] sm:h-[370px] lg:h-auto">
               <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
                 <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textMut)] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
@@ -606,7 +614,7 @@ export default function Home() {
             </div>
 
             {/* Key States panel */}
-            <div className="w-full lg:w-[238px] xl:w-[252px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[400px] lg:max-h-none">
+            <div className="w-full lg:w-[238px] xl:w-[252px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[120px] lg:max-h-none">
               <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
                 {selectedMapState ? (
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -637,7 +645,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="flex-1 overflow-y-auto px-2.5 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 min-h-0">
+                <div className="flex-1 overflow-y-auto px-2.5 py-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 min-h-0 max-h-[380px]">
                   {filteredKeyStates.map((s, i) => (
                     <TiltCard key={s.id} intensity={5}>
                       <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={i}
@@ -714,10 +722,10 @@ export default function Home() {
 
           {/* Bottom charts */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <GlassCard title="State Performance Index" action={selectedYear} className="min-h-[180px]">
+            <GlassCard title="State Performance Index" action={selectedYear} className="min-h-[220px] p-1">
               <StatePerformanceChart stateData={filteredKeyStates} />
             </GlassCard>
-            <GlassCard title="Seat Share Trend" action={selectedYear} className="min-h-[180px]">
+            <GlassCard title="Seat Share Trend" action={selectedYear} className="min-h-[220px] p-1">
               <SeatShareArea
                 activeParties={
                   activeFilters.party !== "All Parties"
@@ -728,7 +736,7 @@ export default function Home() {
                 }
               />
             </GlassCard>
-            <GlassCard title="Vote Share Trend" action={selectedYear} className="min-h-[180px]">
+            <GlassCard title="Vote Share Trend" action={selectedYear} className="min-h-[220px] p-1">
               <VoteShareTrendLine
                 highlightYear={selectedYear}
                 highlightParty={activeFilters.party !== "All Parties" ? activeFilters.party : null}
@@ -740,7 +748,7 @@ export default function Home() {
         {/* ── RIGHT ─────────────────────────────────────────────────────── */}
         <motion.div variants={slideRight} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[308px] xl:w-[336px] lg:flex-shrink-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
-            <GlassCard title="National Vote Share" action={selectedYear} className="min-h-[273px]">
+            <GlassCard title="National Vote Share" action={selectedYear} className="min-h-[280px] p-1">
               <VoteSharePie data={filteredPartiesData.map(p => ({ party: p.party, share: p.share }))} height={110} />
               {activeFilters.party !== "All Parties" || activeFilters.alliance !== "All Alliances" ? (
                 <div className="mt-1 text-[9px] text-center text-[var(--t-textMut)]">
@@ -751,13 +759,16 @@ export default function Home() {
             <GlassCard
               title={selectedMapState ? `${selectedMapState.name} — Constituencies` : "Constituency Analysis"}
               action={selectedMapState ? `${selectedMapState.seats || '?'} seats` : "Scatter"}
-              className="min-h-[200px]"
+              className="min-h-[230px] p-1"
             >
               <ConstituencyScatter selectedState={selectedMapState} selectedYear={selectedYear} />
             </GlassCard>
+            <GlassCard title="Coalition Dynamics" action={selectedYear} className="min-h-[190px] p-1">
+              <CoalitionDonut alliances={yearAlliances} majorityMark={summary.majorityMark} />
+            </GlassCard>
           </div>
 
-          <GlassCard title="Social Media Buzz" className="min-h-[160px]">
+          <GlassCard title="Social Media Buzz" className="min-h-[190px] p-2">
             <div className="space-y-2.5">
               {SOCIAL_BUZZ
                 .filter(s => activeFilters.party === "All Parties" || s.party === activeFilters.party)
