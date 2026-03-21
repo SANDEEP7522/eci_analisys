@@ -33,7 +33,7 @@ export default function VoteSharePie({ data, height = 360 }) {
   }
 
   return (
-    <div style={{ height:320, width: '100%' }}>
+    <div className="h-full w-full" style={{ minHeight: 200 }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

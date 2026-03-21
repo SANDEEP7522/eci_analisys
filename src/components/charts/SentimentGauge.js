@@ -40,7 +40,7 @@ export default function SentimentGauge({ positive = 54, neutral = 14, negative =
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="relative flex justify-center w-full max-w-[240px] mx-auto">
+      <div className="relative flex justify-center w-full gauge-wrapper mx-auto">
         <svg viewBox="0 0 220 108" className="w-full h-auto">
           <defs>
             {/* Negative arc — red gradient */}

@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, useMemo } from "react";
+import { createPortal } from "react-dom";
 import {
-  TrendingUp, BarChart2, Download, Radio, GitCompare, Sun, Moon, Menu, X,
+  TrendingUp, BarChart2, Download, Radio, GitCompare, Sun, Moon, Menu, X, Maximize2, Minimize2,
 } from "lucide-react";
 import {
   motion, useMotionValue, useTransform, useSpring, AnimatePresence,
@@ -179,7 +180,7 @@ function GlassCard({ title, children, className = "", headerRight, action, onAct
     <motion.div variants={cardReveal} initial="hidden" animate="visible" custom={custom} whileHover={{ y: -3, transition: { duration: 0.2 } }} className={`relative overflow-hidden rounded-2xl glass-card flex flex-col ${className}`}>
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
       {title && (
-        <div className="flex items-center justify-between px-1 py-2 border-b border-[var(--t-border)] flex-shrink-0 h-2">
+        <div className="flex items-center justify-between px-1 py-1 border-b border-[var(--t-border)] flex-shrink-0">
           <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textSec)]">{title}</span>
           {headerRight || (action && <button onClick={onAction} className="text-[10px] font-semibold hover:opacity-80" style={{ color: "var(--t-accent)" }}>{action}</button>)}
         </div>
@@ -187,6 +188,26 @@ function GlassCard({ title, children, className = "", headerRight, action, onAct
       <div className="flex-1 p-2 min-h-0 overflow-hidden">{children}</div>
     </motion.div>
   );
+}
+
+function MaxGlassCard({ id, title, children, className = "", action, maximizedPanel, setMaximizedPanel }) {
+  const isMax = maximizedPanel === id;
+  const content = (
+    <div className={`${isMax ? "fixed inset-0 rounded-none h-screen w-screen" : `relative ${className}`} overflow-hidden rounded-2xl glass-card flex flex-col`} style={isMax ? { background: "var(--t-bg)", zIndex: 9999 } : {}}>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+      <div className={`flex items-center justify-between border-b border-[var(--t-border)] flex-shrink-0 ${isMax ? "px-4 py-2.5" : "px-1.5 py-0.5"}`}>
+        <span className={`font-bold tracking-widest uppercase text-[var(--t-textSec)] ${isMax ? "text-base" : "text-[10px]"}`}>{title}</span>
+        <div className="flex items-center gap-1.5">
+          {action && <span className={`font-semibold ${isMax ? "text-base" : "text-[10px]"}`} style={{ color: "var(--t-accent)" }}>{action}</span>}
+          <button onClick={() => setMaximizedPanel(v => v === id ? null : id)} className="p-0.5 rounded hover:bg-white/10 transition-colors" title={isMax ? "Minimize" : "Maximize"}>
+            {isMax ? <Minimize2 size={20} className="text-[var(--t-textSec)]" /> : <Maximize2 size={12} className="text-[var(--t-textSec)]" />}
+          </button>
+        </div>
+      </div>
+      <div className={`flex-1 min-h-0 overflow-hidden ${isMax ? "p-6 h-full" : "p-0"}`}>{children}</div>
+    </div>
+  );
+  return isMax ? createPortal(content, document.body) : content;
 }
 
 function NeonStatCard({ title, value, sub1, sub2, color = "#FF822D", children, index = 0 }) {
@@ -315,6 +336,9 @@ export default function Home() {
   const [selectedMapState, setSelectedMapState] = useState(null);
   const [liveUpdates, setLiveUpdates]           = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen]     = useState(false);
+  const [mapMaximized, setMapMaximized]           = useState(false);
+  const [sentimentMaximized, setSentimentMaximized] = useState(false);
+  const [maximizedPanel, setMaximizedPanel]         = useState(null);
   const { themeName, toggle: toggleTheme }      = useTheme();
   const isDark = themeName === "dark";
 
@@ -594,11 +618,30 @@ export default function Home() {
 
         {/* ── LEFT ──────────────────────────────────────────────────────── */}
         <motion.div variants={slideLeft} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[288px] xl:w-[308px] lg:flex-shrink-0 overflow-y-auto min-h-0 pr-1 pb-1">
-          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1 p-2 m-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="flex-1 min-h-[150px] p-1"><LiveFeed /></GlassCard>
+          <GlassCard title="Live Updates" headerRight={<span className="text-[10px] text-green-500 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />Live</span>} className="flex-1 min-h-[150px] p-1"><LiveFeed /></GlassCard>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
-            <GlassCard title="Sentiment Analysis" action={`+${yearSentiment.positive}/${yearSentiment.positive + yearSentiment.neutral}`} className="min-h-[195px] p-1">
-              <SentimentGauge positive={yearSentiment.positive} neutral={yearSentiment.neutral} negative={yearSentiment.negative} />
-            </GlassCard>
+            {(() => {
+              const sentimentContent = (
+                <div className={`${sentimentMaximized ? "fixed inset-0 rounded-none h-screen w-screen" : "relative min-h-[195px]"} overflow-hidden rounded-2xl glass-card flex flex-col`} style={sentimentMaximized ? { background: "var(--t-bg)", zIndex: 9999 } : {}}>
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+                  <div className={`flex items-center justify-between border-b border-[var(--t-border)] flex-shrink-0 ${sentimentMaximized ? "px-4 py-3" : "px-2 py-1"}`}>
+                    <span className={`font-bold tracking-widest uppercase text-[var(--t-textSec)] ${sentimentMaximized ? "text-base" : "text-[10px]"}`}>Sentiment Analysis</span>
+                    <div className="flex items-center gap-2">
+                      <span className={`font-semibold ${sentimentMaximized ? "text-base" : "text-[10px]"}`} style={{ color: "var(--t-accent)" }}>{`+${yearSentiment.positive}/${yearSentiment.positive + yearSentiment.neutral}`}</span>
+                      <button onClick={() => setSentimentMaximized(v => !v)} className="p-1.5 rounded hover:bg-white/10 transition-colors" title={sentimentMaximized ? "Minimize" : "Maximize"}>
+                        {sentimentMaximized ? <Minimize2 size={20} className="text-[var(--t-textSec)]" /> : <Maximize2 size={14} className="text-[var(--t-textSec)]" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div className={`flex-1 min-h-0 overflow-hidden flex items-center justify-center ${sentimentMaximized ? "p-8" : "p-2"}`}>
+                    <div className={sentimentMaximized ? "w-full h-full max-w-[800px] [&_.gauge-wrapper]:max-w-full" : "w-full [&_.gauge-wrapper]:max-w-[240px]"}>
+                      <SentimentGauge positive={yearSentiment.positive} neutral={yearSentiment.neutral} negative={yearSentiment.negative} />
+                    </div>
+                  </div>
+                </div>
+              );
+              return sentimentMaximized ? createPortal(sentimentContent, document.body) : sentimentContent;
+            })()}
             <GlassCard title="Coalition Race" action={`${summary.totalSeats} seats`} className="min-h-[175px] p-1">
               <CoalitionRaceWidget alliancesData={yearAlliances} majorityMark={summary.majorityMark} />
             </GlassCard>
@@ -608,52 +651,61 @@ export default function Home() {
 
         {/* ── CENTER ────────────────────────────────────────────────────── */}
         <motion.div variants={fadeIn} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:flex-1 lg:min-w-0 overflow-y-auto min-h-0 pr-1 pb-1">
-          <div className="flex flex-col lg:flex-row gap-3 flex-1 min-h-0">
+          <div className="flex flex-col lg:flex-row gap-3 lg:flex-none lg:h-[500px]">
 
             {/* India Map */}
-            <div className="flex-1 min-w-0 glass-card rounded-2xl flex flex-col overflow-hidden h-[370px] sm:h-[420px] lg:h-auto lg:min-h-[500px]">
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textSec)] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
-                  State-wise Election Results
-                  {(mapHighlightParty || mapExternalViewMode) && (
-                    <span className="ml-1 px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: "var(--t-accentBg)", color: "var(--t-accent)" }}>
-                      {mapHighlightParty || (mapExternalViewMode === "alliance" ? "By Alliance" : "")}
+            {(() => {
+              const mapContent = (
+                <div className={`${mapMaximized ? "fixed inset-0 rounded-none h-screen w-screen" : "flex-1 min-w-0 h-[370px] sm:h-[420px] lg:h-auto lg:min-h-[500px]"} glass-card rounded-2xl flex flex-col overflow-hidden`} style={mapMaximized ? { background: "var(--t-bg)", zIndex: 9999 } : {}}>
+                  <div className={`flex items-center justify-between border-b border-[var(--t-border)] flex-shrink-0 ${mapMaximized ? "px-4 py-3" : "px-3 py-1.5"}`}>
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-[var(--t-textSec)] flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 pulse-dot" />
+                      State-wise Election Results
+                      {(mapHighlightParty || mapExternalViewMode) && (
+                        <span className="ml-1 px-1.5 py-0.5 rounded text-[8px] font-bold" style={{ background: "var(--t-accentBg)", color: "var(--t-accent)" }}>
+                          {mapHighlightParty || (mapExternalViewMode === "alliance" ? "By Alliance" : "")}
+                        </span>
+                      )}
                     </span>
-                  )}
-                </span>
-                <span className="text-[10px] font-mono font-bold" style={{ color: "var(--t-accent)" }}>{selectedYear}</span>
-              </div>
-              {/* Live ticker — directly below heading */}
-              <div className="flex-shrink-0 border-b border-[var(--t-border)] py-1 px-3 overflow-hidden bg-[var(--t-sidebar)]">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-[9px] font-black flex-shrink-0 uppercase tracking-widest" style={{ color: "var(--t-accent)" }}>Live</span>
-                  <div className="flex-1 overflow-hidden">
-                    <div className="flex gap-8 ticker-inner whitespace-nowrap">
-                      {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
-                        <span key={i} className="text-[9px] flex-shrink-0 text-[var(--t-textSec)]">{t}</span>
-                      ))}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold" style={{ color: "var(--t-accent)" }}>{selectedYear}</span>
+                      <button onClick={() => setMapMaximized(v => !v)} className="p-1 rounded hover:bg-white/10 transition-colors" title={mapMaximized ? "Minimize" : "Maximize"}>
+                        {mapMaximized ? <Minimize2 size={14} className="text-[var(--t-textSec)]" /> : <Maximize2 size={14} className="text-[var(--t-textSec)]" />}
+                      </button>
                     </div>
                   </div>
+                  {/* Live ticker — directly below heading */}
+                  <div className="flex-shrink-0 border-b border-[var(--t-border)] py-1 px-3 overflow-hidden bg-[var(--t-sidebar)]">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[9px] font-black flex-shrink-0 uppercase tracking-widest" style={{ color: "var(--t-accent)" }}>Live</span>
+                      <div className="flex-1 overflow-hidden">
+                        <div className="flex gap-8 ticker-inner whitespace-nowrap">
+                          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
+                            <span key={i} className="text-[9px] flex-shrink-0 text-[var(--t-textSec)]">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-h-0 p-2 overflow-hidden">
+                    <IndiaMap
+                      key={`${selectedYear}-${mapExternalViewMode}-${mapHighlightParty}`}
+                      selectedYear={selectedYear}
+                      onStateClick={setSelectedMapState}
+                      highlightState={mapHighlightState}
+                      stateData={stateHighlights}
+                      externalViewMode={mapExternalViewMode}
+                      highlightParty={mapHighlightParty}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1 min-h-0 p-2 overflow-hidden">
-                <IndiaMap
-                  key={`${selectedYear}-${mapExternalViewMode}-${mapHighlightParty}`}
-                  selectedYear={selectedYear}
-                  onStateClick={setSelectedMapState}
-                  highlightState={mapHighlightState}
-                  stateData={stateHighlights}
-                  externalViewMode={mapExternalViewMode}
-                  highlightParty={mapHighlightParty}
-                />
-              </div>
-
-            </div>
+              );
+              return mapMaximized ? createPortal(mapContent, document.body) : mapContent;
+            })()}
 
             {/* Key States panel */}
             <div className="w-full lg:w-[288px] xl:w-[316px] lg:flex-shrink-0 glass-card rounded-2xl flex flex-col overflow-hidden max-h-[120px] lg:max-h-none">
-              <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--t-border)] flex-shrink-0">
+              <div className="flex items-center justify-between px-3 py-1.5 border-b border-[var(--t-border)] flex-shrink-0">
                 {selectedMapState ? (
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <button
@@ -751,10 +803,10 @@ export default function Home() {
 
           {/* Bottom charts */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <GlassCard title="State Performance Index" action={selectedYear} className="min-h-[150px] p-1">
+            <MaxGlassCard id="statePerf" title="State Performance Index" action={selectedYear} className="min-h-[180px]" maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel}>
               <StatePerformanceChart stateData={filteredKeyStates} richData={filteredLiveStates} />
-            </GlassCard>
-            <GlassCard title="Seat Share Trend" action={selectedYear} className="min-h-[150px] p-1">
+            </MaxGlassCard>
+            <MaxGlassCard id="seatShare" title="Seat Share Trend" action={selectedYear} className="min-h-[180px] p-1" maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel}>
               <SeatShareArea
                 activeParties={
                   activeFilters.party !== "All Parties"
@@ -764,37 +816,39 @@ export default function Home() {
                       : []
                 }
               />
-            </GlassCard>
-            <GlassCard title="Vote Share Trend" action={selectedYear} className="min-h-[150px] p-1">
+            </MaxGlassCard>
+            <MaxGlassCard id="voteShareTrend" title="Vote Share Trend" action={selectedYear} className="min-h-[180px] p-1" maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel}>
               <VoteShareTrendLine
                 highlightYear={selectedYear}
                 highlightParty={activeFilters.party !== "All Parties" ? activeFilters.party : null}
               />
-            </GlassCard>
+            </MaxGlassCard>
           </div>
         </motion.div>
 
         {/* ── RIGHT ─────────────────────────────────────────────────────── */}
         <motion.div variants={slideRight} initial="hidden" animate="visible" className="flex flex-col gap-3 w-full lg:w-[308px] xl:w-[336px] lg:flex-shrink-0 overflow-y-auto min-h-0 pr-1 pb-1">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
-            <GlassCard title="National Vote Share" action={selectedYear} className="min-h-[280px] p-1">
+            <MaxGlassCard id="nationalVote" title="National Vote Share" action={selectedYear} className="min-h-[280px] p-1" maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel}>
               <VoteSharePie data={filteredPartiesData.map(p => ({ party: p.party, share: p.share }))} height={110} />
               {activeFilters.party !== "All Parties" || activeFilters.alliance !== "All Alliances" ? (
                 <div className="mt-1 text-[9px] text-center text-[var(--t-textMut)]">
                   Filtered: {activeFilters.party !== "All Parties" ? activeFilters.party : activeFilters.alliance}
                 </div>
               ) : null}
-            </GlassCard>
-            <GlassCard
+            </MaxGlassCard>
+            <MaxGlassCard
+              id="constituency"
               title={selectedMapState ? `${selectedMapState.name} — Constituencies` : "Constituency Analysis"}
               action={selectedMapState ? `${selectedMapState.seats || '?'} seats` : "Scatter"}
               className="min-h-[230px] p-1"
+              maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel}
             >
               <ConstituencyScatter selectedState={selectedMapState} richState={selectedMapState ? filteredLiveStates[0] : null} selectedYear={selectedYear} />
-            </GlassCard>
-            <GlassCard title="Coalition Dynamics" action={selectedYear} className="min-h-[190px] p-1">
+            </MaxGlassCard>
+            <MaxGlassCard id="coalition" title="Coalition Dynamics" action={selectedYear} className="min-h-[190px] p-1" maximizedPanel={maximizedPanel} setMaximizedPanel={setMaximizedPanel}>
               <CoalitionDonut alliances={yearAlliances} majorityMark={summary.majorityMark} />
-            </GlassCard>
+            </MaxGlassCard>
           </div>
 
           <GlassCard title="Social Media Buzz" className="flex-1 min-h-[190px] p-2">

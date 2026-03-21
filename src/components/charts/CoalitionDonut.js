@@ -28,8 +28,8 @@ export default function CoalitionRadar({ alliances, majorityMark = 272 }) {
 
   return (
     <div className="flex items-center gap-2 h-full">
-      <div className="flex-1 relative" style={{ minHeight: 120 }}>
-        <ResponsiveContainer width="100%" height={120}>
+      <div className="flex-1 relative h-full" style={{ minHeight: 120 }}>
+        <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data}>
             <PolarGrid stroke="var(--t-border)" />
             <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: 'var(--t-textMut)' }} />
